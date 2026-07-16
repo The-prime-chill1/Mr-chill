@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { profile } from '../data';
 import LightRays from './reactbits/LightRays';
@@ -9,15 +9,20 @@ export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
   const [status, setStatus] = useState('idle'); // idle | sending | success | error
 
+  // Initialise EmailJS once when component mounts (v4 API)
+  useEffect(() => {
+    if (window.emailjs) {
+      window.emailjs.init({ publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY });
+    }
+  }, []);
+
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setStatus('sending');
 
-    // Initialize EmailJS with the public key before every send
-    window.emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
-
+    // Send email via EmailJS (init already called in useEffect)
     window.emailjs.send(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
         import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
