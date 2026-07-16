@@ -100,7 +100,7 @@ function ProjectCard({ project, idx }) {
               }}
             >
               <a href={project.link} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ fontSize: '0.85rem' }}>
-                View Live
+                View Demo
               </a>
             </div>
           </div>
@@ -125,6 +125,11 @@ function ProjectCard({ project, idx }) {
                 </span>
               ))}
             </div>
+            <div style={{ marginTop: 20 }}>
+              <a href={project.link} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ fontSize: '0.85rem', display: 'inline-block', padding: '8px 16px' }}>
+                View Demo
+              </a>
+            </div>
             {project.placeholder && <div className="placeholder-tag">Placeholder — send details</div>}
           </div>
 
@@ -147,7 +152,7 @@ export default function Portfolio() {
             My <span className="gradient-text">Portfolio</span>
           </h2>
           <p className="section-sub" style={{ margin: '0 auto' }}>
-            Seven production builds spanning real estate, e-commerce, logistics, fintech, and more.
+            A collection of production builds spanning real estate, e-commerce, logistics, fintech, and more.
           </p>
         </div>
 

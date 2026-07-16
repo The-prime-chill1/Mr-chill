@@ -1,20 +1,52 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { profile } from '../data';
 import LightRays from './reactbits/LightRays';
 import StarBorder from './reactbits/StarBorder';
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
-  const [sent, setSent] = useState(false);
+  const formRef = useRef(null);
+  const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
+  const [status, setStatus] = useState('idle'); // idle | sending | success | error
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Wire this up to your form backend of choice (EmailJS, Formspree, etc.)
-    setSent(true);
+    setStatus('sending');
+
+    // Initialize EmailJS with the public key before every send
+    window.emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
+
+    window.emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        {
+          from_name: form.name,
+          from_email: form.email,
+          from_phone: form.phone,
+          subject: form.subject,
+          message: form.message,
+          to_email: profile.email,
+        }
+      )
+      .then(() => {
+        setStatus('success');
+        setForm({ name: '', email: '', phone: '', subject: '', message: '' });
+      })
+      .catch((err) => {
+        console.error('EmailJS error:', err);
+        setStatus('error');
+      });
   };
+
+  const btnLabel = {
+    idle: 'Send Message',
+    sending: 'Sending…',
+    success: 'Message Sent ✓',
+    error: 'Failed — Try Again',
+  }[status];
+
 
   return (
     <section id="contact" className="floating-card section" style={{ position: 'relative' }}>
@@ -53,8 +85,12 @@ export default function Contact() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               <a href={`mailto:${profile.email}`}>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>Email</div>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>Brand Email</div>
                 <div style={{ color: 'var(--electric-blue)' }}>{profile.email}</div>
+              </a>
+              <a href={`mailto:${profile.emailPersonal}`}>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>Personal Email</div>
+                <div style={{ color: 'var(--electric-blue)' }}>{profile.emailPersonal}</div>
               </a>
               <a href={profile.whatsapp} target="_blank" rel="noreferrer">
                 <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>WhatsApp / Phone</div>
@@ -94,14 +130,24 @@ export default function Contact() {
                 className="contact-input"
               />
             </div>
-            <input
-              required
-              name="subject"
-              placeholder="Subject"
-              value={form.subject}
-              onChange={handleChange}
-              className="contact-input"
-            />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }} className="form-row">
+              <input
+                name="phone"
+                type="tel"
+                placeholder="Phone Number (optional)"
+                value={form.phone}
+                onChange={handleChange}
+                className="contact-input"
+              />
+              <input
+                required
+                name="subject"
+                placeholder="Subject"
+                value={form.subject}
+                onChange={handleChange}
+                className="contact-input"
+              />
+            </div>
             <textarea
               required
               name="message"
@@ -111,8 +157,8 @@ export default function Contact() {
               onChange={handleChange}
               className="contact-input"
             />
-            <StarBorder as="button" type="submit" color="#22d3ee" speed="5s" thickness={1.5} style={{ width: '100%' }}>
-              {sent ? 'Message Sent ✓' : 'Send Message'}
+            <StarBorder as="button" type="submit" color={status === 'error' ? '#ff4d4d' : status === 'success' ? '#22d3ee' : '#22d3ee'} speed="5s" thickness={1.5} style={{ width: '100%', opacity: status === 'sending' ? 0.7 : 1 }} disabled={status === 'sending'}>
+              {btnLabel}
             </StarBorder>
           </motion.form>
         </div>

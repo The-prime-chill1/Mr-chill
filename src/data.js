@@ -7,7 +7,8 @@ export const profile = {
   name: "Lamidi Abdulhameed Olawale",
   role: "General Manager @ CHIL Investment Ltd | Founder @ CHILL TECH | Web Developer",
   location: "Nigeria",
-  email: "lamidiabdulhameedolawale@gmail.com",
+  email: "chiltech2k26@gmail.com",
+  emailPersonal: "lamidiabdulhameedolawale@gmail.com",
   phone: "+234 913 763 2195",
   whatsapp: "https://wa.me/2349137632195",
   github: "https://github.com/The-prime-chill1",
@@ -159,71 +160,108 @@ export const projects = [
     description:
       "Real estate investment portal with interactive property showcase, investment calculator, and client management system.",
     tech: ["React", "Three.js", "CSS"],
-    link: "#",
+    link: "https://chil-investment-ltd.vercel.app/",
     featured: true,
   },
   {
     title: "Queen Smile",
     description: "E-commerce platform for home and kitchen products with WhatsApp ordering.",
     tech: ["React", "CSS", "Vercel"],
-    link: "#",
+    link: "https://queen-smile1.vercel.app/",
     featured: false,
   },
   {
     title: "Dave Cargo",
     description: "International logistics platform connecting UK to Nigeria with real-time cargo tracking.",
     tech: ["React", "CSS", "Netlify"],
-    link: "#",
+    link: "https://dave-cargo.vercel.app/",
     featured: false,
   },
   {
     title: "Royal Furniture",
     description: "Handcrafted furniture brand website with gallery and custom order system.",
     tech: ["React", "CSS", "Vercel"],
-    link: "#",
+    link: "https://royal-funiture.vercel.app/",
     featured: false,
   },
   {
     title: "LEGACY.streetwear",
     description: "Fashion brand e-commerce with product catalogue and brand storytelling.",
     tech: ["React", "CSS", "Vercel"],
-    link: "#",
+    link: "https://legacy-streetwear-collection.vercel.app",
     featured: false,
   },
   {
     title: "Ali Institute",
     description: "Educational platform for Quran memorisation.",
     tech: ["React", "CSS", "Vercel"],
-    link: "#",
+    link: "https://ali-institute-for-qur-an-memorizati.vercel.app/",
     featured: false,
   },
   {
     title: "Mr. Chills Expense Tracker",
     description: "Fintech application with budget tracking and AI-powered analytics.",
     tech: ["React", "Netlify"],
-    link: "#",
+    link: "https://agent-6a12c2049b12b62ef--mrchill-expense-tracker.netlify.app",
+    featured: false,
+  },
+  {
+    title: "Carrio Motors",
+    description: "Automotive dealership platform showcasing premium vehicles and services.",
+    tech: ["React", "CSS", "Vercel"],
+    link: "https://carrio-motors-opal.vercel.app/",
+    featured: false,
+  },
+  {
+    title: "Transbridge Logistics",
+    description: "Logistics and supply chain management solution.",
+    tech: ["React", "CSS", "Vercel"],
+    link: "https://transbridgelogistics.vercel.app/",
+    featured: false,
+  },
+  {
+    title: "Tife Global",
+    description: "Business and corporate platform for global services.",
+    tech: ["React", "CSS", "Vercel"],
+    link: "https://tife-global.vercel.app/",
     featured: false,
   },
 ];
 
-// PLACEHOLDER — replace with real client quotes when you send them
 export const testimonials = [
   {
-    quote:
-      "PLACEHOLDER — real client quote coming. Working with Lamidi on our real estate platform was smooth from brief to launch.",
-    name: "Client Name",
-    role: "Role, Company",
+    quote: "Working with Lamidi was a game-changer. The platform he built exceeded our expectations in every way.",
+    name: "Chief Ololade",
+    role: "CEO",
   },
   {
-    quote:
-      "PLACEHOLDER — real client quote coming. He translated our logistics workflow into a platform our whole team actually uses.",
-    name: "Client Name",
-    role: "Role, Company",
+    quote: "He delivered a robust real estate platform that streamlined our entire investment process. Highly recommended.",
+    name: "CHIL Investment Ltd",
+    role: "Management",
   },
   {
-    quote:
-      "PLACEHOLDER — real client quote coming. Fast turnaround and he clearly understood the Nigerian e-commerce customer.",
-    name: "Client Name",
-    role: "Role, Company",
+    quote: "Exceptional attention to detail and a deep understanding of our business needs. The final product is flawless.",
+    name: "Busari Ibrahim",
+    role: "Director",
+  },
+  {
+    quote: "Fast turnaround and great communication. The digital solution he provided has boosted our online presence significantly.",
+    name: "Tife",
+    role: "CEO, Tife Global",
+  },
+  {
+    quote: "He translated our complex logistics workflow into a user-friendly platform that our whole team actually uses daily.",
+    name: "Dave",
+    role: "CEO, Dave Cargo",
+  },
+  {
+    quote: "Professional, reliable, and incredibly skilled. The website is fast, responsive, and looks absolutely amazing.",
+    name: "Tola",
+    role: "Founder",
+  },
+  {
+    quote: "A fantastic educational platform was built for us. The interface is intuitive and perfectly tailored for our students.",
+    name: "Ali Institute",
+    role: "Director",
   },
 ];
