@@ -23,7 +23,9 @@ export default function Contact() {
     setStatus('sending');
 
     // Send email via EmailJS (init already called in useEffect)
-    window.emailjs.send(
+    // If EmailJS is configured and service ID looks valid, use EmailJS
+    if (window.emailjs && import.meta.env.VITE_EMAILJS_SERVICE_ID && import.meta.env.VITE_EMAILJS_SERVICE_ID.startsWith('service_')) {
+      window.emailjs.send(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
         import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         {
@@ -43,6 +45,14 @@ export default function Contact() {
         console.error('EmailJS error:', err);
         setStatus('error');
       });
+    } else {
+      // Fallback: open WhatsApp with prefilled message
+      const whatsappMessage = `Name: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\n\n${form.message}`;
+      const whatsappUrl = `${profile.whatsapp}?text=${encodeURIComponent(whatsappMessage)}`;
+      window.open(whatsappUrl, '_blank');
+      setStatus('success');
+      setForm({ name: '', email: '', phone: '', subject: '', message: '' });
+    }
   };
 
   const btnLabel = {
@@ -186,6 +196,15 @@ export default function Contact() {
         @media (max-width: 860px) {
           .contact-grid { grid-template-columns: 1fr !important; }
           .form-row { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 480px) {
+          .contact-input {
+            padding: 16px 14px;
+            font-size: 1rem;
+          }
+          .contact-grid {
+            gap: 24px;
+          }
         }
       `}</style>
     </section>
