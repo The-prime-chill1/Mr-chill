@@ -25,7 +25,7 @@ export const stats = [
 export const education = [
   {
     school: "Police Secondary School, Akure",
-    detail: "Secondary Education — WAEC & NECO",
+    detail: "Secondary Education — SSCE CERTIFICATE",
     period: "Completed",
   },
   {
