@@ -1,4 +1,4 @@
-// Bespoke CHILL TECH mark: a skyline chevron fused with a circuit node,
+// Bespoke CHILL TECH LTD mark: a skyline chevron fused with a circuit node,
 // reading as both a building silhouette (real estate) and a play/forward
 // arrow (momentum, tech). Built to work at favicon size and full wordmark size.
 export default function Logo({ size = 34, withWordmark = true, className = '' }) {
@@ -37,7 +37,7 @@ export default function Logo({ size = 34, withWordmark = true, className = '' })
 
       {withWordmark && (
         <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.15rem', letterSpacing: '0.02em' }}>
-          CHILL<span className="gradient-text">TECH</span>
+          CHILL<span className="gradient-text">TECH LTD</span>
         </span>
       )}
     </span>

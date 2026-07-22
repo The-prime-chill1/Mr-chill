@@ -147,7 +147,7 @@ export default function Hero({ onDownloadCV }) {
           style={{ color: 'var(--text-dim)', maxWidth: 520, marginTop: 18, lineHeight: 1.65, fontSize: '0.95rem' }}
         >
           I manage multi-million naira property portfolios at CHIL Investment Ltd, and build
-          full-stack web applications through CHILL TECH — bridging business leadership with
+          full-stack web applications through CHILL TECH LTD — bridging business leadership with
           digital innovation.
         </motion.p>
 
