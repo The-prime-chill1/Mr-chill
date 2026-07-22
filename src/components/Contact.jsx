@@ -93,8 +93,7 @@ export default function Contact() {
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-60px' }}
-            className="glass"
-            style={{ padding: 32 }}
+            className="glass contact-glass"
           >
             <h3 style={{ fontFamily: 'var(--font-display)', marginBottom: 24 }}>Contact Info</h3>
 
@@ -123,8 +122,8 @@ export default function Contact() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             onSubmit={handleSubmit}
-            className="glass"
-            style={{ padding: 32, display: 'flex', flexDirection: 'column', gap: 16 }}
+            className="glass contact-glass"
+            style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
           >
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }} className="form-row">
               <input
@@ -180,6 +179,14 @@ export default function Contact() {
       </div>
 
       <style>{`
+        .contact-glass {
+          padding: 32px;
+        }
+        @media (max-width: 480px) {
+          .contact-glass {
+            padding: 20px 16px;
+          }
+        }
         .contact-input {
           background: rgba(255,255,255,0.03);
           border: 1px solid var(--panel-border);

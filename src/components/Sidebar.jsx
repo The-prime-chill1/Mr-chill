@@ -122,6 +122,16 @@ export default function Sidebar({ onDownloadCV }) {
           .sidebar-links { flex-direction: row; gap: 10px; }
           .sidebar-icon { width: 40px; height: 40px; }
         }
+
+        @media (max-width: 400px) {
+          .sidebar-rail {
+            padding: 8px 10px;
+            gap: 10px;
+            bottom: 12px;
+          }
+          .sidebar-links { gap: 6px; }
+          .sidebar-icon { width: 36px; height: 36px; font-size: 0.95rem; }
+        }
       `}</style>
     </nav>
   );
