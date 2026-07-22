@@ -72,6 +72,12 @@ img {
   padding: 0 24px;
 }
 
+@media (max-width: 600px) {
+  .container {
+    padding: 0 16px;
+  }
+}
+
 .page-shell {
   padding-left: calc(var(--sidebar-w) + 14px);
   padding-right: 14px;

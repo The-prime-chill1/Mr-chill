@@ -5,7 +5,6 @@
   overflow: hidden;
   isolation: isolate;
   transform: translate3d(0, 0, 0);
-  -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 .border-gradient-bottom {
