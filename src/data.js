@@ -12,6 +12,8 @@ export const profile = {
   phone: "+234 913 763 2195",
   whatsapp: "https://wa.me/2349137632195",
   github: "https://github.com/The-prime-chill1",
+  tiktok: "https://www.tiktok.com/@chill_tech_ltd",
+  instagram: "https://www.instagram.com/chill.aura2k26",
   bio: "Dynamic General Manager and Web Developer with a proven track record in real estate management and digital innovation. As General Manager at CHIL Investment Ltd, I oversee multi-million naira property portfolios, manage investor relations, and drive strategic growth across Lagos, Ogun, and Oyo States. As Founder of CHILL TECH LTD, I design and develop full-stack web applications for businesses across e-commerce, logistics, and fintech sectors. A results-driven leader combining strategic business acumen with technical expertise to deliver measurable outcomes.",
 };
 

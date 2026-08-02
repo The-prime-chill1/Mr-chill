@@ -1,14 +1,33 @@
-<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="48" height="48" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="ctGrad" x1="4" y1="42" x2="44" y2="6" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#2f8dff" />
-      <stop offset="100%" stop-color="#5b6ee8" />
+    <linearGradient id="topGrad" x1="10" y1="10" x2="90" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00e5ff" />
+      <stop offset="100%" stop-color="#2f8dff" />
+    </linearGradient>
+    <linearGradient id="botGrad" x1="10" y1="50" x2="90" y2="90" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#0f172a" />
     </linearGradient>
   </defs>
-  <rect x="1" y="1" width="46" height="46" rx="13" fill="#0d0d0d" />
-  <rect x="10" y="26" width="6" height="12" rx="1.4" fill="url(#ctGrad)" opacity="0.85" />
-  <rect x="18" y="19" width="6" height="19" rx="1.4" fill="url(#ctGrad)" />
-  <rect x="26" y="12" width="6" height="26" rx="1.4" fill="url(#ctGrad)" opacity="0.85" />
-  <path d="M34 14 L40.5 20.5 L34 27" stroke="url(#ctGrad)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-  <circle cx="40.5" cy="20.5" r="1.8" fill="#00d4ff" />
+  <circle cx="50" cy="50" r="46" fill="#090d16" stroke="rgba(47, 141, 255, 0.4)" stroke-width="2" />
+  
+  <path d="M 20 50 A 30 30 0 0 1 80 50" stroke="url(#topGrad)" stroke-width="5" stroke-linecap="round" />
+  <circle cx="20" cy="50" r="4" fill="#00e5ff" />
+  <circle cx="80" cy="50" r="4" fill="#2f8dff" />
+
+  <path d="M 28 50 A 22 22 0 0 1 72 50" stroke="url(#topGrad)" stroke-width="4" stroke-linecap="round" />
+  <circle cx="28" cy="50" r="3.5" fill="#00e5ff" />
+  <circle cx="72" cy="50" r="3.5" fill="#2f8dff" />
+
+  <path d="M 36 50 A 14 14 0 0 1 64 50" stroke="url(#topGrad)" stroke-width="3.5" stroke-linecap="round" />
+  
+  <path d="M 58 26 L 76 8" stroke="url(#topGrad)" stroke-width="3.5" stroke-linecap="round" />
+  <circle cx="76" cy="8" r="3.5" fill="#00e5ff" />
+  <path d="M 65 19 L 82 19" stroke="url(#topGrad)" stroke-width="3.5" stroke-linecap="round" />
+  <circle cx="82" cy="19" r="3.5" fill="#38bdf8" />
+
+  <path d="M 80 50 A 30 30 0 0 1 20 50" stroke="url(#botGrad)" stroke-width="5" stroke-linecap="round" />
+  <path d="M 72 50 A 22 22 0 0 1 28 50" stroke="url(#botGrad)" stroke-width="4" stroke-linecap="round" />
+
+  <circle cx="50" cy="50" r="8" stroke="#00e5ff" stroke-width="3" fill="none" />
 </svg>

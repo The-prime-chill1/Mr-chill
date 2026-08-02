@@ -1,176 +1,209 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FiExternalLink, FiGithub, FiLayers } from 'react-icons/fi';
 import { projects } from '../data';
 import BorderGlow from './reactbits/BorderGlow';
 
-function ProjectCard({ project, idx }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 26 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.5, delay: (idx % 3) * 0.08 }}
-      style={{ height: '100%' }}
-    >
-      <BorderGlow
-        borderRadius={18}
-        glowColor={project.featured ? '190 90% 65%' : '265 80% 70%'}
-        colors={['#2f8dff', '#5b6ee8', '#22d3ee']}
-        backgroundColor="transparent"
-        edgeSensitivity={30}
-        glowIntensity={project.featured ? 1.1 : 0.85}
-      >
-        <div
-          className="glass project-card"
-          style={{
-            overflow: 'hidden',
-            position: 'relative',
-            height: '100%',
-            border: project.featured ? '1px solid rgba(47,141,255,0.5)' : undefined,
-          }}
-        >
-          {project.featured && (
-            <span
-              style={{
-                position: 'absolute',
-                top: 14,
-                right: 14,
-                zIndex: 2,
-                fontSize: '0.68rem',
-                letterSpacing: '0.06em',
-                textTransform: 'uppercase',
-                padding: '4px 10px',
-                borderRadius: 999,
-                background: 'linear-gradient(90deg, var(--electric-blue), var(--purple))',
-                color: '#05060a',
-                fontWeight: 700,
-              }}
-            >
-              Featured
-            </span>
-          )}
+const CATEGORIES = ['All', 'Real Estate', 'E-Commerce', 'Logistics', 'Fintech'];
 
-          <div
-            className="project-thumb"
-            style={{
-              height: 170,
-              background: `linear-gradient(135deg, rgba(47,141,255,0.18), rgba(91,110,232,0.18))`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'relative',
-            }}
-          >
-            <span
-              style={{
-                position: 'absolute',
-                top: 12,
-                left: 12,
-                zIndex: 2,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                fontSize: '0.64rem',
-                letterSpacing: '0.06em',
-                textTransform: 'uppercase',
-                padding: '4px 10px',
-                borderRadius: 999,
-                background: 'rgba(6,10,20,0.55)',
-                border: '1px solid rgba(255,255,255,0.12)',
-                color: 'var(--text-dim)',
-                fontWeight: 600,
-              }}
-            >
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--cyan)', boxShadow: '0 0 6px var(--cyan)' }} />
-              Live
-            </span>
-            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.4rem', color: 'rgba(255,255,255,0.35)' }}>
-              {project.title.split(' ').map((w) => w[0]).slice(0, 2).join('')}
-            </span>
-            <div
-              className="project-overlay"
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'rgba(10,10,10,0.75)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                opacity: 0,
-                transition: 'opacity 0.3s ease',
-              }}
-            >
-              <a href={project.link} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ fontSize: '0.85rem' }}>
-                View Demo
-              </a>
-            </div>
-          </div>
-
-          <div style={{ padding: 22 }}>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.05rem', marginBottom: 8 }}>{project.title}</h3>
-            <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, minHeight: 58 }}>{project.description}</p>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 14 }}>
-              {project.tech.map((t) => (
-                <span
-                  key={t}
-                  style={{
-                    fontSize: '0.72rem',
-                    padding: '4px 10px',
-                    borderRadius: 999,
-                    background: 'rgba(47,141,255,0.08)',
-                    color: 'var(--cyan)',
-                    border: '1px solid rgba(34,211,238,0.25)',
-                  }}
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
-            <div style={{ marginTop: 20 }}>
-              <a href={project.link} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ fontSize: '0.85rem', display: 'inline-block', padding: '8px 16px' }}>
-                View Demo
-              </a>
-            </div>
-            {project.placeholder && <div className="placeholder-tag">Placeholder — send details</div>}
-          </div>
-
-          <style>{`
-            .project-card:hover .project-overlay { opacity: 1; }
-          `}</style>
-        </div>
-      </BorderGlow>
-    </motion.div>
-  );
+function categorizeProject(project) {
+  const desc = (project.title + ' ' + project.description).toLowerCase();
+  if (desc.includes('estate') || desc.includes('investment') || desc.includes('property')) return 'Real Estate';
+  if (desc.includes('commerce') || desc.includes('furniture') || desc.includes('fashion') || desc.includes('streetwear') || desc.includes('smile') || desc.includes('shop')) return 'E-Commerce';
+  if (desc.includes('logistics') || desc.includes('cargo') || desc.includes('dealership') || desc.includes('transbridge')) return 'Logistics';
+  if (desc.includes('fintech') || desc.includes('expense') || desc.includes('budget')) return 'Fintech';
+  return 'E-Commerce';
 }
 
 export default function Portfolio() {
+  const [activeTab, setActiveTab] = useState('All');
+
+  const filteredProjects = projects.filter((p) => {
+    if (activeTab === 'All') return true;
+    return categorizeProject(p) === activeTab;
+  });
+
   return (
     <section id="portfolio" className="floating-card section">
       <div className="container">
-        <div style={{ textAlign: 'center', marginBottom: 56 }}>
-          <span className="eyebrow">Selected Work</span>
+        <div style={{ textAlign: 'center', marginBottom: 48 }}>
+          <span className="eyebrow">Award-Winning Work</span>
           <h2 className="section-title">
-            My <span className="gradient-text">Portfolio</span>
+            Featured <span className="gradient-text">Projects</span>
           </h2>
           <p className="section-sub" style={{ margin: '0 auto' }}>
-            A collection of production builds spanning real estate, e-commerce, logistics, fintech, and more.
+            Production-ready applications spanning real estate, e-commerce, international logistics, and fintech.
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28 }} className="portfolio-grid">
-          {projects.map((p, idx) => (
-            <ProjectCard key={p.title} project={p} idx={idx} />
+        {/* Category Filter Tabs */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: 10,
+            flexWrap: 'wrap',
+            marginBottom: 48,
+          }}
+        >
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveTab(cat)}
+              style={{
+                padding: '10px 22px',
+                borderRadius: 999,
+                fontSize: '0.88rem',
+                fontWeight: 600,
+                fontFamily: 'var(--font-display)',
+                background: activeTab === cat ? 'linear-gradient(135deg, #00c2ff, #0080ff)' : 'rgba(255, 255, 255, 0.04)',
+                color: activeTab === cat ? '#000000' : 'var(--text-dim)',
+                border: activeTab === cat ? 'none' : '1px solid var(--panel-border)',
+                boxShadow: activeTab === cat ? '0 0 20px rgba(0, 194, 255, 0.4)' : 'none',
+                transition: 'all 0.3s ease',
+              }}
+            >
+              {cat}
+            </button>
           ))}
         </div>
-      </div>
 
-      <style>{`
-        @media (max-width: 980px) {
-          .portfolio-grid { grid-template-columns: repeat(2, 1fr) !important; }
-        }
-        @media (max-width: 640px) {
-          .portfolio-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
+        {/* Projects Grid */}
+        <motion.div
+          layout
+          style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 28 }}
+        >
+          <AnimatePresence>
+            {filteredProjects.map((project, idx) => (
+              <motion.div
+                key={project.title}
+                layout
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.4, delay: idx * 0.05 }}
+              >
+                <BorderGlow
+                  borderRadius={20}
+                  glowColor={project.featured ? '190 90% 65%' : '265 80% 70%'}
+                  colors={['#00c2ff', '#818cf8', '#22d3ee']}
+                  backgroundColor="transparent"
+                  edgeSensitivity={30}
+                >
+                  <div
+                    className="glass"
+                    style={{
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      overflow: 'hidden',
+                      position: 'relative',
+                    }}
+                  >
+                    {/* Thumbnail banner */}
+                    <div
+                      style={{
+                        height: 180,
+                        background: 'linear-gradient(135deg, rgba(0, 194, 255, 0.15), rgba(129, 140, 248, 0.15))',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                      }}
+                    >
+                      <span
+                        style={{
+                          position: 'absolute',
+                          top: 14,
+                          left: 14,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 6,
+                          fontSize: '0.68rem',
+                          fontWeight: 700,
+                          padding: '4px 10px',
+                          borderRadius: 999,
+                          background: 'rgba(0,0,0,0.6)',
+                          border: '1px solid rgba(0, 194, 255, 0.3)',
+                          color: '#00c2ff',
+                        }}
+                      >
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00c2ff', boxShadow: '0 0 6px #00c2ff' }} />
+                        {categorizeProject(project)}
+                      </span>
+
+                      {project.featured && (
+                        <span
+                          style={{
+                            position: 'absolute',
+                            top: 14,
+                            right: 14,
+                            fontSize: '0.68rem',
+                            fontWeight: 800,
+                            padding: '4px 10px',
+                            borderRadius: 999,
+                            background: 'linear-gradient(90deg, #00c2ff, #818cf8)',
+                            color: '#000000',
+                          }}
+                        >
+                          FEATURED
+                        </span>
+                      )}
+
+                      <span style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '1.8rem', color: 'rgba(255,255,255,0.25)', letterSpacing: '0.04em' }}>
+                        {project.title.split(' ').map((w) => w[0]).slice(0, 2).join('')}
+                      </span>
+                    </div>
+
+                    {/* Card Content */}
+                    <div style={{ padding: 24, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                      <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, marginBottom: 8 }}>
+                        {project.title}
+                      </h3>
+                      <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem', lineHeight: 1.6, flexGrow: 1, marginBottom: 20 }}>
+                        {project.description}
+                      </p>
+
+                      {/* Tech stack badges */}
+                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
+                        {project.tech.map((t) => (
+                          <span
+                            key={t}
+                            style={{
+                              fontSize: '0.72rem',
+                              padding: '4px 10px',
+                              borderRadius: 999,
+                              background: 'rgba(0, 194, 255, 0.08)',
+                              color: 'var(--cyan)',
+                              border: '1px solid rgba(0, 194, 255, 0.2)',
+                              fontWeight: 500,
+                            }}
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div style={{ display: 'flex', gap: 10 }}>
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="btn btn-primary"
+                          style={{ fontSize: '0.82rem', padding: '10px 18px', flex: 1, justifyContent: 'center' }}
+                        >
+                          Live Demo <FiExternalLink />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </BorderGlow>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+      </div>
     </section>
   );
 }

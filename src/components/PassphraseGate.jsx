@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FiX } from 'react-icons/fi';
 import StarBorder from './reactbits/StarBorder';
 
 const SECRET_PHRASE = 'MR CHILL';
@@ -77,9 +78,10 @@ export default function PassphraseGate({ open, onClose, onVerified }) {
                 fontSize: '1.1rem',
                 lineHeight: 1,
                 padding: 6,
+                cursor: 'pointer',
               }}
             >
-              ✕
+              <FiX />
             </button>
 
             <span className="eyebrow" style={{ marginBottom: 6 }}>
