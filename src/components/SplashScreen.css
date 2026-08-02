@@ -140,25 +140,26 @@
   max-width: 640px;
 }
 
-/* Glass Logo Container */
+/* Glass Logo Container — Circular */
 .splash-logo-box {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(14px, 3vw, 22px) clamp(20px, 5vw, 36px);
-  border-radius: clamp(16px, 3vw, 28px);
-  background: rgba(12, 18, 34, 0.7);
-  border: 1px solid rgba(0, 194, 255, 0.3);
+  width: clamp(180px, 36vw, 260px);
+  height: clamp(180px, 36vw, 260px);
+  padding: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid rgba(0, 194, 255, 0.5);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   box-shadow: 
     0 30px 80px -15px rgba(0, 0, 0, 0.9),
-    0 0 40px -5px rgba(0, 194, 255, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 0 50px -5px rgba(0, 194, 255, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
   overflow: hidden;
   animation: splash-logo-breath 3.5s ease-in-out infinite alternate;
-  max-width: calc(100vw - 48px);
 }
 
 @keyframes splash-logo-breath {
@@ -313,8 +314,9 @@
     gap: 12px;
   }
   .splash-logo-box {
-    padding: 10px 16px;
-    border-radius: 14px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
   }
   .splash-tagline-wrap {
     letter-spacing: 0.06em;
@@ -332,8 +334,9 @@
     gap: 16px;
   }
   .splash-logo-box {
-    padding: 13px 20px;
-    border-radius: 18px;
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
   }
 }
 
@@ -364,8 +367,9 @@
     gap: 10px;
   }
   .splash-logo-box {
-    padding: 10px 18px;
-    border-radius: 14px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
   }
   .splash-radial-glow {
     opacity: 0.5;

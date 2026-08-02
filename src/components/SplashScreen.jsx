@@ -33,7 +33,7 @@ export default function SplashScreen({ onComplete }) {
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
-    const duration = 3200; // 3.2 seconds duration
+    const duration = 15000; // 15 seconds total duration
     const startTime = performance.now();
     let animationFrameId;
 
