@@ -1,13 +1,13 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
-import Sidebar from './components/Sidebar';
+import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import PassphraseGate from './components/PassphraseGate';
 import SplashScreen from './components/SplashScreen';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import FAQPage from './components/FAQPage';
 import QuotePage from './components/QuotePage';
 import WorkWithMe from './components/WorkWithMe';
+import CVPage from './components/CVPage';
 
 const About       = lazy(() => import('./components/About'));
 const Experience  = lazy(() => import('./components/Experience'));
@@ -20,6 +20,7 @@ const Contact     = lazy(() => import('./components/Contact'));
 const Footer      = lazy(() => import('./components/Footer'));
 
 const CV_URL = '/cv/Lamidi_Abdulhameed_Olawale_CV.pdf';
+const CV_FILENAME = 'Lamidi_Abdulhameed_Olawale_CV.pdf';
 
 function SectionFallback() {
   return <div className="floating-card" style={{ minHeight: 200 }} />;
@@ -42,17 +43,16 @@ function useHashRoute() {
 export default function App() {
   const route = useHashRoute();
   const [showSplash, setShowSplash] = useState(true);
-  const [gateOpen, setGateOpen]     = useState(false);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('chill_tech_theme') || 'dark';
+    const savedTheme = localStorage.getItem('chill_tech_theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
 
   useEffect(() => {
     // Only show splash screen once per session (skip on privacy page)
     const hasSeenSplash = sessionStorage.getItem('chill_tech_splash_seen');
-    if (hasSeenSplash === 'true' || route === '/privacy') {
+    if (hasSeenSplash === 'true' || route === '/privacy' || route === '/cv') {
       setShowSplash(false);
     }
   }, [route]);
@@ -62,17 +62,23 @@ export default function App() {
     sessionStorage.setItem('chill_tech_splash_seen', 'true');
   };
 
-  const requestDownload = () => setGateOpen(true);
-
-  const handleVerified = () => {
-    setGateOpen(false);
+  const handleDownloadCV = () => {
     const link = document.createElement('a');
     link.href = CV_URL;
-    link.download = 'Lamidi_Abdulhameed_Olawale_CV.pdf';
+    link.download = CV_FILENAME;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
+
+  const handleViewCV = () => {
+    window.location.hash = '#/cv';
+  };
+
+  // ── Standalone CV Page ──
+  if (route === '/cv') {
+    return <CVPage />;
+  }
 
   // ── Privacy Policy page (standalone, no sidebar/splash) ──
   if (route === '/privacy') {
@@ -100,10 +106,8 @@ export default function App() {
       {/* Full-screen Intro Splash */}
       {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
 
-      {/* Sidebar lives OUTSIDE the motion.div so position:fixed works correctly.
-          CSS rule: any ancestor with a transform creates a new containing block,
-          breaking fixed positioning. The motion.div has scale/y transforms. */}
-      <Sidebar onDownloadCV={requestDownload} />
+      {/* Top Navbar */}
+      <Navbar onDownloadCV={handleDownloadCV} onViewCV={handleViewCV} cvUrl={CV_URL} />
 
       {/* Homepage — fades & glides up once splash exits */}
       <motion.div
@@ -112,7 +116,7 @@ export default function App() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
       >
         <main className="page-shell">
-          <Hero onDownloadCV={requestDownload} />
+          <Hero onDownloadCV={handleDownloadCV} onViewCV={handleViewCV} cvUrl={CV_URL} />
 
           <Suspense fallback={<SectionFallback />}>
             <About />
@@ -125,12 +129,6 @@ export default function App() {
             <Footer />
           </Suspense>
         </main>
-
-        <PassphraseGate
-          open={gateOpen}
-          onClose={() => setGateOpen(false)}
-          onVerified={handleVerified}
-        />
       </motion.div>
     </>
   );

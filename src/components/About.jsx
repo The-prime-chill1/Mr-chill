@@ -76,7 +76,18 @@ export default function About() {
             <h2 className="section-title">
               Building at the intersection of <span className="gradient-text">real estate & tech</span>
             </h2>
-            <p style={{ color: 'var(--text-dim)', lineHeight: 1.8, fontSize: '1.02rem' }}>{profile.bio}</p>
+            
+            <p style={{ color: 'var(--text-dim)', lineHeight: 1.8, fontSize: '1.02rem', marginBottom: 16 }}>
+              {profile.bio}
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginTop: 16 }}>
+              {profile.aboutFull?.map((paragraph, index) => (
+                <p key={index} style={{ color: 'var(--text-dim)', lineHeight: 1.75, fontSize: '0.96rem', margin: 0 }}>
+                  {paragraph}
+                </p>
+              ))}
+            </div>
 
             <div style={{ marginTop: 40 }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14 }} className="stats-grid">

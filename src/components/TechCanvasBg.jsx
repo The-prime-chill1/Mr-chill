@@ -6,277 +6,374 @@ export default function TechCanvasBg() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext('2d');
-    let animationFrameId;
-    let width = (canvas.width = canvas.parentElement.offsetWidth || window.innerWidth);
-    let height = (canvas.height = canvas.parentElement.offsetHeight || window.innerHeight);
-
-    // Mouse tracking & shockwave ripple on click/move
-    const mouse = { x: null, y: null, radius: 160 };
-    let shockwaves = [];
-
-    const handleMouseMove = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
-    };
-
-    const handleClick = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      shockwaves.push({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-        radius: 4,
-        maxRadius: 180,
-        alpha: 0.8,
-      });
-    };
-
-    const handleMouseLeave = () => {
-      mouse.x = null;
-      mouse.y = null;
-    };
+    let animId;
 
     const parent = canvas.parentElement;
-    parent.addEventListener('mousemove', handleMouseMove);
-    parent.addEventListener('click', handleClick);
-    parent.addEventListener('mouseleave', handleMouseLeave);
+    let W = (canvas.width = parent.offsetWidth || window.innerWidth);
+    let H = (canvas.height = parent.offsetHeight || window.innerHeight);
 
-    const handleResize = () => {
-      if (!canvas || !canvas.parentElement) return;
-      width = canvas.width = canvas.parentElement.offsetWidth;
-      height = canvas.height = canvas.parentElement.offsetHeight;
-      initNodes();
+    // ── Mouse Tracking, Shockwaves & Cursor Sparks ──
+    const mouse = { x: null, y: null, prevX: null, prevY: null };
+    let shockwaves = [];
+    let sparks = [];
+    let comets = [];
+
+    const onMove = (e) => {
+      const r = canvas.getBoundingClientRect();
+      const currX = e.clientX - r.left;
+      const currY = e.clientY - r.top;
+
+      if (mouse.x !== null) {
+        const distMoved = Math.hypot(currX - mouse.x, currY - mouse.y);
+        // Spawn sparks on mouse movement
+        if (distMoved > 8 && sparks.length < 35) {
+          sparks.push({
+            x: currX,
+            y: currY,
+            vx: (Math.random() - 0.5) * 1.5,
+            vy: (Math.random() - 0.5) * 1.5 - 0.5,
+            size: rand(1.2, 2.5),
+            alpha: 0.9,
+            color: Math.random() > 0.4 ? '#00c2ff' : '#818cf8',
+          });
+        }
+      }
+      mouse.x = currX;
+      mouse.y = currY;
     };
 
-    window.addEventListener('resize', handleResize);
+    const onLeave = () => { mouse.x = null; mouse.y = null; };
+    const onClick = (e) => {
+      const r = canvas.getBoundingClientRect();
+      const clickX = e.clientX - r.left;
+      const clickY = e.clientY - r.top;
+      shockwaves.push({ x: clickX, y: clickY, rad: 2, alpha: 1 });
 
-    // Configuration
-    const NODE_COUNT = Math.min(Math.floor((width * height) / 10000), 55);
-    let nodes = [];
-    let pulses = [];
-    let radarAngle = 0;
+      // Burst of sparks on click
+      for (let i = 0; i < 14; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = rand(1.5, 4.2);
+        sparks.push({
+          x: clickX,
+          y: clickY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          size: rand(1.8, 3.2),
+          alpha: 1,
+          color: Math.random() > 0.5 ? '#00c2ff' : '#22d3ee',
+        });
+      }
+    };
 
-    function initNodes() {
-      nodes = [];
-      for (let i = 0; i < NODE_COUNT; i++) {
-        nodes.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.7,
-          vy: (Math.random() - 0.5) * 0.7,
-          radius: Math.random() * 2.2 + 1.5,
-          pulse: Math.random() * Math.PI * 2,
-          pulseSpeed: 0.02 + Math.random() * 0.03,
-          isHex: Math.random() > 0.65,
+    parent.addEventListener('mousemove', onMove);
+    parent.addEventListener('mouseleave', onLeave);
+    parent.addEventListener('click', onClick);
+
+    const onResize = () => {
+      W = canvas.width = parent.offsetWidth;
+      H = canvas.height = parent.offsetHeight;
+      init();
+    };
+    window.addEventListener('resize', onResize);
+
+    const rand = (a, b) => a + Math.random() * (b - a);
+    const isLight = () => document.documentElement.getAttribute('data-theme') === 'light';
+
+    // ── 1. Network Nodes & Floating Tech Glyphs ──
+    const NODE_COUNT = Math.min(Math.floor((W * H) / 9200), 75);
+    let nodes = [], pulses = [];
+    const techGlyphs = ['</>', '{ }', '01', 'AI', 'JS', 'React', '⚡'];
+
+    function init() {
+      nodes = Array.from({ length: NODE_COUNT }, (_, idx) => ({
+        x: rand(0, W),
+        y: rand(0, H),
+        vx: rand(-0.55, 0.55),
+        vy: rand(-0.55, 0.55),
+        r: rand(1.5, 3.2),
+        pulse: rand(0, Math.PI * 2),
+        ps: rand(0.018, 0.04),
+        type: idx % 14 === 0 ? 'lightbulb' : idx % 8 === 0 ? 'glyph' : idx % 6 === 0 ? 'cube' : idx % 4 === 0 ? 'hex' : 'dot',
+        glyph: techGlyphs[idx % techGlyphs.length],
+      }));
+    }
+    init();
+
+    function addPulse(a, b) {
+      pulses.push({ sx: a.x, sy: a.y, ex: b.x, ey: b.y, t: 0, spd: rand(0.012, 0.025) });
+    }
+
+    function spawnComet() {
+      if (comets.length < 3) {
+        const startTop = Math.random() > 0.5;
+        comets.push({
+          x: startTop ? rand(0, W * 0.7) : 0,
+          y: startTop ? 0 : rand(0, H * 0.7),
+          vx: rand(3.5, 6.5),
+          vy: rand(2.0, 4.5),
+          len: rand(70, 130),
+          alpha: rand(0.65, 0.95),
+          color: Math.random() > 0.4 ? '#00c2ff' : '#818cf8',
         });
       }
     }
 
-    function createPulse(startNode, endNode) {
-      pulses.push({
-        sx: startNode.x,
-        sy: startNode.y,
-        ex: endNode.x,
-        ey: endNode.y,
-        progress: 0,
-        speed: 0.015 + Math.random() * 0.02,
-      });
-    }
-
-    initNodes();
-
-    // Hexagon Helper
-    function drawHexagon(x, y, r, alpha, colorStr) {
+    // ── Helper Paths ──
+    function hexPath(x, y, r) {
       ctx.beginPath();
       for (let i = 0; i < 6; i++) {
-        const angle = (Math.PI / 3) * i;
-        const hx = x + r * Math.cos(angle);
-        const hy = y + r * Math.sin(angle);
-        if (i === 0) ctx.moveTo(hx, hy);
-        else ctx.lineTo(hx, hy);
+        const a = (Math.PI / 3) * i;
+        i === 0 ? ctx.moveTo(x + r * Math.cos(a), y + r * Math.sin(a))
+                : ctx.lineTo(x + r * Math.cos(a), y + r * Math.sin(a));
       }
       ctx.closePath();
-      ctx.strokeStyle = colorStr.replace('ALPHA', alpha.toFixed(2));
-      ctx.lineWidth = 1;
-      ctx.stroke();
     }
 
-    // Animation Loop
-    function render() {
-      ctx.clearRect(0, 0, width, height);
-
-      // Theme check
-      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-      const baseColor = isLight ? 'rgba(2, 132, 199, ALPHA)' : 'rgba(0, 194, 255, ALPHA)';
-      const accentColor = isLight ? 'rgba(99, 102, 241, ALPHA)' : 'rgba(129, 140, 248, ALPHA)';
-      const primaryHex = isLight ? '#0284c7' : '#00c2ff';
-
-      const cx = width / 2;
-      const cy = height / 2;
-
-      // 1. Radar Sweep Line Animation
-      radarAngle += 0.008;
-      const radarRadius = Math.max(width, height) * 0.6;
-      const sweepX = cx + radarRadius * Math.cos(radarAngle);
-      const sweepY = cy + radarRadius * Math.sin(radarAngle);
-
-      const radarGrad = ctx.createLinearGradient(cx, cy, sweepX, sweepY);
-      radarGrad.addColorStop(0, baseColor.replace('ALPHA', isLight ? '0.12' : '0.18'));
-      radarGrad.addColorStop(1, 'transparent');
+    function drawLightbulbIcon(x, y, size, colorStr) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.strokeStyle = colorStr;
+      ctx.fillStyle = colorStr;
+      ctx.lineWidth = 1.2;
 
       ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.arc(cx, cy, radarRadius, radarAngle - 0.25, radarAngle);
+      ctx.arc(0, 0, size * 1.8, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(0, -size * 0.2, size * 0.6, Math.PI * 0.75, Math.PI * 2.25);
+      ctx.lineTo(size * 0.25, size * 0.5);
+      ctx.lineTo(-size * 0.25, size * 0.5);
       ctx.closePath();
-      ctx.fillStyle = radarGrad;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(0, -size * 0.2, size * 0.2, 0, Math.PI * 2);
       ctx.fill();
 
-      // 2. Shockwave Ripples Animation
-      for (let s = shockwaves.length - 1; s >= 0; s--) {
-        const sw = shockwaves[s];
-        sw.radius += 4;
-        sw.alpha -= 0.015;
+      ctx.restore();
+    }
 
-        if (sw.alpha <= 0 || sw.radius >= sw.maxRadius) {
-          shockwaves.splice(s, 1);
+    function drawWireframeCube(x, y, size, colorStr) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.strokeStyle = colorStr;
+      ctx.lineWidth = 0.95;
+      const h = size * 0.6;
+      const w = size * 0.8;
+
+      ctx.beginPath();
+      ctx.rect(-w/2, -h/2, w, h);
+      ctx.rect(-w/2 + w*0.3, -h/2 - h*0.3, w, h);
+      ctx.moveTo(-w/2, -h/2); ctx.lineTo(-w/2 + w*0.3, -h/2 - h*0.3);
+      ctx.moveTo(w/2, -h/2); ctx.lineTo(w/2 + w*0.3, -h/2 - h*0.3);
+      ctx.moveTo(-w/2, h/2); ctx.lineTo(-w/2 + w*0.3, h/2 - h*0.3);
+      ctx.moveTo(w/2, h/2); ctx.lineTo(w/2 + w*0.3, h/2 - h*0.3);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    // ── RENDER LOOP ──
+    function render() {
+      ctx.clearRect(0, 0, W, H);
+
+      const light = isLight();
+      const c0 = light ? 'rgba(2,132,199,A)' : 'rgba(0,194,255,A)';
+      const ca = light ? 'rgba(99,102,241,A)' : 'rgba(129,140,248,A)';
+      const hexColor = light ? '#0284c7' : '#00c2ff';
+      const col = (t, a) => t.replace('A', (typeof a === 'number' ? a.toFixed(2) : a));
+
+      // Spawn occasional energy comets
+      if (Math.random() < 0.015) spawnComet();
+
+      // Draw Energy Comets
+      for (let c = comets.length - 1; c >= 0; c--) {
+        const com = comets[c];
+        com.x += com.vx;
+        com.y += com.vy;
+        com.alpha -= 0.007;
+
+        if (com.alpha <= 0 || com.x > W + 100 || com.y > H + 100) {
+          comets.splice(c, 1);
           continue;
         }
 
+        const grad = ctx.createLinearGradient(com.x, com.y, com.x - com.vx * 15, com.y - com.vy * 15);
+        grad.addColorStop(0, com.color);
+        grad.addColorStop(1, 'transparent');
+
         ctx.beginPath();
-        ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = baseColor.replace('ALPHA', sw.alpha.toFixed(2));
-        ctx.lineWidth = 1.5;
-        ctx.shadowColor = primaryHex;
+        ctx.moveTo(com.x, com.y);
+        ctx.lineTo(com.x - com.vx * (com.len / 10), com.y - com.vy * (com.len / 10));
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.8;
+        ctx.shadowColor = com.color;
         ctx.shadowBlur = 10;
         ctx.stroke();
         ctx.shadowBlur = 0;
       }
 
-      // 3. Node Connection Lines
-      const maxDistance = 145;
+      // Shockwaves
+      for (let s = shockwaves.length - 1; s >= 0; s--) {
+        const sw = shockwaves[s];
+        sw.rad += 5; sw.alpha -= 0.018;
+        if (sw.alpha <= 0) { shockwaves.splice(s, 1); continue; }
+        ctx.beginPath();
+        ctx.arc(sw.x, sw.y, sw.rad, 0, Math.PI * 2);
+        ctx.strokeStyle = col(c0, sw.alpha);
+        ctx.lineWidth = 1.6;
+        ctx.shadowColor = hexColor; ctx.shadowBlur = 14;
+        ctx.stroke(); ctx.shadowBlur = 0;
+        ctx.beginPath();
+        ctx.arc(sw.x, sw.y, sw.rad * 0.55, 0, Math.PI * 2);
+        ctx.strokeStyle = col(ca, sw.alpha * 0.5);
+        ctx.lineWidth = 1; ctx.stroke();
+      }
+
+      // Cursor Sparks
+      for (let sp = sparks.length - 1; sp >= 0; sp--) {
+        const s = sparks[sp];
+        s.x += s.vx;
+        s.y += s.vy;
+        s.alpha -= 0.025;
+        if (s.alpha <= 0) { sparks.splice(sp, 1); continue; }
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fillStyle = col(s.color === '#00c2ff' ? c0 : ca, s.alpha);
+        ctx.shadowColor = s.color;
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
+      // Node Connections & Polygon Triangle Mesh Fills
+      const maxD = 150;
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
-          const dx = nodes[i].x - nodes[j].x;
-          const dy = nodes[i].y - nodes[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < maxDistance) {
-            const alpha = (1 - dist / maxDistance) * (isLight ? 0.28 : 0.38);
+          const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d < maxD) {
+            const a = (1 - d / maxD) * (light ? 0.28 : 0.42);
             ctx.beginPath();
             ctx.moveTo(nodes[i].x, nodes[i].y);
             ctx.lineTo(nodes[j].x, nodes[j].y);
-            ctx.strokeStyle = baseColor.replace('ALPHA', alpha.toFixed(2));
-            ctx.lineWidth = 1;
-            ctx.stroke();
+            ctx.strokeStyle = col(c0, a);
+            ctx.lineWidth = 0.95; ctx.stroke();
 
-            // Trigger pulses along connections
-            if (Math.random() < 0.001) {
-              createPulse(nodes[i], nodes[j]);
+            if (Math.random() < 0.001) addPulse(nodes[i], nodes[j]);
+
+            // Constellation Triangle Fills
+            for (let k = j + 1; k < nodes.length; k++) {
+              const dx2 = nodes[i].x - nodes[k].x, dy2 = nodes[i].y - nodes[k].y;
+              const d2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+              const dx3 = nodes[j].x - nodes[k].x, dy3 = nodes[j].y - nodes[k].y;
+              const d3 = Math.sqrt(dx3 * dx3 + dy3 * dy3);
+
+              if (d2 < maxD * 0.9 && d3 < maxD * 0.9) {
+                ctx.beginPath();
+                ctx.moveTo(nodes[i].x, nodes[i].y);
+                ctx.lineTo(nodes[j].x, nodes[j].y);
+                ctx.lineTo(nodes[k].x, nodes[k].y);
+                ctx.closePath();
+                ctx.fillStyle = col(c0, light ? 0.025 : 0.045);
+                ctx.fill();
+              }
             }
           }
         }
       }
 
-      // 4. Interactive Mouse Magnet Connections
-      if (mouse.x !== null && mouse.y !== null) {
-        for (let i = 0; i < nodes.length; i++) {
-          const dx = nodes[i].x - mouse.x;
-          const dy = nodes[i].y - mouse.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < mouse.radius) {
-            const alpha = (1 - dist / mouse.radius) * 0.55;
+      // Mouse Magnet Forcefield
+      if (mouse.x !== null) {
+        for (const n of nodes) {
+          const dx = n.x - mouse.x, dy = n.y - mouse.y;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d < 175) {
             ctx.beginPath();
-            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.moveTo(n.x, n.y);
             ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = accentColor.replace('ALPHA', alpha.toFixed(2));
-            ctx.lineWidth = 1.4;
-            ctx.stroke();
+            ctx.strokeStyle = col(ca, (1 - d / 175) * 0.65);
+            ctx.lineWidth = 1.2; ctx.stroke();
+            n.vx += (dx / d) * 0.08;
+            n.vy += (dy / d) * 0.08;
           }
         }
+        const glow = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 80);
+        glow.addColorStop(0, `rgba(0,194,255,${light ? 0.10 : 0.15})`);
+        glow.addColorStop(1, 'transparent');
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, 80, 0, Math.PI * 2);
+        ctx.fillStyle = glow; ctx.fill();
       }
 
-      // 5. Traveling Light Pulses
+      // Traveling Pulses
       for (let p = pulses.length - 1; p >= 0; p--) {
-        const pulse = pulses[p];
-        pulse.progress += pulse.speed;
-
-        if (pulse.progress >= 1) {
-          pulses.splice(p, 1);
-          continue;
-        }
-
-        const px = pulse.sx + (pulse.ex - pulse.sx) * pulse.progress;
-        const py = pulse.sy + (pulse.ey - pulse.sy) * pulse.progress;
-
+        const pl = pulses[p];
+        pl.t += pl.spd;
+        if (pl.t >= 1) { pulses.splice(p, 1); continue; }
+        const px = pl.sx + (pl.ex - pl.sx) * pl.t;
+        const py = pl.sy + (pl.ey - pl.sy) * pl.t;
         ctx.beginPath();
         ctx.arc(px, py, 2.8, 0, Math.PI * 2);
-        ctx.fillStyle = primaryHex;
-        ctx.shadowColor = primaryHex;
-        ctx.shadowBlur = 10;
-        ctx.fill();
-        ctx.shadowBlur = 0;
+        ctx.fillStyle = hexColor;
+        ctx.shadowColor = hexColor; ctx.shadowBlur = 12;
+        ctx.fill(); ctx.shadowBlur = 0;
       }
 
-      // 6. Draw & Update Nodes
-      for (let i = 0; i < nodes.length; i++) {
-        const n = nodes[i];
+      // Nodes & Special Tech Elements
+      for (const n of nodes) {
+        n.x += n.vx; n.y += n.vy;
+        n.vx = Math.max(-1.2, Math.min(1.2, n.vx * 0.995));
+        n.vy = Math.max(-1.2, Math.min(1.2, n.vy * 0.995));
+        if (n.x < 0 || n.x > W) n.vx *= -1;
+        if (n.y < 0 || n.y > H) n.vy *= -1;
+        n.pulse += n.ps;
+        const glow = (Math.sin(n.pulse) + 1) / 2;
+        const a = 0.35 + glow * 0.55;
+        const strokeCol = col(c0, a);
 
-        n.x += n.vx;
-        n.y += n.vy;
-        n.pulse += n.pulseSpeed;
-
-        if (n.x < 0 || n.x > width) n.vx *= -1;
-        if (n.y < 0 || n.y > height) n.vy *= -1;
-
-        const pulseGlow = (Math.sin(n.pulse) + 1) / 2;
-        const alpha = 0.35 + pulseGlow * 0.5;
-
-        if (n.isHex) {
-          drawHexagon(n.x, n.y, 8.5 + pulseGlow * 3.5, alpha * 0.65, baseColor);
+        if (n.type === 'lightbulb') {
+          drawLightbulbIcon(n.x, n.y, 8 + glow * 2, strokeCol);
+        } else if (n.type === 'glyph') {
+          ctx.font = '600 11px monospace';
+          ctx.fillStyle = col(ca, a * 0.9);
+          ctx.fillText(n.glyph, n.x - 8, n.y + 4);
+        } else if (n.type === 'cube') {
+          drawWireframeCube(n.x, n.y, 14 + glow * 4, strokeCol);
+        } else if (n.type === 'hex') {
+          hexPath(n.x, n.y, 7 + glow * 3);
+          ctx.strokeStyle = strokeCol;
+          ctx.lineWidth = 0.9; ctx.stroke();
         } else {
           ctx.beginPath();
-          ctx.arc(n.x, n.y, n.radius + pulseGlow * 1.2, 0, Math.PI * 2);
-          ctx.fillStyle = baseColor.replace('ALPHA', alpha.toFixed(2));
-          ctx.shadowColor = primaryHex;
-          ctx.shadowBlur = 6;
-          ctx.fill();
-          ctx.shadowBlur = 0;
-
-          ctx.beginPath();
-          ctx.arc(n.x, n.y, n.radius * 2.6 + pulseGlow * 2.2, 0, Math.PI * 2);
-          ctx.strokeStyle = baseColor.replace('ALPHA', (alpha * 0.35).toFixed(2));
-          ctx.lineWidth = 0.8;
-          ctx.stroke();
+          ctx.arc(n.x, n.y, n.r + glow * 1.2, 0, Math.PI * 2);
+          ctx.fillStyle = col(c0, a);
+          ctx.shadowColor = hexColor; ctx.shadowBlur = 7;
+          ctx.fill(); ctx.shadowBlur = 0;
         }
       }
 
-      animationFrameId = requestAnimationFrame(render);
+      animId = requestAnimationFrame(render);
     }
 
     render();
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', handleResize);
-      parent.removeEventListener('mousemove', handleMouseMove);
-      parent.removeEventListener('click', handleClick);
-      parent.removeEventListener('mouseleave', handleMouseLeave);
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', onResize);
+      parent.removeEventListener('mousemove', onMove);
+      parent.removeEventListener('mouseleave', onLeave);
+      parent.removeEventListener('click', onClick);
     };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      style={{
-        position: 'absolute',
-        inset: 0,
-        width: '100%',
-        height: '100%',
-        pointerEvents: 'none',
-        zIndex: 1,
-      }}
+      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 }}
     />
   );
 }
+

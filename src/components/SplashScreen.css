@@ -1,390 +1,235 @@
 /* ============================================================
-   CHILL TECH — Awwwards-Quality Cinematic Operating System Intro
-   Apple / Vercel / Linear / Tesla inspired cinematic splash.
-   Fully Responsive: Mobile · Tablet · Desktop · Wide
+   CHILL TECH — Light-Themed Brand Splash Screen with Enter Site CTA
+   Matches the crisp white light theme of the main portfolio.
    ============================================================ */
 
 .splash-container {
   position: fixed;
   inset: 0;
   z-index: 999999;
-  background-color: #000000;
+  background: var(--bg, #f8fafc);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   user-select: none;
+  padding: 24px;
 }
 
-/* Skip Intro Pill Button */
-.splash-skip-btn {
-  position: absolute;
-  top: clamp(14px, 3vw, 28px);
-  right: clamp(14px, 3vw, 32px);
-  z-index: 20;
-  padding: clamp(6px, 1.5vw, 8px) clamp(12px, 3vw, 18px);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.7);
-  font-family: var(--font-display, 'Outfit', sans-serif);
-  font-size: clamp(0.62rem, 2vw, 0.78rem);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.splash-skip-btn:hover {
-  background: rgba(0, 194, 255, 0.15);
-  border-color: #00c2ff;
-  color: #ffffff;
-  box-shadow: 0 0 20px rgba(0, 194, 255, 0.3);
-  transform: translateY(-1px);
-}
-
-/* Canvas Floating Particle Background */
-.splash-canvas {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Futuristic Cyber Grid Drift */
+/* Light Cyber Grid */
 .splash-grid-bg {
   position: absolute;
-  inset: -120px;
+  inset: 0;
   background-image: 
-    linear-gradient(rgba(0, 194, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 194, 255, 0.04) 1px, transparent 1px);
+    linear-gradient(rgba(0, 194, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 194, 255, 0.08) 1px, transparent 1px);
   background-size: 44px 44px;
-  animation: splash-grid-drift 35s linear infinite;
   pointer-events: none;
   z-index: 2;
-  opacity: 0.8;
-}
-
-@keyframes splash-grid-drift {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(44px, 44px); }
-}
-
-/* Central Energy Shockwave Ring */
-.splash-energy-ring {
-  position: absolute;
-  width: clamp(140px, 30vw, 260px);
-  height: clamp(140px, 30vw, 260px);
-  border-radius: 50%;
-  border: 1.5px solid rgba(0, 194, 255, 0.6);
-  box-shadow: 0 0 30px rgba(0, 194, 255, 0.4), inset 0 0 20px rgba(0, 194, 255, 0.2);
-  pointer-events: none;
-  z-index: 3;
+  opacity: 0.75;
 }
 
 /* Ambient Blue Bloom Gradient */
 .splash-radial-glow {
   position: absolute;
-  width: clamp(240px, 65vw, 550px);
-  height: clamp(240px, 65vw, 550px);
+  width: clamp(320px, 85vw, 700px);
+  height: clamp(320px, 85vw, 700px);
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(0, 194, 255, 0.25) 0%,
-    rgba(129, 140, 248, 0.12) 35%,
-    transparent 70%
+    rgba(0, 194, 255, 0.15) 0%,
+    rgba(129, 140, 248, 0.08) 40%,
+    transparent 75%
   );
-  filter: blur(60px);
-  animation: splash-glow-pulse 3s ease-in-out infinite alternate;
   pointer-events: none;
   z-index: 3;
 }
 
-@keyframes splash-glow-pulse {
-  0% { transform: scale(0.88); opacity: 0.5; }
-  100% { transform: scale(1.15); opacity: 0.95; }
-}
-
-/* Lens Flare Horizontal Beam */
+/* Horizontal Light Flare Beam */
 .splash-lens-flare {
   position: absolute;
-  width: 100%;
+  top: 50%;
+  left: 0;
+  right: 0;
   height: 2px;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(0, 194, 255, 0.2) 20%,
-    #00c2ff 50%,
-    rgba(0, 194, 255, 0.2) 80%,
+    rgba(0, 194, 255, 0.15) 20%,
+    rgba(0, 194, 255, 0.6) 50%,
+    rgba(0, 194, 255, 0.15) 80%,
     transparent 100%
   );
-  box-shadow: 0 0 24px #00c2ff, 0 0 48px #00c2ff;
+  box-shadow: 0 0 20px rgba(0, 194, 255, 0.4);
   pointer-events: none;
   z-index: 4;
 }
 
-/* Main Content Wrapper */
+/* Main Content Container */
 .splash-content {
   position: relative;
   z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(16px, 4vh, 32px);
-  padding: 0 clamp(16px, 5vw, 24px);
+  text-align: center;
+  max-width: 600px;
   width: 100%;
-  max-width: 640px;
 }
 
-/* Glass Logo Container — Circular */
-.splash-logo-box {
-  position: relative;
+/* Status Pill */
+.splash-status-pill {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: clamp(180px, 36vw, 260px);
-  height: clamp(180px, 36vw, 260px);
-  padding: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.92);
-  border: 2px solid rgba(0, 194, 255, 0.5);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 
-    0 30px 80px -15px rgba(0, 0, 0, 0.9),
-    0 0 50px -5px rgba(0, 194, 255, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  overflow: hidden;
-  animation: splash-logo-breath 3.5s ease-in-out infinite alternate;
-}
-
-@keyframes splash-logo-breath {
-  0% {
-    transform: scale(1);
-    box-shadow: 
-      0 30px 80px -15px rgba(0, 0, 0, 0.9),
-      0 0 30px -5px rgba(0, 194, 255, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  }
-  100% {
-    transform: scale(1.02);
-    box-shadow: 
-      0 35px 90px -10px rgba(0, 0, 0, 0.95),
-      0 0 50px 0px rgba(0, 194, 255, 0.5),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  }
-}
-
-/* Laser Neon Sweep Across Logo */
-.splash-light-sweep {
-  position: absolute;
-  top: 0;
-  left: -150%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    115deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.05) 30%,
-    rgba(0, 194, 255, 0.45) 50%,
-    rgba(255, 255, 255, 0.3) 55%,
-    transparent 80%
-  );
-  transform: skewX(-25deg);
-  animation: splash-sweep-pass 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite 0.2s;
-  pointer-events: none;
-}
-
-@keyframes splash-sweep-pass {
-  0% { left: -150%; }
-  65%, 100% { left: 200%; }
-}
-
-/* Tagline Wrapper */
-.splash-tagline-wrap {
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(0, 194, 255, 0.08);
+  border: 1px solid rgba(0, 194, 255, 0.25);
+  color: #0284c7;
   font-family: var(--font-display, 'Outfit', sans-serif);
-  font-size: clamp(0.58rem, 2.2vw, 0.95rem);
-  font-weight: 600;
-  letter-spacing: clamp(0.1em, 1vw, 0.28em);
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.85);
-  text-shadow: 0 0 16px rgba(0, 194, 255, 0.4);
-  text-align: center;
-  line-height: 1.6;
-  padding: 0 8px;
-  max-width: calc(100vw - 32px);
-  word-break: break-word;
+  font-size: clamp(0.68rem, 2vw, 0.78rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
 }
 
-/* Loading Section */
-.splash-loading-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(10px, 2vh, 16px);
-  width: 100%;
-  max-width: clamp(200px, 80vw, 320px);
-}
-
-/* Progress Track */
-.splash-progress-track {
-  position: relative;
-  width: 100%;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 99px;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.8);
-}
-
-/* Progress Fill Line */
-.splash-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #00c2ff 0%, #22d3ee 50%, #818cf8 100%);
-  border-radius: 99px;
-  box-shadow: 0 0 16px rgba(0, 194, 255, 0.9);
-  transition: width 0.05s linear;
-}
-
-/* Glowing Progress Head Dot */
-.splash-progress-head {
-  position: absolute;
-  top: 50%;
-  width: 8px;
-  height: 8px;
+.splash-pill-dot {
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 0 12px #00c2ff, 0 0 24px #00c2ff;
-  transform: translate(-50%, -50%);
-  transition: left 0.05s linear;
-}
-
-/* Status Row */
-.splash-status-row {
-  display: flex;
-  align-items: center;
-  gap: clamp(6px, 2vw, 10px);
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.splash-status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #00c2ff;
-  box-shadow: 0 0 8px #00c2ff;
-  animation: splash-dot-pulse 1.2s ease-in-out infinite alternate;
+  background: #0284c7;
+  box-shadow: 0 0 10px rgba(2, 132, 199, 0.8);
+  animation: splash-dot-pulse 1.8s ease-in-out infinite;
 }
 
 @keyframes splash-dot-pulse {
-  0% { transform: scale(0.8); opacity: 0.4; }
-  100% { transform: scale(1.3); opacity: 1; }
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.5; }
 }
 
-.splash-loading-text {
-  font-family: var(--font-display, 'Outfit', sans-serif);
-  font-size: clamp(0.58rem, 1.8vw, 0.72rem);
-  font-weight: 600;
-  letter-spacing: clamp(0.08em, 1vw, 0.22em);
-  text-transform: uppercase;
-  color: var(--text-dim, #94a3b8);
-  text-align: center;
+/* Logo Box */
+.splash-logo-box {
+  position: relative;
+  width: clamp(140px, 32vw, 210px);
+  height: clamp(140px, 32vw, 210px);
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid rgba(0, 194, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.08),
+    0 0 35px rgba(0, 194, 255, 0.2),
+    0 0 0 10px rgba(0, 194, 255, 0.05);
+  overflow: hidden;
+  margin-bottom: 28px;
 }
 
-.splash-percentage {
+/* Typography for Light Mode */
+.splash-text-group {
+  margin-bottom: 24px;
+}
+
+.splash-title {
   font-family: var(--font-display, 'Outfit', sans-serif);
-  font-size: clamp(0.62rem, 1.8vw, 0.75rem);
   font-weight: 800;
+  font-size: clamp(1.6rem, 5vw, 2.6rem);
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0 0 10px 0;
+}
+
+.splash-accent {
+  background: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.splash-subtitle {
+  font-size: clamp(0.88rem, 2.5vw, 1.05rem);
+  color: #475569;
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+/* Feature Chips for Light Mode */
+.splash-features-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.splash-feature-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: #334155;
+  font-size: clamp(0.75rem, 2vw, 0.84rem);
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.chip-icon {
+  color: #0284c7;
+  font-size: 0.95rem;
+}
+
+/* Enter Site Button */
+.splash-enter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 36px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #00c2ff 0%, #2f8dff 100%);
+  color: #ffffff;
+  font-family: var(--font-display, 'Outfit', sans-serif);
+  font-weight: 800;
+  font-size: clamp(0.95rem, 2.5vw, 1.08rem);
   letter-spacing: 0.06em;
-  color: #00c2ff;
-  white-space: nowrap;
+  border: none;
+  cursor: pointer;
+  box-shadow: 
+    0 12px 28px rgba(0, 194, 255, 0.35),
+    0 0 0 2px rgba(0, 194, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ============================================================
-   RESPONSIVE BREAKPOINTS
-   ============================================================ */
-
-/* ── Ultra-Small phones (≤ 360px) ── */
-@media (max-width: 360px) {
-  .splash-content {
-    gap: 12px;
-  }
-  .splash-logo-box {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-  }
-  .splash-tagline-wrap {
-    letter-spacing: 0.06em;
-    font-size: 0.54rem;
-  }
-  .splash-loading-text {
-    letter-spacing: 0.05em;
-    font-size: 0.54rem;
-  }
+.splash-enter-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 
+    0 18px 36px rgba(0, 194, 255, 0.5),
+    0 0 0 3px rgba(0, 194, 255, 0.3);
 }
 
-/* ── Small phones (361px – 480px) ── */
-@media (min-width: 361px) and (max-width: 480px) {
-  .splash-content {
-    gap: 16px;
-  }
-  .splash-logo-box {
-    width: 170px;
-    height: 170px;
-    border-radius: 50%;
-  }
+.splash-enter-btn:active {
+  transform: translateY(0) scale(0.98);
 }
 
-/* ── Tablet portrait (641px – 1024px) ── */
-@media (min-width: 641px) and (max-width: 1024px) {
-  .splash-content {
-    max-width: 540px;
-  }
-  .splash-tagline-wrap {
-    letter-spacing: 0.2em;
-  }
+.enter-btn-arrow {
+  font-size: 1.25rem;
+  transition: transform 0.3s ease;
 }
 
-/* ── Large desktop (≥ 1440px) ── */
-@media (min-width: 1440px) {
-  .splash-content {
-    gap: 40px;
-  }
-  .splash-radial-glow {
-    width: 700px;
-    height: 700px;
-  }
+.splash-enter-btn:hover .enter-btn-arrow {
+  transform: translateX(5px);
 }
 
-/* ── Short portrait viewports (height ≤ 600px) ── */
-@media (max-height: 600px) {
-  .splash-content {
-    gap: 10px;
-  }
-  .splash-logo-box {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-  }
-  .splash-radial-glow {
-    opacity: 0.5;
-  }
-}
-
-/* ── Landscape phones (height ≤ 420px) ── */
-@media (max-height: 420px) {
-  .splash-tagline-wrap {
-    display: none;
-  }
-  .splash-content {
-    gap: 8px;
-  }
-  .splash-loading-section {
-    gap: 8px;
+@media (max-width: 480px) {
+  .splash-features-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
   }
 }

@@ -5,93 +5,79 @@
 
 export const profile = {
   name: "Lamidi Abdulhameed Olawale",
-  role: "General Manager @ CHIL Investment Ltd | Founder @ CHILL TECH LTD | Web Developer",
-  location: "Nigeria",
-  email: "chiltech2k26@gmail.com",
-  emailPersonal: "lamidiabdulhameedolawale@gmail.com",
-  phone: "+234 913 763 2195",
-  whatsapp: "https://wa.me/2349137632195",
-  github: "https://github.com/The-prime-chill1",
-  tiktok: "https://www.tiktok.com/@chill_tech_ltd",
-  instagram: "https://www.instagram.com/chill.aura2k26",
-  bio: "Dynamic General Manager and Web Developer with a proven track record in real estate management and digital innovation. As General Manager at CHIL Investment Ltd, I oversee multi-million naira property portfolios, manage investor relations, and drive strategic growth across Lagos, Ogun, and Oyo States. As Founder of CHILL TECH LTD, I design and develop full-stack web applications for businesses across e-commerce, logistics, and fintech sectors. A results-driven leader combining strategic business acumen with technical expertise to deliver measurable outcomes.",
+  tagline: "SOFTWARE ENGINEERING STUDENT • FOUNDER @ CHILL TECH LTD • GENERAL MANAGER @ CHIL INVESTMENT",
+  role: "Software Engineering Student • Web Developer • Technology Entrepreneur",
+  headlineSub: "General Manager & Tech Entrepreneur",
+  heroBio: "Software Engineering student at Aptech, Founder of CHILL TECH LTD, and General Manager at CHIL Investment Ltd — managing multi-million naira real estate portfolios while engineering modern, high-performance digital solutions across e-commerce, real estate, gadgets, and web tech.",
+  bio: "Software Engineering student at Aptech Computer Education with practical experience designing, developing, deploying, and improving modern web applications. Founder of CHILL TECH LTD and General Manager at CHIL Investment Ltd, combining technical problem-solving with operational leadership.",
+  aboutFull: [
+    "I’m Lamidi Abdulhameed Olawale, a passionate Web Developer and the founder of CHILL TECH LTD, focused on building modern, responsive, and high-performance digital solutions for businesses and individuals.",
+    "My experience spans Frontend Development, React.js, JavaScript, HTML, CSS, UI/UX Design, and modern web technologies. I enjoy turning ideas into functional, visually engaging websites that solve real-world problems.",
+    "Beyond technology, I have a strong background in leadership, discipline, and organization, having held multiple leadership positions throughout my academic journey. These experiences shaped my ability to take responsibility, work with people, and lead with confidence.",
+    "My long-term vision is to grow CHILL TECH LTD into a full-service company combining technology, real estate, and gadgets/electronics, creating innovative solutions and opportunities across different industries.",
+    "I’m constantly learning, building, and improving — with the goal of becoming a highly skilled technology professional and building products that make a meaningful impact."
+  ],
 };
 
 export const stats = [
+  { label: "Projects Delivered", value: 7, suffix: "+" },
   { label: "Investors Served", value: 500, suffix: "+" },
   { label: "Plots Allocated", value: 1000, suffix: "+" },
   { label: "Client Satisfaction", value: 98, suffix: "%" },
-  { label: "Projects Delivered", value: 7, suffix: "+" },
 ];
 
 export const education = [
   {
-    school: "Police Secondary School, Akure",
-    detail: "Secondary Education — SSCE CERTIFICATE",
-    period: "Completed",
-  },
-  {
-    school: "Aptech",
-    detail: "Software Engineering (Ongoing)",
+    school: "Aptech Computer Education",
+    degree: "Software Engineering Student",
+    detail: "Currently studying Software Engineering with practical training in programming, web development, databases, software design, and modern application development.",
+    coursework: "Programming Principles & Techniques • Logic Building & C Programming • Modern Website Development • UI/UX Responsive Design • Frontend Development with React • Object-Oriented Programming • Database Management with SQL • Generative AI",
     period: "Present",
   },
   {
-    school: "Self-Taught Developer",
-    detail: "Extensive practical experience building production-ready applications; continuous training in React, Three.js, UI/UX Design & Digital Strategy",
-    period: "Ongoing",
+    school: "Police Secondary School, Akure",
+    degree: "Senior Secondary School Certificate Examination (SSCE)",
+    detail: "Secondary Education — SSCE CERTIFICATE",
+    achievement: "Became the first Student Provost in the history of Police Secondary School, Akure, demonstrating leadership, responsibility, discipline, organization, and decision-making.",
+    period: "Completed",
   },
 ];
 
 export const experience = [
+  {
+    role: "Founder & Web Developer",
+    org: "CHILL TECH LTD",
+    location: "Nigeria",
+    period: "Present",
+    points: [
+      "Lead the company's digital and technology direction and manage client-facing software projects",
+      "Design and develop responsive websites and web applications based on business requirements",
+      "Translate client requirements into practical, user-focused digital solutions",
+      "Manage projects from consultation and planning through development, testing, deployment, and delivery",
+      "Build and maintain projects using modern frontend technologies and version-control workflows",
+      "Deploy and maintain websites using platforms including Vercel and Netlify",
+      "Develop solutions for e-commerce, real estate, logistics, education, and business use cases",
+    ],
+    achievements: [
+      "Founded and lead CHILL TECH LTD, combining technology development with business-focused digital solutions",
+      "Successfully delivered 7+ web projects across different industries",
+    ],
+  },
   {
     role: "General Manager",
     org: "CHIL Investment Ltd",
     location: "Nigeria",
     period: "Present",
     points: [
-      "Oversee all real estate operations and investment activities across Lagos, Ogun, and Oyo States",
-      "Manage property portfolios valued at millions of naira for over 500+ investors",
-      "Lead land acquisition, documentation, and sales strategies for premium estates",
-      "Supervise estate development projects including Oluyole Elites City, Royal Crown Estate, and Victory Garden City",
-      "Build and maintain strategic relationships with investors, stakeholders, and industry partners",
-      "Develop flexible payment plans to broaden access to property ownership",
+      "Coordinate day-to-day business operations and support management decision-making",
+      "Manage relationships with investors, clients, stakeholders, and business partners",
+      "Support land documentation, property allocation, sales, and estate development activities",
+      "Contribute to business growth, customer service, property marketing, and operational improvement",
+      "Coordinate stakeholders and support the effective execution of company initiatives",
     ],
     achievements: [
-      "Successfully managed allocation of 1,000+ plots across three states",
-      "Maintained 98% client satisfaction rate",
-      "Expanded operations to 12+ estate locations",
-      "Increased investor portfolio by 40% year-on-year",
-    ],
-  },
-  {
-    role: "Founder",
-    org: "CHILL TECH LTD",
-    location: "Nigeria",
-    period: "Present",
-    points: [
-      "Build and deploy full-stack web applications for clients across diverse industries",
-      "Specialise in e-commerce, real estate, logistics, and fintech solutions",
-      "Create responsive, user-centric digital experiences that solve complex business problems",
-      "Manage end-to-end project delivery from initial consultation to deployment",
-      "Help brands establish powerful online presence through innovative digital solutions",
-    ],
-    achievements: [],
-  },
-  {
-    role: "Freelance Web Developer",
-    org: "Independent",
-    location: "Remote",
-    period: "1+ Year",
-    points: [
-      "Delivered custom websites and web applications to diverse clients",
-      "Managed end-to-end project delivery from initial consultation to deployment",
-      "Ensured responsive, performant, and SEO-optimised websites",
-      "Collaborated with clients to translate business requirements into technical solutions",
-    ],
-    achievements: [
-      "Successfully delivered 7+ web projects across multiple industries",
-      "Maintained 100% client satisfaction rate",
-      "Built reputation for reliable, high-quality digital solutions",
+      "Managed real estate investments for 500+ investors across Nigeria",
+      "Supervised allocation of 1,000+ plots across multiple estate locations",
     ],
   },
 ];
@@ -226,6 +212,13 @@ export const projects = [
     description: "Business and corporate platform for global services.",
     tech: ["React", "CSS", "Vercel"],
     link: "https://tife-global.vercel.app/",
+    featured: false,
+  },
+  {
+    title: "The Glossy Scent",
+    description: "Beauty & lifestyle e-commerce store featuring perfumes, skincare, body care and self-care essentials — everything to smell good and glow.",
+    tech: ["React", "CSS", "Vercel"],
+    link: "https://the-glossy-scent.vercel.app/",
     featured: false,
   },
 ];

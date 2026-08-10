@@ -99,9 +99,9 @@ img {
 }
 
 .page-shell {
-  padding-left: calc(var(--sidebar-w) + 14px);
+  padding-left: 14px;
   padding-right: 14px;
-  padding-top: 20px;
+  padding-top: 130px;
   /* Prevent any child from causing horizontal scroll */
   overflow-x: hidden;
   width: 100%;
@@ -112,9 +112,8 @@ img {
   .page-shell {
     padding-left: 14px;
     padding-right: 14px;
-    padding-top: 14px;
-    /* Bottom nav: ~68px height + 16px gap + safe area buffer */
-    padding-bottom: 110px;
+    padding-top: 120px;
+    padding-bottom: 30px;
   }
 }
 
@@ -122,8 +121,8 @@ img {
   .page-shell {
     padding-left: 12px;
     padding-right: 12px;
-    padding-top: 10px;
-    padding-bottom: 108px;
+    padding-top: 115px;
+    padding-bottom: 24px;
   }
 }
 
@@ -131,7 +130,8 @@ img {
   .page-shell {
     padding-left: 10px;
     padding-right: 10px;
-    padding-bottom: 104px;
+    padding-top: 110px;
+    padding-bottom: 20px;
   }
 }
 

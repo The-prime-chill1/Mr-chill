@@ -150,9 +150,35 @@ export default function Portfolio() {
                         </span>
                       )}
 
-                      <span style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '1.8rem', color: 'rgba(255,255,255,0.25)', letterSpacing: '0.04em' }}>
-                        {project.title.split(' ').map((w) => w[0]).slice(0, 2).join('')}
-                      </span>
+                      {/* Live site iframe preview */}
+                      <div
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          overflow: 'hidden',
+                          position: 'relative',
+                          borderRadius: 0,
+                        }}
+                      >
+                        <iframe
+                          src={project.link}
+                          title={`${project.title} preview`}
+                          scrolling="no"
+                          style={{
+                            width: '1280px',
+                            height: '720px',
+                            border: 'none',
+                            transformOrigin: 'top left',
+                            transform: 'scale(0.25)',
+                            pointerEvents: 'none',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                          }}
+                        />
+                        {/* Overlay to block interaction */}
+                        <div style={{ position: 'absolute', inset: 0 }} />
+                      </div>
                     </div>
 
                     {/* Card Content */}

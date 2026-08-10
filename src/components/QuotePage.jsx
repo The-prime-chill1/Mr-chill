@@ -5,7 +5,7 @@ import Logo from './Logo';
 import { profile } from '../data';
 
 export default function QuotePage() {
-  const [theme, setTheme] = useState(() => localStorage.getItem('chill_tech_theme') || 'dark');
+  const [theme, setTheme] = useState(() => localStorage.getItem('chill_tech_theme') || 'light');
   const toggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
     setTheme(next);

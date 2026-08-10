@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FiHome, FiUser, FiBarChart2, FiGrid, FiMail,
-  FiDownload, FiBriefcase, FiHelpCircle, FiSun, FiMoon, FiMessageSquare,
+  FiDownload, FiEye, FiBriefcase, FiHelpCircle, FiSun, FiMoon, FiMessageSquare,
 } from 'react-icons/fi';
 import Logo from './Logo';
 
@@ -28,9 +28,9 @@ const ALL_LINKS = [
   { id: 'contact',      icon: FiMail,       label: 'Contact',      href: '#contact' },
 ];
 
-export default function Sidebar({ onDownloadCV }) {
+export default function Sidebar({ onDownloadCV, onViewCV, cvUrl }) {
   const [active, setActive] = useState('top');
-  const [theme, setTheme]   = useState(() => localStorage.getItem('chill_tech_theme') || 'dark');
+  const [theme, setTheme]   = useState(() => localStorage.getItem('chill_tech_theme') || 'light');
   const [isMobile, setIsMobile] = useState(false);
   const observerRef = useRef(null);
 
@@ -103,6 +103,16 @@ export default function Sidebar({ onDownloadCV }) {
           >
             {theme === 'dark' ? <FiSun /> : <FiMoon />}
           </button>
+
+          <a
+            href="#/cv"
+            className="sidebar-icon sidebar-download"
+            aria-label="Read CV"
+            title="Read CV"
+            style={{ color: '#00c2ff' }}
+          >
+            <FiEye />
+          </a>
 
           <button
             onClick={onDownloadCV}

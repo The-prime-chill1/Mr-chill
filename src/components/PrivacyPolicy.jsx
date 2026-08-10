@@ -103,7 +103,7 @@ Our website may contain links to external websites. We are not responsible for t
 ];
 
 export default function PrivacyPolicy() {
-  const [theme, setTheme] = useState(() => localStorage.getItem('chill_tech_theme') || 'dark');
+  const [theme, setTheme] = useState(() => localStorage.getItem('chill_tech_theme') || 'light');
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });

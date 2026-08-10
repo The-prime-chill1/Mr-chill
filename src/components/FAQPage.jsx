@@ -52,7 +52,7 @@ const FAQ_ITEMS = [
 
 export default function FAQPage() {
   const [activeIndex, setActiveIndex] = useState(null);
-  const [theme, setTheme] = useState(() => localStorage.getItem('chill_tech_theme') || 'dark');
+  const [theme, setTheme] = useState(() => localStorage.getItem('chill_tech_theme') || 'light');
 
   const toggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark';

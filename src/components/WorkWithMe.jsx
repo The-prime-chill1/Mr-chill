@@ -59,7 +59,7 @@ export default function WorkWithMe() {
   const [pageCount, setPageCount] = useState('4-7 Pages');
   const [timeline, setTimeline] = useState('Standard (2-3 Weeks)');
   const [currency, setCurrency] = useState('NGN');
-  const [theme, setTheme] = useState(() => localStorage.getItem('chill_tech_theme') || 'dark');
+  const [theme, setTheme] = useState(() => localStorage.getItem('chill_tech_theme') || 'light');
   const [selectedFeatures, setSelectedFeatures] = useState(['SEO Optimization', 'Mobile Responsive']);
   const [activeFaq, setActiveFaq] = useState(null);
 
