@@ -249,37 +249,46 @@ export default function TechCanvasBg() {
       }
 
       // Node Connections & Polygon Triangle Mesh Fills
-      const maxD = 150;
+      const maxD = 140;
+      const maxD2 = maxD * maxD;
+      const maxTriD2 = (maxD * 0.85) * (maxD * 0.85);
+
       for (let i = 0; i < nodes.length; i++) {
+        const ni = nodes[i];
         for (let j = i + 1; j < nodes.length; j++) {
-          const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
-          const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < maxD) {
+          const nj = nodes[j];
+          const dx = ni.x - nj.x, dy = ni.y - nj.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < maxD2) {
+            const d = Math.sqrt(d2);
             const a = (1 - d / maxD) * (light ? 0.28 : 0.42);
             ctx.beginPath();
-            ctx.moveTo(nodes[i].x, nodes[i].y);
-            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.moveTo(ni.x, ni.y);
+            ctx.lineTo(nj.x, nj.y);
             ctx.strokeStyle = col(c0, a);
             ctx.lineWidth = 0.95; ctx.stroke();
 
-            if (Math.random() < 0.001) addPulse(nodes[i], nodes[j]);
+            if (Math.random() < 0.001) addPulse(ni, nj);
 
-            // Constellation Triangle Fills
-            for (let k = j + 1; k < nodes.length; k++) {
-              const dx2 = nodes[i].x - nodes[k].x, dy2 = nodes[i].y - nodes[k].y;
-              const d2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-              const dx3 = nodes[j].x - nodes[k].x, dy3 = nodes[j].y - nodes[k].y;
-              const d3 = Math.sqrt(dx3 * dx3 + dy3 * dy3);
+            // Constellation Triangle Fills (Optimized neighbor check)
+            const kLimit = Math.min(j + 10, nodes.length);
+            for (let k = j + 1; k < kLimit; k++) {
+              const nk = nodes[k];
+              const dx2 = ni.x - nk.x, dy2 = ni.y - nk.y;
+              const dist2_i = dx2 * dx2 + dy2 * dy2;
+              if (dist2_i >= maxTriD2) continue;
 
-              if (d2 < maxD * 0.9 && d3 < maxD * 0.9) {
-                ctx.beginPath();
-                ctx.moveTo(nodes[i].x, nodes[i].y);
-                ctx.lineTo(nodes[j].x, nodes[j].y);
-                ctx.lineTo(nodes[k].x, nodes[k].y);
-                ctx.closePath();
-                ctx.fillStyle = col(c0, light ? 0.025 : 0.045);
-                ctx.fill();
-              }
+              const dx3 = nj.x - nk.x, dy3 = nj.y - nk.y;
+              const dist2_j = dx3 * dx3 + dy3 * dy3;
+              if (dist2_j >= maxTriD2) continue;
+
+              ctx.beginPath();
+              ctx.moveTo(ni.x, ni.y);
+              ctx.lineTo(nj.x, nj.y);
+              ctx.lineTo(nk.x, nk.y);
+              ctx.closePath();
+              ctx.fillStyle = col(c0, light ? 0.025 : 0.045);
+              ctx.fill();
             }
           }
         }
