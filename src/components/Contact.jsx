@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FiMail, FiPhone, FiCheck, FiCopy, FiMessageSquare, FiGithub } from 'react-icons/fi';
-import { SiTiktok, SiInstagram } from 'react-icons/si';
+import { SiTiktok, SiInstagram, SiX } from 'react-icons/si';
 import { profile } from '../data';
 import LightRays from './reactbits/LightRays';
 import StarBorder from './reactbits/StarBorder';
@@ -178,9 +178,16 @@ export default function Contact() {
                 </div>
 
                 <div className="contact-info-item">
+                  <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: 4 }}>X / Twitter Profile</div>
+                  <a href={profile.twitter} target="_blank" rel="noreferrer" style={{ color: 'var(--electric-blue)', fontWeight: 600, fontSize: '0.95rem', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                    <SiX style={{ fontSize: '0.85rem' }} /> @chill_tech_ltd
+                  </a>
+                </div>
+
+                <div className="contact-info-item">
                   <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: 4 }}>Instagram Profile</div>
                   <a href={profile.instagram} target="_blank" rel="noreferrer" style={{ color: 'var(--electric-blue)', fontWeight: 600, fontSize: '0.95rem', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                    <SiInstagram style={{ fontSize: '0.9rem' }} /> @chill.aura2k26
+                    <SiInstagram style={{ fontSize: '0.9rem' }} /> @chill_tech_ltd
                   </a>
                 </div>
               </div>

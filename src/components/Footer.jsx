@@ -1,5 +1,5 @@
 import { FiArrowUp, FiGithub, FiMail, FiMessageSquare } from 'react-icons/fi';
-import { SiTiktok, SiInstagram } from 'react-icons/si';
+import { SiTiktok, SiInstagram, SiX } from 'react-icons/si';
 import { profile } from '../data';
 import Logo from './Logo';
 
@@ -65,11 +65,14 @@ export default function Footer() {
               <a href={profile.github} target="_blank" rel="noreferrer" aria-label="GitHub" className="footer-social-btn">
                 <FiGithub />
               </a>
-              <a href={profile.tiktok} target="_blank" rel="noreferrer" aria-label="TikTok" className="footer-social-btn">
-                <SiTiktok />
+              <a href={profile.twitter} target="_blank" rel="noreferrer" aria-label="X / Twitter" className="footer-social-btn">
+                <SiX />
               </a>
               <a href={profile.instagram} target="_blank" rel="noreferrer" aria-label="Instagram" className="footer-social-btn">
                 <SiInstagram />
+              </a>
+              <a href={profile.tiktok} target="_blank" rel="noreferrer" aria-label="TikTok" className="footer-social-btn">
+                <SiTiktok />
               </a>
               <a href={profile.whatsapp} target="_blank" rel="noreferrer" aria-label="WhatsApp" className="footer-social-btn">
                 <FiMessageSquare />

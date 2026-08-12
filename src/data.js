@@ -8,6 +8,13 @@ export const profile = {
   tagline: "SOFTWARE ENGINEERING STUDENT • FOUNDER @ CHILL TECH LTD • GENERAL MANAGER @ CHIL INVESTMENT",
   role: "Software Engineering Student • Web Developer • Technology Entrepreneur",
   headlineSub: "General Manager & Tech Entrepreneur",
+  email: "lamidiabdulhameedolawale@gmail.com",
+  phone: "+234 913 763 2195",
+  whatsapp: "https://wa.me/2349137632195",
+  github: "https://github.com/The-prime-chill1",
+  twitter: "https://x.com/chill_tech_ltd",
+  instagram: "https://instagram.com/chill_tech_ltd",
+  tiktok: "https://www.tiktok.com/@chill_tech_ltd",
   heroBio: "Software Engineering student at Aptech, Founder of CHILL TECH LTD, and General Manager at CHIL Investment Ltd — managing multi-million naira real estate portfolios while engineering modern, high-performance digital solutions across e-commerce, real estate, gadgets, and web tech.",
   bio: "Software Engineering student at Aptech Computer Education with practical experience designing, developing, deploying, and improving modern web applications. Founder of CHILL TECH LTD and General Manager at CHIL Investment Ltd, combining technical problem-solving with operational leadership.",
   aboutFull: [
