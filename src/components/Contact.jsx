@@ -11,7 +11,8 @@ export default function Contact() {
   const isMobile = typeof window !== 'undefined' && (window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent));
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
   const [status, setStatus] = useState('idle');
-  const [copied, setCopied] = useState(false);
+  const [copiedPersonal, setCopiedPersonal] = useState(false);
+  const [copiedOfficial, setCopiedOfficial] = useState(false);
 
   useEffect(() => {
     if (window.emailjs) {
@@ -21,10 +22,16 @@ export default function Contact() {
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText(profile.email);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+  const handleCopyPersonalEmail = () => {
+    navigator.clipboard.writeText(profile.personalEmail);
+    setCopiedPersonal(true);
+    setTimeout(() => setCopiedPersonal(false), 2500);
+  };
+
+  const handleCopyOfficialEmail = () => {
+    navigator.clipboard.writeText(profile.officialEmail);
+    setCopiedOfficial(true);
+    setTimeout(() => setCopiedOfficial(false), 2500);
   };
 
   const handleSubmit = (e) => {
@@ -141,13 +148,16 @@ export default function Contact() {
               </h3>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                {/* 1. Official Company Email */}
                 <div className="contact-info-item">
-                  <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: 4 }}>Official Email</div>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: 4 }}>Company / Official Email</div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                    <span style={{ color: 'var(--electric-blue)', fontWeight: 600, fontSize: '0.95rem' }}>{profile.email}</span>
+                    <a href={`mailto:${profile.officialEmail}`} style={{ color: 'var(--electric-blue)', fontWeight: 600, fontSize: '0.92rem', wordBreak: 'break-all', textDecoration: 'none' }}>
+                      {profile.officialEmail}
+                    </a>
                     <button
-                      onClick={handleCopyEmail}
-                      aria-label="Copy Email"
+                      onClick={handleCopyOfficialEmail}
+                      aria-label="Copy Official Email"
                       style={{
                         background: 'rgba(0, 194, 255, 0.1)',
                         border: '1px solid rgba(0, 194, 255, 0.25)',
@@ -158,52 +168,82 @@ export default function Contact() {
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: 4,
+                        cursor: 'pointer',
                       }}
                     >
-                      {copied ? <FiCheck /> : <FiCopy />}
-                      {copied ? 'Copied!' : 'Copy'}
+                      {copiedOfficial ? <FiCheck /> : <FiCopy />}
+                      {copiedOfficial ? 'Copied!' : 'Copy'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* 2. Direct / Founder Email */}
+                <div className="contact-info-item">
+                  <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: 4 }}>Founder & Direct Email</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                    <a href={`mailto:${profile.personalEmail}`} style={{ color: 'var(--electric-blue)', fontWeight: 600, fontSize: '0.92rem', wordBreak: 'break-all', textDecoration: 'none' }}>
+                      {profile.personalEmail}
+                    </a>
+                    <button
+                      onClick={handleCopyPersonalEmail}
+                      aria-label="Copy Personal Email"
+                      style={{
+                        background: 'rgba(0, 194, 255, 0.1)',
+                        border: '1px solid rgba(0, 194, 255, 0.25)',
+                        color: 'var(--cyan)',
+                        padding: '4px 10px',
+                        borderRadius: 6,
+                        fontSize: '0.75rem',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 4,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {copiedPersonal ? <FiCheck /> : <FiCopy />}
+                      {copiedPersonal ? 'Copied!' : 'Copy'}
                     </button>
                   </div>
                 </div>
 
                 <div className="contact-info-item">
                   <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: 4 }}>Phone & WhatsApp</div>
-                  <a href={profile.whatsapp} target="_blank" rel="noreferrer" style={{ color: 'var(--electric-blue)', fontWeight: 600, fontSize: '0.95rem' }}>
+                  <a href={profile.whatsapp} target="_blank" rel="noreferrer" style={{ color: 'var(--electric-blue)', fontWeight: 600, fontSize: '0.92rem', wordBreak: 'break-all' }}>
                     {profile.phone}
                   </a>
                 </div>
 
                 <div className="contact-info-item">
                   <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: 4 }}>GitHub Profile</div>
-                  <a href={profile.github} target="_blank" rel="noreferrer" style={{ color: 'var(--electric-blue)', fontWeight: 600, fontSize: '0.95rem' }}>
+                  <a href={profile.github} target="_blank" rel="noreferrer" style={{ color: 'var(--electric-blue)', fontWeight: 600, fontSize: '0.92rem', wordBreak: 'break-all' }}>
                     github.com/The-prime-chill1
                   </a>
                 </div>
 
                 <div className="contact-info-item">
                   <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: 4 }}>TikTok Profile</div>
-                  <a href={profile.tiktok} target="_blank" rel="noreferrer" style={{ color: 'var(--electric-blue)', fontWeight: 600, fontSize: '0.95rem', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <a href={profile.tiktok} target="_blank" rel="noreferrer" style={{ color: 'var(--electric-blue)', fontWeight: 600, fontSize: '0.92rem', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                     <SiTiktok style={{ fontSize: '0.9rem' }} /> @chill_tech_ltd
                   </a>
                 </div>
 
                 <div className="contact-info-item">
                   <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: 4 }}>X / Twitter Profile</div>
-                  <a href={profile.twitter} target="_blank" rel="noreferrer" style={{ color: 'var(--electric-blue)', fontWeight: 600, fontSize: '0.95rem', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <a href={profile.twitter} target="_blank" rel="noreferrer" style={{ color: 'var(--electric-blue)', fontWeight: 600, fontSize: '0.92rem', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                     <SiX style={{ fontSize: '0.85rem' }} /> @chill_tech_ltd
                   </a>
                 </div>
 
                 <div className="contact-info-item">
                   <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: 4 }}>Instagram Profile</div>
-                  <a href={profile.instagram} target="_blank" rel="noreferrer" style={{ color: 'var(--electric-blue)', fontWeight: 600, fontSize: '0.95rem', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <a href={profile.instagram} target="_blank" rel="noreferrer" style={{ color: 'var(--electric-blue)', fontWeight: 600, fontSize: '0.92rem', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                     <SiInstagram style={{ fontSize: '0.9rem' }} /> @chill_tech_ltd
                   </a>
                 </div>
 
                 <div className="contact-info-item">
                   <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: 4 }}>Office Address</div>
-                  <div style={{ color: 'var(--text)', fontWeight: 500, fontSize: '0.92rem', lineHeight: 1.5 }}>
+                  <div style={{ color: 'var(--text)', fontWeight: 500, fontSize: '0.9rem', lineHeight: 1.5 }}>
                     31 Grace Court, Chois Oasis,<br />
                     Abijo GRA, Ibeju-Lekki,<br />
                     Lagos, Nigeria
@@ -219,11 +259,13 @@ export default function Contact() {
               rel="noreferrer"
               className="btn"
               style={{
-                marginTop: 32,
+                marginTop: 28,
                 background: 'rgba(34, 197, 94, 0.15)',
                 border: '1px solid rgba(34, 197, 94, 0.4)',
                 color: '#22c55e',
                 justifyContent: 'center',
+                padding: '12px 20px',
+                fontSize: '0.88rem',
               }}
             >
               <FiMessageSquare /> Chat Directly on WhatsApp
@@ -237,7 +279,7 @@ export default function Contact() {
             viewport={{ once: true, margin: '-60px' }}
             onSubmit={handleSubmit}
             className="glass"
-            style={{ padding: 36, display: 'flex', flexDirection: 'column', gap: 18 }}
+            style={{ padding: 'clamp(20px, 4vw, 36px)', display: 'flex', flexDirection: 'column', gap: 16 }}
           >
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }} className="form-row">
               <input

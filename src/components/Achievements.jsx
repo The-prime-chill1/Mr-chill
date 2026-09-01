@@ -15,7 +15,7 @@ export default function Achievements() {
           </h2>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 18 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: 'clamp(12px, 2.5vw, 18px)' }}>
           {achievements.map((text, idx) => {
             const Icon = ICONS[idx % ICONS.length];
             return (
@@ -26,25 +26,25 @@ export default function Achievements() {
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.4, delay: idx * 0.06 }}
                 className="glass"
-                style={{ padding: '18px 20px', display: 'flex', gap: 14, alignItems: 'flex-start' }}
+                style={{ padding: 'clamp(14px, 3vw, 18px) clamp(14px, 3vw, 20px)', display: 'flex', gap: 12, alignItems: 'flex-start' }}
               >
                 <span
                   style={{
                     flexShrink: 0,
-                    width: 38,
-                    height: 38,
+                    width: 36,
+                    height: 36,
                     borderRadius: 10,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     background: 'linear-gradient(135deg, rgba(47,141,255,0.15), rgba(91,110,232,0.15))',
                     color: 'var(--electric-blue)',
-                    fontSize: '1.1rem',
+                    fontSize: '1rem',
                   }}
                 >
                   <Icon />
                 </span>
-                <span style={{ fontSize: '0.88rem', color: 'var(--text-dim)', lineHeight: 1.5, paddingTop: 6 }}>{text}</span>
+                <span style={{ fontSize: 'clamp(0.82rem, 2vw, 0.88rem)', color: 'var(--text-dim)', lineHeight: 1.5, paddingTop: 4 }}>{text}</span>
               </motion.div>
             );
           })}

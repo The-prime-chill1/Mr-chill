@@ -59,15 +59,15 @@ export default function Skills() {
         </div>
 
         {/* Tech Stack Icon Grid */}
-        <div style={{ marginBottom: 64 }}>
-          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', marginBottom: 24, textAlign: 'center', color: 'var(--cyan)' }}>
+        <div style={{ marginBottom: 56 }}>
+          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1rem, 2.5vw, 1.15rem)', marginBottom: 20, textAlign: 'center', color: 'var(--cyan)' }}>
             Core Technology Stack
           </h3>
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))',
-              gap: 16,
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 95px), 1fr))',
+              gap: 'clamp(8px, 2vw, 16px)',
             }}
           >
             {TECH_STACK.map((tech) => {
@@ -75,22 +75,22 @@ export default function Skills() {
               return (
                 <motion.div
                   key={tech.name}
-                  whileHover={{ y: -6, scale: 1.05 }}
+                  whileHover={{ y: -4, scale: 1.03 }}
                   transition={{ type: 'spring', stiffness: 300 }}
                   className="glass"
                   style={{
-                    padding: '20px 12px',
+                    padding: 'clamp(12px, 3vw, 18px) clamp(8px, 2vw, 12px)',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: 10,
-                    borderRadius: '16px',
+                    gap: 8,
+                    borderRadius: '14px',
                     textAlign: 'center',
                   }}
                 >
-                  <IconComp style={{ fontSize: '2rem', color: tech.color, filter: `drop-shadow(0 0 8px ${tech.color}66)` }} />
-                  <span style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text)' }}>{tech.name}</span>
+                  <IconComp style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', color: tech.color, filter: `drop-shadow(0 0 8px ${tech.color}66)` }} />
+                  <span style={{ fontSize: 'clamp(0.68rem, 2vw, 0.78rem)', fontWeight: 600, color: 'var(--text)' }}>{tech.name}</span>
                 </motion.div>
               );
             })}
@@ -98,7 +98,7 @@ export default function Skills() {
         </div>
 
         {/* Skill Category Progress Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: 'clamp(14px, 3vw, 24px)' }}>
           {skills.map((group, idx) => (
             <motion.div
               key={group.category}
@@ -107,9 +107,9 @@ export default function Skills() {
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.5, delay: idx * 0.08 }}
               className="glass"
-              style={{ padding: 32 }}
+              style={{ padding: 'clamp(18px, 4vw, 32px)' }}
             >
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', marginBottom: 24, color: 'var(--cyan)' }}>
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.05rem', marginBottom: 20, color: 'var(--cyan)' }}>
                 {group.category}
               </h3>
               {group.items.map((item) => (

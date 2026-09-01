@@ -59,7 +59,7 @@ export default function CVPage() {
             
             <div className="cv-contact-block">
               <div>31 Grace Court, Chois Oasis, Abijo GRA, Ibeju-Lekki, Lagos, Nigeria</div>
-              <div>+234 913 763 2195 • lamidiabdulhameedolawale@gmail.com</div>
+              <div>+234 913 763 2195 • chilltech2k26@gmail.com • lamidiabdulhameedolawale@gmail.com</div>
               <div>
                 chilltechltd.com • linkedin.com/in/lamidi-abdulhameed-olawale-740985428 • github.com/The-prime-chill1
               </div>
@@ -496,6 +496,41 @@ export default function CVPage() {
             width: 100% !important;
           }
           .page-break { page-break-after: always; height: 0; }
+        }
+
+        /* MOBILE RESPONSIVE STYLES */
+        @media (max-width: 640px) {
+          .cv-page-container {
+            padding: 16px 8px 60px;
+          }
+          .cv-action-bar {
+            flex-direction: column;
+            gap: 12px;
+            align-items: stretch;
+            text-align: center;
+          }
+          .cv-action-bar > div {
+            justify-content: center;
+          }
+          .cv-sheet {
+            padding: clamp(18px, 4vw, 28px) clamp(14px, 3vw, 20px);
+            border-radius: 8px;
+          }
+          .cv-name {
+            font-size: 1.45rem;
+          }
+          .cv-subtitle {
+            font-size: 0.74rem;
+          }
+          .cv-strengths-box {
+            grid-template-columns: 1fr;
+            gap: 4px;
+          }
+          .cv-table-skills, .cv-table-projects {
+            display: block;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+          }
         }
       `}</style>
     </div>

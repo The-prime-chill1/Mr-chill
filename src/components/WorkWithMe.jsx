@@ -558,17 +558,17 @@ I'd like to get started on my project!`;
                   </div>
                 </div>
 
-                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '2.2rem', color: '#00c2ff' }}>
+                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(1.5rem, 4.5vw, 2.2rem)', color: '#00c2ff', wordBreak: 'break-word' }}>
                   {currency === 'NGN'
                     ? `₦${estimatedCost.toLocaleString()}`
                     : `$${(Math.round(estimatedCost / 1500)).toLocaleString()}`}
-                  <span style={{ fontSize: '0.85rem', color: 'var(--text-dim)', fontWeight: 500, marginLeft: 10 }}>
+                  <span style={{ fontSize: '0.82rem', color: 'var(--text-dim)', fontWeight: 500, marginLeft: 8, display: 'inline-block' }}>
                     ({currency === 'NGN' ? `approx. $${(Math.round(estimatedCost / 1500)).toLocaleString()} USD` : `approx. ₦${estimatedCost.toLocaleString()} NGN`})
                   </span>
                 </div>
               </div>
 
-              <button onClick={handleWhatsAppEstimate} className="btn btn-primary" style={{ padding: '14px 28px', fontSize: '0.92rem' }}>
+              <button onClick={handleWhatsAppEstimate} className="btn btn-primary" style={{ padding: '12px 24px', fontSize: '0.88rem' }}>
                 <FiMessageSquare /> Start Project on WhatsApp
               </button>
             </div>

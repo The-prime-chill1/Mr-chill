@@ -124,9 +124,9 @@ export default function Testimonials() {
         {/* 3 preview cards */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: 20,
-          marginBottom: 40,
+          gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
+          gap: 'clamp(14px, 3vw, 20px)',
+          marginBottom: 36,
         }}>
           {PREVIEW.map((t, idx) => (
             <PreviewCard key={t.name} t={t} idx={idx} />
@@ -143,8 +143,8 @@ export default function Testimonials() {
         >
           {/* Mini stats row */}
           <div style={{
-            display: 'inline-flex', gap: 28, alignItems: 'center',
-            padding: '14px 28px', borderRadius: 999,
+            display: 'inline-flex', gap: 'clamp(12px, 4vw, 28px)', alignItems: 'center',
+            padding: 'clamp(10px, 2.5vw, 14px) clamp(16px, 4vw, 28px)', borderRadius: 999,
             background: 'rgba(0,194,255,0.05)',
             border: '1px solid rgba(0,194,255,0.15)',
             marginBottom: 24,
@@ -159,7 +159,7 @@ export default function Testimonials() {
               <div key={s.l} style={{ textAlign: 'center' }}>
                 <div style={{
                   fontFamily: 'var(--font-display)', fontWeight: 800,
-                  fontSize: '1.25rem',
+                  fontSize: 'clamp(1.05rem, 3vw, 1.25rem)',
                   background: 'linear-gradient(135deg, #00c2ff, #818cf8)',
                   WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
                 }}>{s.v}</div>
@@ -173,9 +173,9 @@ export default function Testimonials() {
               href="#/reviews"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
-                padding: '13px 30px', borderRadius: 999,
+                padding: '12px 28px', borderRadius: 999,
                 background: 'linear-gradient(135deg, #00c2ff, #0080ff)',
-                color: '#000', fontWeight: 700, fontSize: '0.95rem',
+                color: '#000', fontWeight: 700, fontSize: '0.92rem',
                 textDecoration: 'none',
                 boxShadow: '0 8px 28px rgba(0,194,255,0.3)',
                 transition: 'opacity 0.2s',

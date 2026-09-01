@@ -84,43 +84,44 @@ export default function FAQ() {
                   aria-expanded={isOpen}
                   style={{
                     width: '100%',
-                    padding: '22px 28px',
+                    padding: 'clamp(16px, 3.5vw, 22px) clamp(16px, 4vw, 28px)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    gap: 16,
+                    gap: 12,
                     background: 'transparent',
                     color: 'var(--text)',
                     fontFamily: 'var(--font-display)',
                     fontWeight: 700,
-                    fontSize: '1.05rem',
+                    fontSize: 'clamp(0.92rem, 2.5vw, 1.05rem)',
                     textAlign: 'left',
                     cursor: 'pointer',
                     border: 'none',
                   }}
                 >
-                  <span style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
                     <span
                       style={{
-                        fontSize: '0.7rem',
+                        fontSize: '0.68rem',
                         fontWeight: 800,
                         textTransform: 'uppercase',
                         letterSpacing: '0.1em',
-                        padding: '4px 10px',
+                        padding: '3px 8px',
                         borderRadius: 999,
                         background: 'rgba(0, 194, 255, 0.1)',
                         color: 'var(--cyan)',
                         border: '1px solid rgba(0, 194, 255, 0.2)',
+                        whiteSpace: 'nowrap',
                       }}
                     >
                       {item.category}
                     </span>
-                    {item.question}
+                    <span>{item.question}</span>
                   </span>
                   <div
                     style={{
-                      width: 32,
-                      height: 32,
+                      width: 30,
+                      height: 30,
                       borderRadius: '50%',
                       background: isOpen ? 'rgba(0, 194, 255, 0.15)' : 'rgba(255, 255, 255, 0.04)',
                       display: 'flex',
@@ -146,12 +147,12 @@ export default function FAQ() {
                     >
                       <div
                         style={{
-                          padding: '0 28px 24px',
+                          padding: '0 clamp(16px, 4vw, 28px) clamp(14px, 3vw, 24px)',
                           color: 'var(--text-dim)',
-                          fontSize: '0.94rem',
+                          fontSize: 'clamp(0.86rem, 2vw, 0.94rem)',
                           lineHeight: 1.7,
                           borderTop: '1px solid rgba(255, 255, 255, 0.04)',
-                          paddingTop: 16,
+                          paddingTop: 14,
                         }}
                       >
                         {item.answer}
@@ -169,29 +170,29 @@ export default function FAQ() {
           className="glass"
           style={{
             maxWidth: 840,
-            margin: '40px auto 0',
-            padding: 28,
+            margin: 'clamp(28px, 5vw, 40px) auto 0',
+            padding: 'clamp(18px, 4vw, 28px)',
             borderRadius: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             flexWrap: 'wrap',
-            gap: 20,
+            gap: 16,
             background: 'linear-gradient(135deg, rgba(0, 194, 255, 0.08) 0%, rgba(12, 18, 34, 0.6) 100%)',
             border: '1px solid rgba(0, 194, 255, 0.25)',
           }}
         >
           <div>
-            <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 700, marginBottom: 4, color: 'var(--text)' }}>
+            <h4 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(0.98rem, 2.5vw, 1.1rem)', fontWeight: 700, marginBottom: 4, color: 'var(--text)' }}>
               Have more questions or a custom inquiry?
             </h4>
-            <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', margin: 0 }}>
+            <p style={{ color: 'var(--text-dim)', fontSize: '0.86rem', margin: 0 }}>
               Let's talk directly about your project goals and requirements.
             </p>
           </div>
 
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            <a href="#/quote" className="btn btn-primary" style={{ padding: '10px 20px', fontSize: '0.85rem' }}>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <a href="#/quote" className="btn btn-primary" style={{ padding: '10px 18px', fontSize: '0.84rem' }}>
               Get a Quote <FiArrowRight />
             </a>
             <a
@@ -199,7 +200,7 @@ export default function FAQ() {
               target="_blank"
               rel="noreferrer"
               className="btn btn-ghost"
-              style={{ padding: '10px 18px', fontSize: '0.85rem' }}
+              style={{ padding: '10px 16px', fontSize: '0.84rem' }}
             >
               <FiMessageSquare /> WhatsApp Chat
             </a>

@@ -192,12 +192,12 @@ function HeroCarousel() {
           ))}
         </div>
 
-        {/* Left / Right arrows */}
         {[
           { fn: prev, side: 'left', Icon: FiChevronLeft, label: 'Previous' },
           { fn: next, side: 'right', Icon: FiChevronRight, label: 'Next' },
         ].map(({ fn, side, Icon, label }) => (
           <button key={side} onClick={fn} aria-label={label}
+            className="carousel-arrow-btn"
             style={{
               position: 'absolute', [side]: 16, top: '50%',
               transform: 'translateY(-50%)',
@@ -236,8 +236,8 @@ function ReviewCard({ t, idx }) {
       style={{
         background: 'var(--bg-card)',
         border: '1px solid var(--panel-border)',
-        borderRadius: 22, padding: '28px 26px',
-        display: 'flex', flexDirection: 'column', gap: 16,
+        borderRadius: 22, padding: 'clamp(20px, 4vw, 28px) clamp(16px, 4vw, 26px)',
+        display: 'flex', flexDirection: 'column', gap: 14,
         cursor: 'default', position: 'relative', overflow: 'hidden',
         transition: 'border-color 0.25s, box-shadow 0.25s',
         boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
@@ -251,56 +251,30 @@ function ReviewCard({ t, idx }) {
         e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.06)';
       }}
     >
-      {/* Corner ambient glow */}
       <div style={{
         position: 'absolute', top: -30, right: -30,
         width: 100, height: 100, borderRadius: '50%',
         background: `${g1}18`, filter: 'blur(28px)', pointerEvents: 'none',
       }} />
 
-      {/* Top row: stars + verified badge */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
-        <Stars count={t.rating || 5} size="0.92rem" />
-        {t.project && (
-          <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: 4,
-            fontSize: '0.67rem', fontWeight: 700,
-            color: '#00c2ff', padding: '4px 10px', borderRadius: 999,
-            background: 'rgba(0,194,255,0.09)', border: '1px solid rgba(0,194,255,0.22)',
-            whiteSpace: 'nowrap', flexShrink: 0,
-          }}>
-            <FiCheckCircle style={{ fontSize: '0.68rem' }} />
-            Verified
-          </span>
-        )}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
+        <Stars count={t.rating || 5} size="0.95rem" />
+        <VerifiedBadge project={t.project} />
       </div>
 
-      {/* Quote */}
       <p style={{
-        fontSize: '0.91rem', lineHeight: 1.76,
-        color: 'var(--text-dim)', fontStyle: 'italic', flexGrow: 1,
-        position: 'relative', zIndex: 1,
+        fontSize: '0.92rem', lineHeight: 1.76,
+        color: 'var(--text-dim)', fontStyle: 'italic',
+        flexGrow: 1, margin: 0,
       }}>
         "{t.quote}"
       </p>
 
-      {/* Project label */}
-      {t.project && (
-        <div style={{
-          fontSize: '0.74rem', color: '#00c2ff',
-          fontWeight: 600, letterSpacing: '0.03em',
-        }}>
-          {t.project}
-        </div>
-      )}
+      <div style={{ height: 1, background: 'var(--panel-border)', margin: '4px 0' }} />
 
-      {/* Divider */}
-      <div style={{ height: 1, background: 'var(--panel-border)' }} />
-
-      {/* Reviewer row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <Avatar name={t.name} idx={idx} size={46} />
-        <div style={{ flex: 1, minWidth: 0 }}>
+        <div>
           <div style={{
             fontFamily: 'var(--font-display)', fontWeight: 700,
             fontSize: '0.94rem', color: 'var(--text)',
@@ -318,40 +292,36 @@ function ReviewCard({ t, idx }) {
    STATS BANNER
    ══════════════════════════════════════════ */
 function StatsBanner() {
-  const items = [
+  const stats = [
     { value: '7+', label: 'Projects Delivered', color: '#00c2ff' },
     { value: '100%', label: '5-Star Rated', color: '#f59e0b' },
-    { value: '7', label: 'Happy Clients', color: '#818cf8' },
-    { value: '98%', label: 'Satisfaction Rate', color: '#22c55e' },
+    { value: '7', label: 'Happy Clients', color: '#22c55e' },
+    { value: '98%', label: 'Satisfaction Rate', color: '#818cf8' },
   ];
+
   return (
     <div style={{
-      display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
-      borderRadius: 22, overflow: 'hidden',
-      border: '1px solid var(--panel-border)',
-      marginBottom: 60,
-      boxShadow: '0 4px 24px rgba(0,0,0,0.07)',
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))',
+      gap: 16, marginBottom: 56,
     }} className="reviews-stats-banner">
-      {items.map((s, i) => (
-        <div key={s.label} style={{
-          textAlign: 'center', padding: '30px 12px',
-          background: 'var(--bg-card)',
-          borderRight: i < items.length - 1 ? '1px solid var(--panel-border)' : 'none',
-          position: 'relative', overflow: 'hidden',
-        }}>
-          {/* subtle bottom accent */}
-          <div style={{
-            position: 'absolute', bottom: 0, left: '20%', right: '20%',
-            height: 2, borderRadius: 999,
-            background: `${s.color}55`,
-          }} />
+      {stats.map((s) => (
+        <div
+          key={s.label}
+          style={{
+            background: 'var(--bg-card)',
+            border: '1px solid var(--panel-border)',
+            borderRadius: 18, padding: 'clamp(16px, 3vw, 24px) 16px',
+            textAlign: 'center',
+          }}
+        >
           <div style={{
             fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 900,
-            color: s.color, marginBottom: 6,
+            fontSize: 'clamp(1.6rem, 3.5vw, 2.4rem)', fontWeight: 900,
+            color: s.color, marginBottom: 4,
             filter: `drop-shadow(0 0 12px ${s.color}44)`,
           }}>{s.value}</div>
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)', fontWeight: 500 }}>
+          <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', fontWeight: 500 }}>
             {s.label}
           </div>
         </div>
@@ -381,66 +351,55 @@ export default function ReviewsPage() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-dark)', fontFamily: 'var(--font-body)' }}>
 
-      {/* ── Top Navigation ── */}
-      <header style={{
+      <header className="reviews-header" style={{
         position: 'sticky', top: 0, zIndex: 100,
-        padding: '14px 28px',
+        padding: '12px 10px',
       }}>
-        <div style={{
+        <div className="reviews-nav-pill" style={{
           maxWidth: 1100, margin: '0 auto',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16,
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
           background: theme === 'dark'
-            ? 'rgba(10,15,26,0.82)' : 'rgba(255,255,255,0.88)',
+            ? 'rgba(10,15,26,0.85)' : 'rgba(255,255,255,0.9)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           border: '1px solid var(--panel-border)',
           borderRadius: 999,
-          padding: '10px 10px 10px 18px',
+          padding: '8px 10px 8px 12px',
           boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
         }}>
 
           {/* Brand */}
-          <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0 }}>
+          <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', flexShrink: 0 }}>
             <div style={{
-              width: 36, height: 36, borderRadius: '50%',
+              width: 30, height: 30, borderRadius: '50%',
               border: '2px solid rgba(0,194,255,0.4)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               overflow: 'hidden',
             }}>
-              <Logo width={34} style={{ borderRadius: '50%' }} />
+              <Logo width={28} style={{ borderRadius: '50%' }} />
             </div>
-            <span style={{
+            <span className="reviews-brand-text" style={{
               fontFamily: 'var(--font-display)', fontWeight: 800,
-              fontSize: '1rem', color: 'var(--text)', letterSpacing: '-0.01em',
+              fontSize: '0.92rem', color: 'var(--text)', letterSpacing: '-0.01em',
             }}>
               Chill<span style={{ color: 'var(--electric-blue)' }}>Tech</span>
             </span>
           </a>
 
-          {/* Centre label */}
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 7,
-            fontSize: '0.78rem', fontWeight: 700,
-            color: 'var(--text-dim)', letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-          }}>
-            <FiStar fill="#f59e0b" stroke="none" style={{ fontSize: '0.82rem' }} />
-            Client Reviews
-          </div>
 
           {/* Actions */}
-          <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexShrink: 0 }}>
             {/* Theme toggle */}
             <button
               onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
               aria-label="Toggle theme"
               style={{
-                width: 36, height: 36, borderRadius: '50%',
+                width: 32, height: 32, borderRadius: '50%',
                 border: '1px solid var(--panel-border)',
                 background: 'var(--bg-card)',
                 color: 'var(--text-dim)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                cursor: 'pointer', fontSize: '1rem', flexShrink: 0,
+                cursor: 'pointer', fontSize: '0.92rem', flexShrink: 0,
                 transition: 'all 0.2s',
               }}
               onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(0,194,255,0.4)'; e.currentTarget.style.color = '#00c2ff'; }}
@@ -449,11 +408,13 @@ export default function ReviewsPage() {
               {theme === 'dark' ? <FiSun style={{ color: '#f59e0b' }} /> : <FiMoon style={{ color: '#3b82f6' }} />}
             </button>
 
+            {/* Portfolio link */}
             <a href="/"
+              className="reviews-nav-btn"
               style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                fontSize: '0.84rem', fontWeight: 600, color: 'var(--text-dim)',
-                textDecoration: 'none', padding: '8px 16px', borderRadius: 999,
+                display: 'inline-flex', alignItems: 'center', gap: 5,
+                fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-dim)',
+                textDecoration: 'none', padding: '7px 12px', borderRadius: 999,
                 border: '1px solid var(--panel-border)',
                 background: 'var(--bg-card)',
                 transition: 'all 0.2s', whiteSpace: 'nowrap',
@@ -461,14 +422,16 @@ export default function ReviewsPage() {
               onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--electric-blue)'; e.currentTarget.style.borderColor = 'rgba(0,194,255,0.4)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-dim)'; e.currentTarget.style.borderColor = 'var(--panel-border)'; }}
             >
-              <FiArrowLeft style={{ fontSize: '0.9rem' }} /> Portfolio
+              <FiArrowLeft style={{ fontSize: '0.85rem' }} /> <span className="reviews-btn-label">Portfolio</span>
             </a>
 
+            {/* Hire Me link */}
             <a href="#/quote"
+              className="reviews-nav-btn reviews-nav-btn-primary"
               style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                fontSize: '0.84rem', fontWeight: 700,
-                color: '#000', padding: '8px 18px', borderRadius: 999,
+                display: 'inline-flex', alignItems: 'center', gap: 5,
+                fontSize: '0.78rem', fontWeight: 700,
+                color: '#000', padding: '7px 12px', borderRadius: 999,
                 background: 'linear-gradient(135deg, #00c2ff, #0080ff)',
                 textDecoration: 'none',
                 boxShadow: '0 4px 16px rgba(0,194,255,0.35)',
@@ -477,21 +440,19 @@ export default function ReviewsPage() {
               onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.87'; }}
               onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; }}
             >
-              <FiHome style={{ fontSize: '0.82rem' }} /> Hire Me
+              <FiHome style={{ fontSize: '0.8rem' }} /> <span className="reviews-btn-label">Hire Me</span>
             </a>
           </div>
         </div>
       </header>
 
-      {/* ── Page Content ── */}
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(40px, 7vw, 72px) 24px 80px' }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(28px, 5vw, 64px) clamp(14px, 3vw, 24px) 80px' }}>
 
-        {/* Page header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          style={{ textAlign: 'center', marginBottom: 52 }}
+          style={{ textAlign: 'center', marginBottom: 44 }}
         >
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -499,7 +460,7 @@ export default function ReviewsPage() {
             textTransform: 'uppercase', color: 'var(--electric-blue)',
             padding: '6px 18px', borderRadius: 999,
             background: 'rgba(0,194,255,0.1)', border: '1px solid rgba(0,194,255,0.28)',
-            marginBottom: 22,
+            marginBottom: 18,
           }}>
             <FiMessageSquare style={{ fontSize: '0.82rem' }} />
             Client Reviews & Testimonials
@@ -507,9 +468,9 @@ export default function ReviewsPage() {
 
           <h1 style={{
             fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(2rem, 6vw, 3.5rem)',
+            fontSize: 'clamp(1.8rem, 5vw, 3.2rem)',
             fontWeight: 900, lineHeight: 1.12,
-            color: 'var(--text)', marginBottom: 18, letterSpacing: '-0.02em',
+            color: 'var(--text)', marginBottom: 14, letterSpacing: '-0.02em',
           }}>
             What Clients Say About{' '}
             <span style={{
@@ -521,8 +482,8 @@ export default function ReviewsPage() {
           </h1>
 
           <p style={{
-            fontSize: 'clamp(0.95rem, 2vw, 1.08rem)',
-            lineHeight: 1.78, color: 'var(--text-dim)',
+            fontSize: 'clamp(0.88rem, 2vw, 1.02rem)',
+            lineHeight: 1.72, color: 'var(--text-dim)',
             maxWidth: 580, margin: '0 auto',
           }}>
             Real, verified feedback from founders, directors, and executives who trusted
@@ -530,7 +491,6 @@ export default function ReviewsPage() {
           </p>
         </motion.div>
 
-        {/* Stats banner */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -539,7 +499,6 @@ export default function ReviewsPage() {
           <StatsBanner />
         </motion.div>
 
-        {/* Hero spotlight carousel */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -548,7 +507,6 @@ export default function ReviewsPage() {
           <HeroCarousel />
         </motion.div>
 
-        {/* Section divider */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 32 }}>
           <div style={{ flex: 1, height: 1, background: 'var(--panel-border)' }} />
           <span style={{
@@ -560,18 +518,16 @@ export default function ReviewsPage() {
           <div style={{ flex: 1, height: 1, background: 'var(--panel-border)' }} />
         </div>
 
-        {/* All reviews grid */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-          gap: 22, marginBottom: 72,
+          gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))',
+          gap: 20, marginBottom: 64,
         }} className="reviews-card-grid">
           {testimonials.map((t, idx) => (
             <ReviewCard key={t.name} t={t} idx={idx} />
           ))}
         </div>
 
-        {/* Bottom CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -579,15 +535,14 @@ export default function ReviewsPage() {
           transition={{ duration: 0.5 }}
           style={{
             textAlign: 'center',
-            padding: 'clamp(36px, 6vw, 56px) clamp(24px, 5vw, 48px)',
+            padding: 'clamp(28px, 5vw, 56px) clamp(16px, 4vw, 48px)',
             background: 'var(--bg-card)',
             border: '1px solid var(--panel-border)',
-            borderRadius: 28,
+            borderRadius: 24,
             position: 'relative', overflow: 'hidden',
             boxShadow: '0 8px 40px rgba(0,0,0,0.08)',
           }}
         >
-          {/* Background gradient accent */}
           <div style={{
             position: 'absolute', top: 0, left: 0, right: 0, height: 2,
             background: 'linear-gradient(90deg, transparent, #00c2ff, #818cf8, transparent)',
@@ -599,26 +554,26 @@ export default function ReviewsPage() {
           }} />
 
           <div style={{ position: 'relative', zIndex: 1 }}>
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
-              <Stars count={5} size="1.4rem" />
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 14 }}>
+              <Stars count={5} size="1.3rem" />
             </div>
             <h2 style={{
               fontFamily: 'var(--font-display)', fontWeight: 800,
-              fontSize: 'clamp(1.35rem, 4vw, 2rem)',
-              color: 'var(--text)', marginBottom: 12,
+              fontSize: 'clamp(1.3rem, 3.5vw, 1.9rem)',
+              color: 'var(--text)', marginBottom: 10,
             }}>
               Ready to be the next success story?
             </h2>
-            <p style={{ color: 'var(--text-dim)', fontSize: '0.97rem', marginBottom: 32, maxWidth: 460, margin: '0 auto 32px' }}>
+            <p style={{ color: 'var(--text-dim)', fontSize: '0.92rem', marginBottom: 28, maxWidth: 460, margin: '0 auto 28px' }}>
               Let's build something extraordinary together. Reach out today and let's start your project.
             </p>
-            <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
               <a href="/"
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
-                  padding: '13px 30px', borderRadius: 999,
+                  padding: '12px 26px', borderRadius: 999,
                   background: 'linear-gradient(135deg, #00c2ff, #0080ff)',
-                  color: '#000', fontWeight: 700, fontSize: '0.93rem',
+                  color: '#000', fontWeight: 700, fontSize: '0.88rem',
                   textDecoration: 'none',
                   boxShadow: '0 8px 28px rgba(0,194,255,0.35)',
                   transition: 'opacity 0.2s',
@@ -626,14 +581,14 @@ export default function ReviewsPage() {
                 onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.87'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; }}
               >
-                <FiHome style={{ fontSize: '0.9rem' }} /> View My Portfolio
+                <FiHome style={{ fontSize: '0.88rem' }} /> View My Portfolio
               </a>
               <a href="#/quote"
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
-                  padding: '13px 30px', borderRadius: 999,
+                  padding: '12px 26px', borderRadius: 999,
                   border: '1px solid rgba(0,194,255,0.38)',
-                  color: 'var(--electric-blue)', fontWeight: 600, fontSize: '0.93rem',
+                  color: 'var(--electric-blue)', fontWeight: 600, fontSize: '0.88rem',
                   textDecoration: 'none', background: 'rgba(0,194,255,0.06)',
                   transition: 'all 0.2s',
                 }}
@@ -649,6 +604,18 @@ export default function ReviewsPage() {
 
       <style>{`
         @media (max-width: 640px) {
+          .carousel-arrow-btn {
+            display: none !important;
+          }
+          .reviews-center-label {
+            display: none !important;
+          }
+          .reviews-btn-label {
+            display: none !important;
+          }
+          .reviews-nav-btn {
+            padding: 7px 10px !important;
+          }
           .reviews-stats-banner {
             grid-template-columns: repeat(2, 1fr) !important;
           }

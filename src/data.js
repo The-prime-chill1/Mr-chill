@@ -8,7 +8,9 @@ export const profile = {
   tagline: "ADVANCED DIPLOMA IN SOFTWARE ENGINEERING (ADSE) • FOUNDER @ CHILL TECH LTD • GENERAL MANAGER @ CHIL INVESTMENT",
   role: "Advanced Diploma in Software Engineering (ADSE) • Web Developer • Technology Entrepreneur",
   headlineSub: "General Manager & Tech Entrepreneur",
-  email: "lamidiabdulhameedolawale@gmail.com",
+  email: "chilltech2k26@gmail.com",
+  officialEmail: "chilltech2k26@gmail.com",
+  personalEmail: "lamidiabdulhameedolawale@gmail.com",
   phone: "+234 913 763 2195",
   whatsapp: "https://wa.me/2349137632195",
   github: "https://github.com/The-prime-chill1",
@@ -212,9 +214,9 @@ export const projects = [
 
 export const testimonials = [
   {
-    quote: "Working with Abdulhameed was a game-changer. The digital platform and automated investment tools he engineered for CHIL Investment exceeded all our expectations.",
+    quote: "Working with Abdulhameed as our General Manager has been phenomenal. The digital platform and automated investment tools he engineered for CHIL Investment exceeded all our expectations.",
     name: "Alh. Lamidi T.A. Ololade",
-    role: "Founder, CHIL Investment Ltd",
+    role: "Founder, CHIL Investment Ltd (Chairman: T.A. Olatunde)",
     project: "Real Estate Investment Portal",
     rating: 5,
   },

@@ -93,7 +93,7 @@ However, no method of transmission over the internet is 100% secure. We cannot g
 • Request data portability in a machine-readable format.
 • Withdraw consent at any time.
 
-To exercise any of these rights, please contact us at chiltech2k26@gmail.com. We will respond within 30 days.`,
+To exercise any of these rights, please contact us at chilltech2k26@gmail.com. We will respond within 30 days.`,
   },
   {
     category: 'Compliance',

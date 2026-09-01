@@ -301,25 +301,37 @@ img {
 }
 
 /* ============================================================
-   RESPONSIVE SYSTEM — Mobile · Tablet · Desktop
-   Mobile-first approach. Emphasis on phones (320px–480px).
+   RESPONSIVE SYSTEM — Mobile (320px–480px) · Tablet (481px–860px) · Desktop (>860px)
+   Mobile-first, fluid layout with zero horizontal overflow.
    ============================================================ */
 
-/* ── Section padding: tighter on mobile ── */
+/* Global text safety */
+h1, h2, h3, h4, h5, h6, p, span, a, button {
+  overflow-wrap: break-word;
+}
+
+/* ── Section padding: fluid across viewports ── */
+.section {
+  position: relative;
+  padding: clamp(48px, 8vw, 96px) 0;
+}
+
+.section-tight {
+  position: relative;
+  padding: clamp(36px, 6vw, 64px) 0;
+}
+
 @media (max-width: 768px) {
-  .section {
-    padding: 60px 0;
-  }
   .floating-card {
-    border-radius: 16px;
+    border-radius: clamp(14px, 3vw, 20px);
     margin-bottom: 16px;
   }
   .section-title {
-    font-size: clamp(1.6rem, 6vw, 2.4rem);
+    font-size: clamp(1.5rem, 5.5vw, 2.4rem);
     margin-bottom: 12px;
   }
   .section-sub {
-    font-size: 0.95rem;
+    font-size: clamp(0.88rem, 2.5vw, 1rem);
   }
   .eyebrow {
     font-size: 11px;
@@ -332,23 +344,20 @@ img {
 }
 
 @media (max-width: 480px) {
-  .section {
-    padding: 48px 0;
-  }
   .container {
-    padding: 0 14px;
+    padding: 0 12px;
   }
   .floating-card {
-    border-radius: 12px;
+    border-radius: 14px;
     margin-bottom: 12px;
   }
   .btn {
     padding: 11px 18px;
-    font-size: 0.85rem;
+    font-size: 0.84rem;
     gap: 7px;
   }
   .section-title {
-    font-size: clamp(1.4rem, 7vw, 2rem);
+    font-size: clamp(1.35rem, 6.5vw, 1.95rem);
   }
 }
 
@@ -363,7 +372,7 @@ img {
 @media (max-width: 900px) {
   .about-grid {
     grid-template-columns: 1fr !important;
-    gap: 32px !important;
+    gap: 28px !important;
   }
 }
 
@@ -429,46 +438,42 @@ img {
     grid-template-columns: 1fr !important;
   }
   .tech-stack-grid {
-    grid-template-columns: repeat(3, 1fr) !important;
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 }
 
-/* ── PAGE SHELL: no left padding on mobile (sidebar goes to bottom) ── */
+/* ── PAGE SHELL ── */
 @media (max-width: 860px) {
   .page-shell {
-    padding-left: 14px;
-    padding-right: 14px;
+    padding-left: 12px;
+    padding-right: 12px;
     padding-bottom: 90px;
-    padding-top: 16px;
+    padding-top: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-shell {
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 92px;
+    padding-bottom: 80px;
   }
 }
 
 /* ── Hero section min-height ── */
 @media (max-width: 480px) {
   #top.floating-card {
-    min-height: 100svh !important;
-    padding-bottom: 100px;
+    min-height: auto !important;
+    padding-bottom: 36px;
   }
 }
 
 /* ── Floating card glass CTA in work-with-me ── */
 @media (max-width: 640px) {
   .work-cta-glass {
-    padding: 36px 20px !important;
-    border-radius: 18px !important;
-  }
-}
-
-/* ── Footer ── */
-@media (max-width: 640px) {
-  .footer-grid {
-    grid-template-columns: 1fr !important;
-    gap: 28px !important;
-  }
-  .footer-bottom {
-    flex-direction: column !important;
-    gap: 12px !important;
-    text-align: center;
+    padding: 28px 16px !important;
+    border-radius: 16px !important;
   }
 }
 
@@ -480,8 +485,15 @@ img {
 }
 
 /* ══════════════════════════════════════════
-   MOBILE PERFORMANCE OPTIMIZATIONS
+   MOBILE PERFORMANCE & ACCESSIBILITY
    ══════════════════════════════════════════ */
+
+/* Form inputs: 16px on mobile prevents iOS auto-zoom */
+@media (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
 
 /* Promote animated elements to their own compositor layer */
 .floating-card {
@@ -506,10 +518,9 @@ a, button {
 @media (max-width: 768px) {
   .section {
     content-visibility: auto;
-    contain-intrinsic-size: 0 600px;
+    contain-intrinsic-size: 0 500px;
   }
 
-  /* Reduce animation complexity on mobile */
   .hero-orbit-icon-item {
     animation: none !important;
   }
@@ -525,14 +536,15 @@ a, button {
   }
 }
 
-/* Optimise image rendering on mobile */
+/* Optimise image rendering */
 img {
   image-rendering: auto;
   max-width: 100%;
+  height: auto;
 }
 
-/* Prevent layout thrash on cards with images */
 .glass {
   contain: layout style;
 }
+
 

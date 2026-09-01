@@ -112,9 +112,9 @@ export default function Portfolio() {
           style={{
             display: 'flex',
             justifyContent: 'center',
-            gap: 10,
+            gap: 8,
             flexWrap: 'wrap',
-            marginBottom: 48,
+            marginBottom: 40,
           }}
         >
           {CATEGORIES.map((cat) => (
@@ -122,9 +122,9 @@ export default function Portfolio() {
               key={cat}
               onClick={() => setActiveTab(cat)}
               style={{
-                padding: '10px 22px',
+                padding: '8px 18px',
                 borderRadius: 999,
-                fontSize: '0.88rem',
+                fontSize: 'clamp(0.78rem, 2vw, 0.88rem)',
                 fontWeight: 600,
                 fontFamily: 'var(--font-display)',
                 background: activeTab === cat ? 'linear-gradient(135deg, #00c2ff, #0080ff)' : 'rgba(255, 255, 255, 0.04)',
@@ -143,7 +143,7 @@ export default function Portfolio() {
         {/* Projects Grid */}
         <motion.div
           layout
-          style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 28 }}
+          style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', gap: 'clamp(16px, 3vw, 28px)' }}
         >
           <AnimatePresence>
             {filteredProjects.map((project, idx) => {
@@ -233,16 +233,16 @@ export default function Portfolio() {
                       </div>
 
                       {/* Card Content */}
-                      <div style={{ padding: 24, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                      <div style={{ padding: 'clamp(16px, 4vw, 24px)', flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
                         <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, marginBottom: 8 }}>
                           {project.title}
                         </h3>
-                        <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem', lineHeight: 1.6, flexGrow: 1, marginBottom: 20 }}>
+                        <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, flexGrow: 1, marginBottom: 18 }}>
                           {project.description}
                         </p>
 
                         {/* Tech stack badges */}
-                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
+                        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 18 }}>
                           {project.tech.map((t) => (
                             <span
                               key={t}
@@ -281,6 +281,7 @@ export default function Portfolio() {
             })}
           </AnimatePresence>
         </motion.div>
+
         {/* ── Reviews CTA strip ── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -288,34 +289,34 @@ export default function Portfolio() {
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.5 }}
           style={{
-            marginTop: 56,
+            marginTop: 'clamp(36px, 6vw, 56px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: 20,
+            gap: 16,
             flexWrap: 'wrap',
-            padding: '24px 32px',
+            padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 32px)',
             borderRadius: 20,
             background: 'rgba(0,194,255,0.04)',
             border: '1px solid rgba(0,194,255,0.15)',
           }}
         >
           {/* Left: star summary */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', gap: 4 }}>
               {[...Array(5)].map((_, i) => (
                 <FiStar key={i} fill="#f59e0b" stroke="none"
-                  style={{ fontSize: '1.15rem', filter: 'drop-shadow(0 0 5px rgba(245,158,11,0.5))' }} />
+                  style={{ fontSize: '1.1rem', filter: 'drop-shadow(0 0 5px rgba(245,158,11,0.5))' }} />
               ))}
             </div>
             <div>
               <div style={{
                 fontFamily: 'var(--font-display)', fontWeight: 700,
-                fontSize: '0.97rem', color: 'var(--text)',
+                fontSize: '0.94rem', color: 'var(--text)',
               }}>
                 {testimonials.length} verified client reviews
               </div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginTop: 2 }}>
+              <div style={{ fontSize: '0.76rem', color: 'var(--text-dim)', marginTop: 2 }}>
                 100% 5-star rated · Real feedback from real clients
               </div>
             </div>
@@ -326,9 +327,9 @@ export default function Portfolio() {
             href="#/reviews"
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
-              padding: '12px 26px', borderRadius: 999,
+              padding: '11px 24px', borderRadius: 999,
               background: 'linear-gradient(135deg, #00c2ff, #0080ff)',
-              color: '#000', fontWeight: 700, fontSize: '0.9rem',
+              color: '#000', fontWeight: 700, fontSize: '0.88rem',
               textDecoration: 'none',
               boxShadow: '0 6px 22px rgba(0,194,255,0.3)',
               transition: 'opacity 0.2s', whiteSpace: 'nowrap',

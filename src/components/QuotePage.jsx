@@ -78,33 +78,33 @@ function useEstimate(type, features, timeline, pages) {
    ════════════════════════════════════════ */
 function StepBar({ step }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0, marginBottom: 40 }}>
+    <div className="quote-stepbar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 36, width: '100%' }}>
       {STEPS.map((label, i) => (
-        <div key={label} style={{ display: 'flex', alignItems: 'center' }}>
+        <div key={label} style={{ display: 'flex', alignItems: 'center', flex: i < STEPS.length - 1 ? 1 : 'initial' }}>
           <div style={{
             display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
           }}>
             <div style={{
-              width: 36, height: 36, borderRadius: '50%',
+              width: 34, height: 34, borderRadius: '50%',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '0.88rem',
+              fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '0.84rem',
               background: i < step ? '#00c2ff' : i === step ? 'linear-gradient(135deg,#00c2ff,#818cf8)' : 'var(--bg-card)',
               color: i <= step ? '#000' : 'var(--text-dim)',
               border: i === step ? 'none' : '2px solid var(--panel-border)',
               boxShadow: i === step ? '0 0 16px rgba(0,194,255,0.5)' : 'none',
-              transition: 'all 0.3s',
+              transition: 'all 0.3s', flexShrink: 0,
             }}>
               {i < step ? <FiCheckCircle style={{ fontSize: '1rem' }} /> : i + 1}
             </div>
-            <span style={{
-              fontSize: '0.68rem', fontWeight: i === step ? 700 : 500,
+            <span className="quote-step-label" style={{
+              fontSize: '0.66rem', fontWeight: i === step ? 700 : 500,
               color: i === step ? 'var(--electric-blue)' : 'var(--text-dim)',
               whiteSpace: 'nowrap', letterSpacing: '0.02em',
             }}>{label}</span>
           </div>
           {i < STEPS.length - 1 && (
             <div style={{
-              width: 48, height: 2, margin: '0 4px', marginBottom: 20,
+              flex: 1, minWidth: 12, height: 2, margin: '0 4px', marginBottom: 20,
               background: i < step ? '#00c2ff' : 'var(--panel-border)',
               borderRadius: 999, transition: 'background 0.3s',
             }} />
@@ -124,7 +124,7 @@ function PriceSidebar({ type, features, timeline, pages }) {
   const pg = PAGES_OPTIONS.find(p => p.id === pages);
 
   return (
-    <div style={{
+    <div className="quote-price-sidebar" style={{
       position: 'sticky', top: 100,
       background: 'var(--bg-card)',
       border: '1px solid rgba(0,194,255,0.2)',
@@ -554,30 +554,31 @@ export default function QuotePage() {
     <div style={{ minHeight: '100vh', background: 'var(--bg-dark)', color: 'var(--text)', fontFamily: 'var(--font-body)' }}>
 
       {/* ── Sticky Navbar ── */}
-      <header style={{ position: 'sticky', top: 0, zIndex: 100, padding: '14px 24px' }}>
-        <div style={{
+      <header className="quote-header" style={{ position: 'sticky', top: 0, zIndex: 100, padding: '12px 10px' }}>
+        <div className="quote-nav-pill" style={{
           maxWidth: 1180, margin: '0 auto',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16,
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
           background: theme === 'dark' ? 'rgba(10,15,26,0.85)' : 'rgba(255,255,255,0.9)',
           backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
           border: '1px solid var(--panel-border)',
-          borderRadius: 999, padding: '10px 10px 10px 18px',
+          borderRadius: 999, padding: '8px 10px 8px 12px',
           boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
         }}>
-          <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0 }}>
+          <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', flexShrink: 0 }}>
             <div style={{
-              width: 36, height: 36, borderRadius: '50%',
+              width: 32, height: 32, borderRadius: '50%',
               border: '2px solid rgba(0,194,255,0.4)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
             }}>
-              <Logo width={34} style={{ borderRadius: '50%' }} />
+              <Logo width={30} style={{ borderRadius: '50%' }} />
             </div>
-            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1rem', color: 'var(--text)' }}>
+            <span className="quote-brand-text" style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '0.92rem', color: 'var(--text)' }}>
               Chill<span style={{ color: 'var(--electric-blue)' }}>Tech</span>
             </span>
           </a>
 
-          <div style={{
+          {/* Center label — hidden on mobile */}
+          <div className="quote-center-label" style={{
             fontSize: '0.77rem', fontWeight: 700, letterSpacing: '0.08em',
             textTransform: 'uppercase', color: 'var(--text-dim)',
             display: 'flex', alignItems: 'center', gap: 6,
@@ -586,29 +587,30 @@ export default function QuotePage() {
             Project Estimator
           </div>
 
-          <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexShrink: 0 }}>
             <button onClick={toggleTheme} aria-label="Toggle theme"
               style={{
-                width: 36, height: 36, borderRadius: '50%',
+                width: 32, height: 32, borderRadius: '50%',
                 border: '1px solid var(--panel-border)', background: 'var(--bg-card)',
                 color: theme === 'dark' ? '#f59e0b' : '#3b82f6',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                cursor: 'pointer', fontSize: '1rem', flexShrink: 0, transition: 'all 0.2s',
+                cursor: 'pointer', fontSize: '0.92rem', flexShrink: 0, transition: 'all 0.2s',
               }}>
               {theme === 'dark' ? <FiSun /> : <FiMoon />}
             </button>
             <a href="/"
+              className="quote-nav-btn"
               style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                fontSize: '0.84rem', fontWeight: 600, color: 'var(--text-dim)',
-                textDecoration: 'none', padding: '8px 16px', borderRadius: 999,
+                display: 'inline-flex', alignItems: 'center', gap: 5,
+                fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-dim)',
+                textDecoration: 'none', padding: '7px 12px', borderRadius: 999,
                 border: '1px solid var(--panel-border)', background: 'var(--bg-card)',
                 transition: 'all 0.2s', whiteSpace: 'nowrap',
               }}
               onMouseEnter={(e) => { e.currentTarget.style.color = '#00c2ff'; e.currentTarget.style.borderColor = 'rgba(0,194,255,0.4)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-dim)'; e.currentTarget.style.borderColor = 'var(--panel-border)'; }}
             >
-              <FiArrowLeft /> Portfolio
+              <FiArrowLeft /> <span className="quote-btn-label">Portfolio</span>
             </a>
           </div>
         </div>
@@ -742,6 +744,28 @@ export default function QuotePage() {
         @media (max-width: 760px) {
           .estimator-layout {
             grid-template-columns: 1fr !important;
+          }
+          .quote-price-sidebar {
+            position: static !important;
+            min-width: 100% !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+          }
+        }
+        @media (max-width: 640px) {
+          .quote-center-label {
+            display: none !important;
+          }
+          .quote-btn-label {
+            display: none !important;
+          }
+          .quote-nav-btn {
+            padding: 7px 10px !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .quote-step-label {
+            display: none;
           }
         }
       `}</style>

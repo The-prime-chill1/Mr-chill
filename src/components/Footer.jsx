@@ -1,28 +1,39 @@
-import { FiArrowUp, FiGithub, FiMail, FiStar } from 'react-icons/fi';
+import { FiArrowUp, FiGithub, FiMail, FiMapPin, FiStar, FiExternalLink } from 'react-icons/fi';
 import { SiTiktok, SiInstagram, SiX, SiWhatsapp } from 'react-icons/si';
 import { profile } from '../data';
 import Logo from './Logo';
 
 const SOCIALS = [
-  { href: profile.github,            Icon: FiGithub,    label: 'GitHub' },
-  { href: profile.twitter,           Icon: SiX,         label: 'X' },
-  { href: profile.instagram,         Icon: SiInstagram, label: 'Instagram' },
-  { href: profile.tiktok,            Icon: SiTiktok,    label: 'TikTok' },
-  { href: profile.whatsapp,          Icon: SiWhatsapp,  label: 'WhatsApp' },
-  { href: `mailto:${profile.email}`, Icon: FiMail,      label: 'Email' },
+  { href: profile.github,            Icon: FiGithub,    label: 'GitHub',    hoverColor: '#e2e8f0' },
+  { href: profile.twitter,           Icon: SiX,         label: 'X',         hoverColor: '#e2e8f0' },
+  { href: profile.instagram,         Icon: SiInstagram, label: 'Instagram', hoverColor: '#f472b6' },
+  { href: profile.tiktok,            Icon: SiTiktok,    label: 'TikTok',    hoverColor: '#e2e8f0' },
+  { href: profile.whatsapp,          Icon: SiWhatsapp,  label: 'WhatsApp',  hoverColor: '#22c55e' },
+  { href: `mailto:${profile.email}`, Icon: FiMail,      label: 'Email',     hoverColor: '#00c2ff' },
 ];
 
-const LINKS = [
+const NAV_LINKS = [
   { label: 'Home',           href: '#top' },
-  { label: 'About',          href: '#about' },
-  { label: 'Skills',         href: '#skills' },
-  { label: 'Portfolio',      href: '#portfolio' },
+  { label: 'About Me',       href: '#about' },
+  { label: 'Skills & Tech',  href: '#skills' },
+  { label: 'Featured Work',  href: '#portfolio' },
+  { label: 'Contact Me',     href: '#contact' },
+];
+
+const SERVICES = [
+  'Full-Stack Web Development',
+  'Mobile Web Apps (PWA)',
+  'E-Commerce & Store Platforms',
+  'Real Estate Portals',
+  'API & Cloud Integrations',
+];
+
+const QUICK_LINKS = [
   { label: 'Work With Me',   href: '#/work-with-me' },
-  { label: 'Get Quote',      href: '#/quote' },
-  { label: 'Reviews',        href: '#/reviews', star: true },
-  { label: 'FAQ',            href: '#/faq' },
-  { label: 'Privacy',        href: '#/privacy' },
-  { label: 'Contact',        href: '#contact' },
+  { label: 'Request a Quote', href: '#/quote' },
+  { label: 'Client Reviews', href: '#/reviews', star: true },
+  { label: 'FAQ Page',       href: '#/faq' },
+  { label: 'Privacy & Terms', href: '#/privacy' },
 ];
 
 export default function Footer() {
@@ -30,146 +41,255 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="simple-footer">
-      {/* Subtle top border line */}
-      <div className="simple-footer-border" />
+    <footer className="pro-footer">
+      {/* Top Gradient Divider */}
+      <div className="pro-footer-divider" />
 
-      <div className="container simple-footer-inner">
-        {/* Main Row */}
-        <div className="simple-footer-main">
-          {/* Brand */}
-          <div className="simple-footer-brand">
-            <div className="simple-footer-logo-wrap">
-              <Logo width={36} style={{ borderRadius: '50%' }} />
+      <div className="container pro-footer-container">
+        {/* Main Grid: Brand on Left (40%), Links on Right (60%) */}
+        <div className="pro-footer-grid">
+
+          {/* ── Brand Info Column ── */}
+          <div className="pro-footer-brand-col">
+            <div className="pro-footer-brand-header">
+              <div className="pro-footer-logo-ring">
+                <Logo width={38} style={{ borderRadius: '50%' }} />
+              </div>
+              <div>
+                <div className="pro-footer-brand-name">
+                  CHILL <span className="gradient-text">TECH LTD</span>
+                </div>
+                <div className="pro-footer-brand-tagline">
+                  INNOVATE • BUILD • EMPOWER
+                </div>
+              </div>
             </div>
-            <div>
-              <div className="simple-footer-title">
-                CHILL <span className="gradient-text">TECH LTD</span>
+
+            <p className="pro-footer-desc">
+              Engineering high-performance web applications and multi-million naira real estate solutions across Nigeria.
+            </p>
+
+            {/* Direct Contact Snippets */}
+            <div className="pro-footer-contact-info">
+              <div className="pro-footer-contact-item">
+                <FiMapPin className="pro-footer-icon" />
+                <span>31 Grace Court, Chois Oasis, Abijo GRA, Lekki, Lagos</span>
               </div>
-              <div className="simple-footer-tagline">
-                Innovate • Build • Empower
-              </div>
+              <a href={`mailto:${profile.officialEmail}`} className="pro-footer-contact-item pro-footer-link-hover" title="Company Official Email">
+                <FiMail className="pro-footer-icon" />
+                <span>{profile.officialEmail}</span>
+              </a>
+              <a href={`mailto:${profile.personalEmail}`} className="pro-footer-contact-item pro-footer-link-hover" title="Founder & GM Direct Email">
+                <FiMail className="pro-footer-icon" />
+                <span>{profile.personalEmail}</span>
+              </a>
+            </div>
+
+            {/* Social Icons */}
+            <div className="pro-footer-socials">
+              {SOCIALS.map(({ href, Icon, label, hoverColor }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith('mailto') ? undefined : '_blank'}
+                  rel="noreferrer"
+                  aria-label={label}
+                  className="pro-social-btn"
+                  style={{ '--hover-color': hoverColor }}
+                >
+                  <Icon />
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Social Icons */}
-          <div className="simple-footer-socials">
-            {SOCIALS.map(({ href, Icon, label }) => (
-              <a
-                key={label}
-                href={href}
-                target={href.startsWith('mailto') ? undefined : '_blank'}
-                rel="noreferrer"
-                aria-label={label}
-                className="simple-social-btn"
-              >
-                <Icon />
-              </a>
-            ))}
+          {/* ── Link Columns (Right) ── */}
+          <div className="pro-footer-links-grid">
+
+            {/* Col 1: Navigation */}
+            <div className="pro-footer-col">
+              <h4 className="pro-footer-heading">Navigation</h4>
+              <ul className="pro-footer-list">
+                {NAV_LINKS.map(({ label, href }) => (
+                  <li key={label}>
+                    <a href={href} className="pro-footer-link">
+                      {label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Col 2: Services */}
+            <div className="pro-footer-col">
+              <h4 className="pro-footer-heading">Services</h4>
+              <ul className="pro-footer-list">
+                {SERVICES.map((s) => (
+                  <li key={s} className="pro-footer-service-item">
+                    <span className="pro-footer-dot" />
+                    <span>{s}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Col 3: Company & Pages */}
+            <div className="pro-footer-col">
+              <h4 className="pro-footer-heading">Explore</h4>
+              <ul className="pro-footer-list">
+                {QUICK_LINKS.map(({ label, href, star }) => (
+                  <li key={label}>
+                    <a
+                      href={href}
+                      className={`pro-footer-link ${star ? 'pro-footer-link-gold' : ''}`}
+                    >
+                      {star && <FiStar fill="#f59e0b" stroke="none" style={{ fontSize: '0.75rem', marginRight: 5 }} />}
+                      {label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
           </div>
         </div>
 
-        {/* Links Navigation */}
-        <nav className="simple-footer-nav" aria-label="Footer Navigation">
-          {LINKS.map(({ label, href, star }) => (
-            <a
-              key={label}
-              href={href}
-              className={`simple-footer-link ${star ? 'simple-footer-link-star' : ''}`}
-            >
-              {star && <FiStar fill="#f59e0b" stroke="none" style={{ fontSize: '0.72rem', marginRight: 4 }} />}
-              {label}
-            </a>
-          ))}
-        </nav>
-
-        {/* Bottom Row */}
-        <div className="simple-footer-bottom">
-          <div className="simple-footer-copy">
+        {/* ── Bottom Bar ── */}
+        <div className="pro-footer-bottom">
+          <div className="pro-footer-copy">
             © {year} <strong style={{ color: 'var(--text)' }}>CHILL TECH LTD</strong>. All rights reserved.
-            <span className="simple-footer-built"> · Built by <a href="#top">Lamidi Abdulhameed Olawale</a></span>
+            <span className="pro-footer-author">
+              &nbsp;·&nbsp; Engineered by{' '}
+              <a href="#top" className="pro-footer-author-link">
+                Lamidi Abdulhameed Olawale
+              </a>
+            </span>
           </div>
 
-          <button onClick={scrollToTop} aria-label="Scroll to top" className="simple-footer-top-btn">
+          <button onClick={scrollToTop} aria-label="Scroll to top" className="pro-footer-top-btn">
             Back to top <FiArrowUp style={{ fontSize: '0.82rem' }} />
           </button>
         </div>
       </div>
 
       <style>{`
-        .simple-footer {
+        .pro-footer {
           position: relative;
           background: var(--bg-dark);
+          color: var(--text);
           padding-bottom: calc(76px + env(safe-area-inset-bottom, 12px));
         }
 
-        .simple-footer-border {
+        .pro-footer-divider {
           height: 1px;
-          background: linear-gradient(90deg, transparent 0%, rgba(0, 194, 255, 0.4) 30%, rgba(129, 140, 248, 0.4) 70%, transparent 100%);
+          background: linear-gradient(90deg, transparent 0%, rgba(0, 194, 255, 0.45) 35%, rgba(129, 140, 248, 0.45) 65%, transparent 100%);
         }
 
-        .simple-footer-inner {
-          padding-top: 40px;
+        .pro-footer-container {
+          padding-top: 48px;
           padding-bottom: 24px;
+        }
+
+        /* ── Main 2-part Grid ── */
+        .pro-footer-grid {
+          display: grid;
+          grid-template-columns: 1.3fr 2fr;
+          gap: 48px;
+          padding-bottom: 40px;
+          border-bottom: 1px solid var(--panel-border);
+        }
+
+        /* ── Brand Column ── */
+        .pro-footer-brand-col {
           display: flex;
           flex-direction: column;
-          gap: 28px;
         }
 
-        /* Top Brand & Socials Row */
-        .simple-footer-main {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          flex-wrap: wrap;
-          gap: 20px;
-        }
-
-        .simple-footer-brand {
+        .pro-footer-brand-header {
           display: flex;
           align-items: center;
           gap: 12px;
+          margin-bottom: 14px;
         }
 
-        .simple-footer-logo-wrap {
-          width: 42px;
-          height: 42px;
+        .pro-footer-logo-ring {
+          width: 44px;
+          height: 44px;
           border-radius: 50%;
           overflow: hidden;
           background: #fff;
           display: flex;
           align-items: center;
           justify-content: center;
-          border: 2px solid rgba(0, 194, 255, 0.35);
-          box-shadow: 0 0 14px rgba(0, 194, 255, 0.2);
+          border: 2px solid rgba(0, 194, 255, 0.4);
+          box-shadow: 0 0 16px rgba(0, 194, 255, 0.2);
           flex-shrink: 0;
         }
 
-        .simple-footer-title {
+        .pro-footer-brand-name {
           font-family: var(--font-display);
           font-weight: 800;
-          font-size: 1rem;
+          font-size: 1.05rem;
           color: var(--text);
           letter-spacing: -0.01em;
         }
 
-        .simple-footer-tagline {
-          font-size: 0.65rem;
-          letter-spacing: 0.16em;
+        .pro-footer-brand-tagline {
+          font-size: 0.6rem;
+          letter-spacing: 0.18em;
           color: var(--text-dim);
           text-transform: uppercase;
           margin-top: 2px;
         }
 
-        /* Social Icons */
-        .simple-footer-socials {
+        .pro-footer-desc {
+          color: var(--text-dim);
+          font-size: 0.86rem;
+          line-height: 1.65;
+          margin: 0 0 18px;
+          max-width: 360px;
+        }
+
+        .pro-footer-contact-info {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          margin-bottom: 20px;
+        }
+
+        .pro-footer-contact-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 8px;
+          font-size: 0.82rem;
+          color: var(--text-dim);
+          line-height: 1.45;
+          text-decoration: none;
+        }
+
+        .pro-footer-link-hover {
+          transition: color 0.2s ease;
+        }
+        .pro-footer-link-hover:hover {
+          color: var(--electric-blue);
+        }
+
+        .pro-footer-icon {
+          color: var(--electric-blue);
+          font-size: 0.88rem;
+          flex-shrink: 0;
+          margin-top: 2px;
+        }
+
+        /* ── Social Buttons ── */
+        .pro-footer-socials {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 9px;
           flex-wrap: wrap;
         }
 
-        .simple-social-btn {
+        .pro-social-btn {
           width: 36px;
           height: 36px;
           border-radius: 50%;
@@ -184,72 +304,118 @@ export default function Footer() {
           transition: all 0.2s ease;
         }
 
-        .simple-social-btn:hover {
-          color: var(--electric-blue);
-          border-color: rgba(0, 194, 255, 0.5);
+        .pro-social-btn:hover {
+          color: var(--hover-color, #00c2ff);
+          border-color: rgba(0, 194, 255, 0.45);
           background: rgba(0, 194, 255, 0.08);
           transform: translateY(-2px);
         }
 
-        /* Navigation Links */
-        .simple-footer-nav {
-          display: flex;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 8px 24px;
-          padding: 16px 0;
-          border-top: 1px solid var(--panel-border);
-          border-bottom: 1px solid var(--panel-border);
+        /* ── Right Links Grid ── */
+        .pro-footer-links-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 32px;
         }
 
-        .simple-footer-link {
+        .pro-footer-col {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .pro-footer-heading {
+          font-family: var(--font-display);
+          font-size: 0.88rem;
+          font-weight: 700;
+          color: var(--text);
+          margin-bottom: 16px;
+          letter-spacing: 0.02em;
+          position: relative;
+          padding-bottom: 8px;
+        }
+
+        .pro-footer-heading::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 24px;
+          height: 2px;
+          border-radius: 999px;
+          background: linear-gradient(90deg, #00c2ff, #818cf8);
+        }
+
+        .pro-footer-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .pro-footer-link {
           font-size: 0.85rem;
           color: var(--text-dim);
           text-decoration: none;
-          transition: color 0.2s ease;
+          transition: color 0.2s ease, transform 0.2s ease;
           display: inline-flex;
           align-items: center;
         }
 
-        .simple-footer-link:hover {
+        .pro-footer-link:hover {
           color: var(--electric-blue);
+          transform: translateX(3px);
         }
 
-        .simple-footer-link-star {
+        .pro-footer-link-gold {
           color: #f59e0b;
           font-weight: 600;
         }
-
-        .simple-footer-link-star:hover {
+        .pro-footer-link-gold:hover {
           color: #fbbf24;
         }
 
-        /* Bottom Row */
-        .simple-footer-bottom {
+        .pro-footer-service-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 0.84rem;
+          color: var(--text-dim);
+          line-height: 1.4;
+        }
+
+        .pro-footer-dot {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: var(--electric-blue);
+          opacity: 0.55;
+          flex-shrink: 0;
+        }
+
+        /* ── Bottom Bar ── */
+        .pro-footer-bottom {
           display: flex;
           align-items: center;
           justify-content: space-between;
           flex-wrap: wrap;
-          gap: 14px;
-          font-size: 0.8rem;
+          gap: 16px;
+          padding-top: 24px;
+          font-size: 0.82rem;
           color: var(--text-dim);
         }
 
-        .simple-footer-copy strong {
-          color: var(--text);
-        }
-
-        .simple-footer-copy a {
+        .pro-footer-author-link {
           color: var(--electric-blue);
           text-decoration: none;
           font-weight: 600;
         }
-
-        .simple-footer-copy a:hover {
+        .pro-footer-author-link:hover {
           text-decoration: underline;
         }
 
-        .simple-footer-top-btn {
+        .pro-footer-top-btn {
           display: inline-flex;
           align-items: center;
           gap: 6px;
@@ -264,42 +430,53 @@ export default function Footer() {
           font-family: var(--font-body);
         }
 
-        .simple-footer-top-btn:hover {
+        .pro-footer-top-btn:hover {
           color: var(--electric-blue);
-          border-color: rgba(0, 194, 255, 0.4);
+          border-color: rgba(0, 194, 255, 0.45);
           background: rgba(0, 194, 255, 0.05);
         }
 
-        /* Mobile Adjustments */
+        /* ── Responsive Tablet & Mobile ── */
+        @media (max-width: 960px) {
+          .pro-footer-grid {
+            grid-template-columns: 1fr;
+            gap: 36px;
+          }
+
+          .pro-footer-desc {
+            max-width: 100%;
+          }
+
+          .pro-footer-links-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+          }
+        }
+
         @media (max-width: 640px) {
-          .simple-footer-inner {
-            padding-top: 32px;
-            gap: 22px;
+          .pro-footer-container {
+            padding-top: 36px;
           }
 
-          .simple-footer-main {
+          .pro-footer-links-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+          }
+
+          .pro-footer-links-grid > div:nth-child(2) {
+            grid-column: 1 / -1;
+          }
+
+          .pro-footer-bottom {
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 16px;
+            gap: 14px;
           }
 
-          .simple-footer-brand {
-            flex-direction: column;
-            gap: 8px;
-          }
-
-          .simple-footer-nav {
-            justify-content: center;
-            gap: 10px 18px;
-            padding: 14px 0;
-          }
-
-          .simple-footer-bottom {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 12px;
+          .pro-footer-author {
+            display: block;
+            margin-top: 4px;
           }
         }
       `}</style>
