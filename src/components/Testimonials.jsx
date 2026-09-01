@@ -1,243 +1,193 @@
-import { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FiStar, FiChevronLeft, FiChevronRight, FiCheckCircle } from 'react-icons/fi';
+import { motion } from 'framer-motion';
+import { FiStar, FiArrowRight, FiCheckCircle } from 'react-icons/fi';
 import { testimonials } from '../data';
-import BorderGlow from './reactbits/BorderGlow';
+
+// Show just 3 preview cards on the homepage
+const PREVIEW = testimonials.slice(0, 3);
+
+const AVATAR_GRADIENTS = [
+  ['#00c2ff', '#0080ff'],
+  ['#818cf8', '#a855f7'],
+  ['#22d3ee', '#0891b2'],
+];
+
+function Avatar({ name, idx }) {
+  const [g1, g2] = AVATAR_GRADIENTS[idx % AVATAR_GRADIENTS.length];
+  const initials = name.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase();
+  return (
+    <div style={{
+      width: 44, height: 44, borderRadius: '50%',
+      background: `linear-gradient(135deg, ${g1}, ${g2})`,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      color: '#fff', fontWeight: 800, fontSize: '0.88rem', flexShrink: 0,
+      boxShadow: `0 4px 14px ${g1}55`,
+      border: '2px solid rgba(255,255,255,0.15)',
+    }}>{initials}</div>
+  );
+}
+
+function PreviewCard({ t, idx }) {
+  const [g1] = AVATAR_GRADIENTS[idx % AVATAR_GRADIENTS.length];
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.45, delay: idx * 0.1 }}
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+      style={{
+        background: 'var(--bg-card)',
+        border: '1px solid var(--panel-border)',
+        borderRadius: 20, padding: '24px 22px',
+        display: 'flex', flexDirection: 'column', gap: 14,
+        position: 'relative', overflow: 'hidden',
+        transition: 'border-color 0.25s',
+        cursor: 'default',
+      }}
+      onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(0,194,255,0.3)'; }}
+      onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--panel-border)'; }}
+    >
+      {/* Corner accent */}
+      <div style={{
+        position: 'absolute', top: -24, right: -24,
+        width: 80, height: 80, borderRadius: '50%',
+        background: `${g1}14`, filter: 'blur(22px)', pointerEvents: 'none',
+      }} />
+
+      {/* Stars */}
+      <div style={{ display: 'flex', gap: 3 }}>
+        {[...Array(t.rating || 5)].map((_, i) => (
+          <FiStar key={i} fill="#f59e0b" stroke="none"
+            style={{ fontSize: '0.88rem', filter: 'drop-shadow(0 0 4px rgba(245,158,11,0.4))' }} />
+        ))}
+      </div>
+
+      {/* Quote */}
+      <p style={{
+        fontSize: '0.9rem', lineHeight: 1.72,
+        color: 'var(--text-dim)', fontStyle: 'italic', flexGrow: 1,
+      }}>
+        "{t.quote}"
+      </p>
+
+      {/* Divider */}
+      <div style={{ height: 1, background: 'var(--panel-border)' }} />
+
+      {/* Reviewer */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
+        <Avatar name={t.name} idx={idx} />
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{
+            fontFamily: 'var(--font-display)', fontWeight: 700,
+            fontSize: '0.9rem', color: 'var(--text)',
+          }}>{t.name}</div>
+          <div style={{ fontSize: '0.76rem', color: 'var(--text-dim)', marginTop: 1 }}>
+            {t.role}
+          </div>
+        </div>
+        {t.project && (
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 4,
+            fontSize: '0.66rem', fontWeight: 600,
+            color: 'var(--electric-blue)', padding: '3px 8px', borderRadius: 999,
+            background: 'rgba(0,194,255,0.08)', border: '1px solid rgba(0,194,255,0.2)',
+            whiteSpace: 'nowrap', flexShrink: 0,
+          }}>
+            <FiCheckCircle style={{ fontSize: '0.67rem' }} />
+            Verified
+          </span>
+        )}
+      </div>
+    </motion.div>
+  );
+}
 
 export default function Testimonials() {
-  const [index, setIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-
-  const next = useCallback(() => setIndex((i) => (i + 1) % testimonials.length), []);
-  const prev = () => setIndex((i) => (i - 1 + testimonials.length) % testimonials.length);
-
-  useEffect(() => {
-    if (isPaused) return;
-    const timer = setInterval(next, 5500);
-    return () => clearInterval(timer);
-  }, [next, isPaused]);
-
-  const current = testimonials[index];
-
-  // Generate initials for avatar
-  const getInitials = (name) => {
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .slice(0, 2)
-      .join('')
-      .toUpperCase();
-  };
-
   return (
     <section id="testimonials" className="floating-card section">
-      <div className="container" style={{ maxWidth: 880 }}>
+      <div className="container">
+
         {/* Section Header */}
-        <div style={{ textAlign: 'center', marginBottom: 44 }}>
-          <span className="eyebrow">Client Endorsements</span>
+        <div style={{ textAlign: 'center', marginBottom: 48 }}>
+          <span className="eyebrow">
+            <FiStar style={{ marginRight: 6, verticalAlign: 'middle' }} />
+            Client Endorsements
+          </span>
           <h2 className="section-title">
             Trusted by <span className="gradient-text">Visionaries</span>
           </h2>
           <p className="section-sub" style={{ margin: '0 auto' }}>
-            Real reviews and feedback from enterprise executives, founders, and organization leaders.
+            Real reviews and feedback from founders, directors, and executives who trusted CHILL TECH LTD.
           </p>
         </div>
 
-        <div
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-        >
-          <BorderGlow
-            borderRadius={24}
-            glowColor="190 90% 65%"
-            colors={['#00c2ff', '#818cf8', '#22d3ee']}
-            backgroundColor="transparent"
-            edgeSensitivity={35}
-          >
-            <div
-              className="glass"
-              style={{
-                padding: 'clamp(28px, 6vw, 48px)',
-                textAlign: 'center',
-                minHeight: 280,
-                position: 'relative',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-              }}
-            >
-              {/* Header inside card: Stars + Project Tag */}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-                {/* 5-Star Rating */}
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 6, color: '#f59e0b', fontSize: '1.25rem' }}>
-                  {[...Array(current.rating || 5)].map((_, i) => (
-                    <FiStar key={i} fill="#f59e0b" style={{ filter: 'drop-shadow(0 0 6px rgba(245, 158, 11, 0.45))' }} />
-                  ))}
-                </div>
-
-                {/* Verified Project Badge */}
-                {current.project && (
-                  <div
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 6,
-                      padding: '4px 12px',
-                      borderRadius: 999,
-                      background: 'rgba(0, 194, 255, 0.1)',
-                      border: '1px solid rgba(0, 194, 255, 0.25)',
-                      color: 'var(--electric-blue)',
-                      fontSize: '0.78rem',
-                      fontWeight: 600,
-                    }}
-                  >
-                    <FiCheckCircle style={{ fontSize: '0.85rem' }} />
-                    <span>Verified Project: {current.project}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Animated Testimonial Text */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -15 }}
-                  transition={{ duration: 0.35, ease: 'easeOut' }}
-                >
-                  <p
-                    style={{
-                      fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
-                      lineHeight: 1.75,
-                      color: 'var(--text)',
-                      fontStyle: 'italic',
-                      fontWeight: 400,
-                      maxWidth: 680,
-                      margin: '0 auto',
-                    }}
-                  >
-                    “{current.quote}”
-                  </p>
-
-                  {/* Reviewer Profile */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginTop: 28 }}>
-                    {/* Avatar Initials Bubble */}
-                    <div
-                      style={{
-                        width: 46,
-                        height: 46,
-                        borderRadius: '50%',
-                        background: 'linear-gradient(135deg, #00c2ff 0%, #6366f1 100%)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: '#fff',
-                        fontWeight: 800,
-                        fontSize: '0.95rem',
-                        boxShadow: '0 4px 14px rgba(0, 194, 255, 0.35)',
-                        border: '2px solid rgba(255, 255, 255, 0.2)',
-                      }}
-                    >
-                      {getInitials(current.name)}
-                    </div>
-
-                    <div style={{ textAlign: 'left' }}>
-                      <div
-                        style={{
-                          fontFamily: 'var(--font-display)',
-                          fontWeight: 700,
-                          fontSize: '1.05rem',
-                          color: 'var(--text)',
-                        }}
-                      >
-                        {current.name}
-                      </div>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--text-dim)', marginTop: 2 }}>
-                        {current.role}
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Navigation Indicators */}
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, marginTop: 32 }}>
-                {testimonials.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setIndex(i)}
-                    aria-label={`Go to review ${i + 1}`}
-                    style={{
-                      width: i === index ? 28 : 8,
-                      height: 8,
-                      borderRadius: 999,
-                      background: i === index ? 'var(--electric-blue)' : 'var(--text-dim)',
-                      opacity: i === index ? 1 : 0.3,
-                      border: 'none',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease',
-                      padding: 0,
-                    }}
-                  />
-                ))}
-              </div>
-
-              {/* Left / Right Nav Arrows */}
-              <button
-                onClick={prev}
-                aria-label="Previous review"
-                className="btn-ghost"
-                style={{
-                  position: 'absolute',
-                  left: 12,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  borderRadius: '50%',
-                  width: 40,
-                  height: 40,
-                  padding: 0,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.2rem',
-                  border: '1px solid var(--panel-border)',
-                  background: 'var(--bg-card-hover)',
-                  color: 'var(--text)',
-                  cursor: 'pointer',
-                }}
-              >
-                <FiChevronLeft />
-              </button>
-
-              <button
-                onClick={next}
-                aria-label="Next review"
-                className="btn-ghost"
-                style={{
-                  position: 'absolute',
-                  right: 12,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  borderRadius: '50%',
-                  width: 40,
-                  height: 40,
-                  padding: 0,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.2rem',
-                  border: '1px solid var(--panel-border)',
-                  background: 'var(--bg-card-hover)',
-                  color: 'var(--text)',
-                  cursor: 'pointer',
-                }}
-              >
-                <FiChevronRight />
-              </button>
-            </div>
-          </BorderGlow>
+        {/* 3 preview cards */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+          gap: 20,
+          marginBottom: 40,
+        }}>
+          {PREVIEW.map((t, idx) => (
+            <PreviewCard key={t.name} t={t} idx={idx} />
+          ))}
         </div>
+
+        {/* CTA to full reviews page */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4 }}
+          style={{ textAlign: 'center' }}
+        >
+          {/* Mini stats row */}
+          <div style={{
+            display: 'inline-flex', gap: 28, alignItems: 'center',
+            padding: '14px 28px', borderRadius: 999,
+            background: 'rgba(0,194,255,0.05)',
+            border: '1px solid rgba(0,194,255,0.15)',
+            marginBottom: 24,
+            flexWrap: 'wrap', justifyContent: 'center',
+          }}>
+            {[
+              { v: '7+', l: 'Projects' },
+              { v: '7', l: 'Clients' },
+              { v: '100%', l: '5-Star Rated' },
+              { v: '98%', l: 'Satisfaction' },
+            ].map((s) => (
+              <div key={s.l} style={{ textAlign: 'center' }}>
+                <div style={{
+                  fontFamily: 'var(--font-display)', fontWeight: 800,
+                  fontSize: '1.25rem',
+                  background: 'linear-gradient(135deg, #00c2ff, #818cf8)',
+                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                }}>{s.v}</div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontWeight: 500 }}>{s.l}</div>
+              </div>
+            ))}
+          </div>
+
+          <div>
+            <a
+              href="#/reviews"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                padding: '13px 30px', borderRadius: 999,
+                background: 'linear-gradient(135deg, #00c2ff, #0080ff)',
+                color: '#000', fontWeight: 700, fontSize: '0.95rem',
+                textDecoration: 'none',
+                boxShadow: '0 8px 28px rgba(0,194,255,0.3)',
+                transition: 'opacity 0.2s',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.87'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; }}
+            >
+              See All {testimonials.length} Reviews <FiArrowRight />
+            </a>
+          </div>
+        </motion.div>
+
       </div>
     </section>
   );

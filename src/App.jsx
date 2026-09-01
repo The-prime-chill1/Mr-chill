@@ -8,13 +8,14 @@ import FAQPage from './components/FAQPage';
 import QuotePage from './components/QuotePage';
 import WorkWithMe from './components/WorkWithMe';
 import CVPage from './components/CVPage';
+import ReviewsPage from './components/ReviewsPage';
 
 const About       = lazy(() => import('./components/About'));
 const Experience  = lazy(() => import('./components/Experience'));
 const Skills      = lazy(() => import('./components/Skills'));
 const Achievements = lazy(() => import('./components/Achievements'));
 const Portfolio   = lazy(() => import('./components/Portfolio'));
-const Testimonials = lazy(() => import('./components/Testimonials'));
+
 const FAQ          = lazy(() => import('./components/FAQ'));
 const Contact     = lazy(() => import('./components/Contact'));
 const Footer      = lazy(() => import('./components/Footer'));
@@ -100,6 +101,11 @@ export default function App() {
     return <WorkWithMe />;
   }
 
+  // ── Reviews page (standalone) ──
+  if (route === '/reviews') {
+    return <ReviewsPage />;
+  }
+
   // ── Main Portfolio ──
   return (
     <>
@@ -124,7 +130,7 @@ export default function App() {
             <Skills />
             <Achievements />
             <Portfolio />
-            <Testimonials />
+
             <Contact />
             <Footer />
           </Suspense>

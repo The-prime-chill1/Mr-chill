@@ -7,6 +7,8 @@ import LightRays from './reactbits/LightRays';
 import StarBorder from './reactbits/StarBorder';
 
 export default function Contact() {
+  // Disable heavy WebGL LightRays on mobile to save GPU
+  const isMobile = typeof window !== 'undefined' && (window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent));
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
   const [status, setStatus] = useState('idle');
   const [copied, setCopied] = useState(false);
@@ -70,19 +72,27 @@ export default function Contact() {
   return (
     <section id="contact" className="floating-card section" style={{ position: 'relative' }}>
       <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-        <LightRays
-          raysOrigin="top-center"
-          raysColor="#00c2ff"
-          raysSpeed={1.2}
-          lightSpread={0.8}
-          rayLength={1.4}
-          followMouse
-          mouseInfluence={0.12}
-          noiseAmount={0.05}
-          distortion={0.03}
-          fadeDistance={1.1}
-          saturation={0.9}
-        />
+        {isMobile ? (
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,194,255,0.08) 0%, transparent 70%)',
+          }} />
+        ) : (
+          <LightRays
+            raysOrigin="top-center"
+            raysColor="#00c2ff"
+            raysSpeed={1.2}
+            lightSpread={0.8}
+            rayLength={1.4}
+            followMouse
+            mouseInfluence={0.12}
+            noiseAmount={0.05}
+            distortion={0.03}
+            fadeDistance={1.1}
+            saturation={0.9}
+          />
+        )}
       </div>
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>

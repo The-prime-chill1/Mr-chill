@@ -9,11 +9,16 @@ export default function TechCanvasBg() {
     const ctx = canvas.getContext('2d');
     let animId;
 
+    // ── Mobile / Performance Detection ──
+    const isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
+    // On mobile: skip every other frame (target ~30fps), disable shadowBlur
+    let frameCount = 0;
+
     const parent = canvas.parentElement;
     let W = (canvas.width = parent.offsetWidth || window.innerWidth);
     let H = (canvas.height = parent.offsetHeight || window.innerHeight);
 
-    // ── Mouse Tracking, Shockwaves & Cursor Sparks ──
+    // ── Mouse Tracking, Shockwaves & Cursor Sparks (desktop only) ──
     const mouse = { x: null, y: null, prevX: null, prevY: null };
     let shockwaves = [];
     let sparks = [];
@@ -66,9 +71,12 @@ export default function TechCanvasBg() {
       }
     };
 
-    parent.addEventListener('mousemove', onMove);
-    parent.addEventListener('mouseleave', onLeave);
-    parent.addEventListener('click', onClick);
+    // Only add mouse/click tracking on non-touch devices
+    if (!isMobile) {
+      parent.addEventListener('mousemove', onMove);
+      parent.addEventListener('mouseleave', onLeave);
+      parent.addEventListener('click', onClick);
+    }
 
     const onResize = () => {
       W = canvas.width = parent.offsetWidth;
@@ -81,7 +89,9 @@ export default function TechCanvasBg() {
     const isLight = () => document.documentElement.getAttribute('data-theme') === 'light';
 
     // ── 1. Network Nodes & Floating Tech Glyphs ──
-    const NODE_COUNT = Math.min(Math.floor((W * H) / 9200), 75);
+    // Mobile gets far fewer nodes to stay within CPU budget
+    const MAX_NODES = isMobile ? 20 : 75;
+    const NODE_COUNT = Math.min(Math.floor((W * H) / 9200), MAX_NODES);
     let nodes = [], pulses = [];
     const techGlyphs = ['</>', '{ }', '01', 'AI', 'JS', 'React', '⚡'];
 
@@ -177,6 +187,13 @@ export default function TechCanvasBg() {
 
     // ── RENDER LOOP ──
     function render() {
+      // Mobile: skip every other frame to target ~30fps
+      frameCount++;
+      if (isMobile && frameCount % 2 !== 0) {
+        animId = requestAnimationFrame(render);
+        return;
+      }
+
       ctx.clearRect(0, 0, W, H);
 
       const light = isLight();
@@ -209,8 +226,7 @@ export default function TechCanvasBg() {
         ctx.lineTo(com.x - com.vx * (com.len / 10), com.y - com.vy * (com.len / 10));
         ctx.strokeStyle = grad;
         ctx.lineWidth = 1.8;
-        ctx.shadowColor = com.color;
-        ctx.shadowBlur = 10;
+        if (!isMobile) { ctx.shadowColor = com.color; ctx.shadowBlur = 10; }
         ctx.stroke();
         ctx.shadowBlur = 0;
       }
@@ -224,7 +240,7 @@ export default function TechCanvasBg() {
         ctx.arc(sw.x, sw.y, sw.rad, 0, Math.PI * 2);
         ctx.strokeStyle = col(c0, sw.alpha);
         ctx.lineWidth = 1.6;
-        ctx.shadowColor = hexColor; ctx.shadowBlur = 14;
+        if (!isMobile) { ctx.shadowColor = hexColor; ctx.shadowBlur = 14; }
         ctx.stroke(); ctx.shadowBlur = 0;
         ctx.beginPath();
         ctx.arc(sw.x, sw.y, sw.rad * 0.55, 0, Math.PI * 2);
@@ -242,8 +258,7 @@ export default function TechCanvasBg() {
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
         ctx.fillStyle = col(s.color === '#00c2ff' ? c0 : ca, s.alpha);
-        ctx.shadowColor = s.color;
-        ctx.shadowBlur = 8;
+        if (!isMobile) { ctx.shadowColor = s.color; ctx.shadowBlur = 8; }
         ctx.fill();
         ctx.shadowBlur = 0;
       }
@@ -327,7 +342,7 @@ export default function TechCanvasBg() {
         ctx.beginPath();
         ctx.arc(px, py, 2.8, 0, Math.PI * 2);
         ctx.fillStyle = hexColor;
-        ctx.shadowColor = hexColor; ctx.shadowBlur = 12;
+        if (!isMobile) { ctx.shadowColor = hexColor; ctx.shadowBlur = 12; }
         ctx.fill(); ctx.shadowBlur = 0;
       }
 
@@ -359,7 +374,7 @@ export default function TechCanvasBg() {
           ctx.beginPath();
           ctx.arc(n.x, n.y, n.r + glow * 1.2, 0, Math.PI * 2);
           ctx.fillStyle = col(c0, a);
-          ctx.shadowColor = hexColor; ctx.shadowBlur = 7;
+          if (!isMobile) { ctx.shadowColor = hexColor; ctx.shadowBlur = 7; }
           ctx.fill(); ctx.shadowBlur = 0;
         }
       }
@@ -367,14 +382,27 @@ export default function TechCanvasBg() {
       animId = requestAnimationFrame(render);
     }
 
+    // Pause animation when tab is hidden — saves battery/CPU on mobile
+    const onVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animId);
+      } else {
+        animId = requestAnimationFrame(render);
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
     render();
 
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', onResize);
-      parent.removeEventListener('mousemove', onMove);
-      parent.removeEventListener('mouseleave', onLeave);
-      parent.removeEventListener('click', onClick);
+      document.removeEventListener('visibilitychange', onVisibility);
+      if (!isMobile) {
+        parent.removeEventListener('mousemove', onMove);
+        parent.removeEventListener('mouseleave', onLeave);
+        parent.removeEventListener('click', onClick);
+      }
     };
   }, []);
 

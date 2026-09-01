@@ -479,3 +479,60 @@ img {
   }
 }
 
+/* ══════════════════════════════════════════
+   MOBILE PERFORMANCE OPTIMIZATIONS
+   ══════════════════════════════════════════ */
+
+/* Promote animated elements to their own compositor layer */
+.floating-card {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Smooth, native-feeling scroll on mobile */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: none;
+}
+
+/* Prevent tap highlight flicker on mobile */
+a, button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Defer rendering of off-screen sections on mobile */
+@media (max-width: 768px) {
+  .section {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 600px;
+  }
+
+  /* Reduce animation complexity on mobile */
+  .hero-orbit-icon-item {
+    animation: none !important;
+  }
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Optimise image rendering on mobile */
+img {
+  image-rendering: auto;
+  max-width: 100%;
+}
+
+/* Prevent layout thrash on cards with images */
+.glass {
+  contain: layout style;
+}
+
