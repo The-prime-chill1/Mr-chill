@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { useEffect, useState, useRef } from 'react';
+import { motion, useInView, animate } from 'framer-motion';
 import { FiGitBranch, FiCode, FiLayers, FiCpu } from 'react-icons/fi';
 import { SiReact, SiJavascript, SiHtml5, SiFirebase, SiNodedotjs, SiGithub, SiVercel, SiNetlify, SiFigma } from 'react-icons/si';
 import { DiVisualstudio, DiCss3 } from 'react-icons/di';
@@ -20,23 +21,64 @@ const TECH_STACK = [
 ];
 
 function SkillBar({ name, level }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.1 });
+  const [displayValue, setDisplayValue] = useState(0);
+
+  useEffect(() => {
+    if (isInView) {
+      const controls = animate(0, level, {
+        duration: 1.1,
+        ease: 'easeOut',
+        onUpdate: (latest) => setDisplayValue(Math.round(latest)),
+      });
+      return () => controls.stop();
+    } else {
+      const t = setTimeout(() => setDisplayValue(level), 300);
+      return () => clearTimeout(t);
+    }
+  }, [isInView, level]);
+
   return (
-    <div style={{ marginBottom: 18 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', marginBottom: 8, fontWeight: 500 }}>
-        <span>{name}</span>
-        <span style={{ color: 'var(--electric-blue)', fontWeight: 700 }}>{level}%</span>
+    <div ref={ref} style={{ marginBottom: 20 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.88rem', marginBottom: 8, fontWeight: 600 }}>
+        <span style={{ color: 'var(--text)' }}>{name}</span>
+        <span style={{
+          color: 'var(--electric-blue)',
+          fontWeight: 800,
+          fontFamily: 'var(--font-display)',
+          fontSize: '0.92rem',
+          minWidth: 40,
+          textAlign: 'right',
+        }}>
+          {displayValue > 0 ? displayValue : level}%
+        </span>
       </div>
-      <div style={{ height: 7, borderRadius: 999, background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
+
+      {/* Progress Track - Visible in both Light and Dark mode */}
+      <div
+        style={{
+          height: 10,
+          borderRadius: 999,
+          background: 'rgba(0, 194, 255, 0.12)',
+          border: '1px solid rgba(0, 194, 255, 0.28)',
+          padding: 1.5,
+          boxSizing: 'border-box',
+          overflow: 'hidden',
+          position: 'relative',
+          width: '100%',
+        }}
+      >
         <motion.div
-          initial={{ width: 0 }}
-          whileInView={{ width: `${level}%` }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 1.2, ease: 'easeOut' }}
+          initial={{ width: '0%' }}
+          animate={{ width: `${level}%` }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           style={{
             height: '100%',
             borderRadius: 999,
-            background: 'linear-gradient(90deg, #00c2ff, #22d3ee, #818cf8)',
-            boxShadow: '0 0 10px rgba(0, 194, 255, 0.6)',
+            background: 'linear-gradient(90deg, #00c2ff 0%, #0080ff 60%, #818cf8 100%)',
+            boxShadow: '0 0 12px rgba(0, 194, 255, 0.8)',
+            position: 'relative',
           }}
         />
       </div>
@@ -104,7 +146,7 @@ export default function Skills() {
               key={group.category}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.5, delay: idx * 0.08 }}
               className="glass"
               style={{ padding: 'clamp(18px, 4vw, 32px)' }}
