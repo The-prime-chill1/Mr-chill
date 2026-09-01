@@ -1,4 +1,4 @@
-import { FiArrowUp, FiGithub, FiMail, FiMessageSquare } from 'react-icons/fi';
+import { FiArrowUp, FiGithub, FiMail, FiMessageSquare, FiMapPin } from 'react-icons/fi';
 import { SiTiktok, SiInstagram, SiX } from 'react-icons/si';
 import { profile } from '../data';
 import Logo from './Logo';
@@ -31,6 +31,13 @@ export default function Footer() {
             <p className="footer-brand-desc">
               Delivering high-performance web applications and multi-million naira real estate solutions across Nigeria.
             </p>
+            <div className="footer-address">
+              <FiMapPin style={{ color: 'var(--electric-blue)', flexShrink: 0, marginTop: 3 }} />
+              <div>
+                <strong style={{ color: 'var(--text)', display: 'block', marginBottom: 2 }}>Office Address:</strong>
+                31 Grace Court, Chois Oasis, Abijo GRA, Ibeju-Lekki, Lagos, Nigeria
+              </div>
+            </div>
           </div>
 
           {/* Col 2: Navigation */}
@@ -52,9 +59,11 @@ export default function Footer() {
             <h4 className="footer-col-heading">Services</h4>
             <div className="footer-links">
               <span>Full-Stack Web Development</span>
-              <span>Real Estate Portfolio Management</span>
-              <span>E-Commerce &amp; Logistics Platforms</span>
-              <span>Fintech &amp; Custom Web Apps</span>
+              <span>iOS &amp; Android Mobile Apps</span>
+              <span>Progressive Web Apps (PWA)</span>
+              <span>E-Commerce &amp; Logistics Stores</span>
+              <span>Real Estate &amp; SaaS Portals</span>
+              <span>API Integration &amp; Cloud Backends</span>
             </div>
           </div>
 
@@ -152,6 +161,15 @@ export default function Footer() {
           font-size: 0.88rem;
           line-height: 1.65;
           margin: 0;
+        }
+        .footer-address {
+          margin-top: 14px;
+          font-size: 0.82rem;
+          color: var(--text-dim);
+          line-height: 1.5;
+          display: flex;
+          align-items: flex-start;
+          gap: 8px;
         }
 
         /* ── Columns ── */

@@ -190,6 +190,15 @@ export default function Contact() {
                     <SiInstagram style={{ fontSize: '0.9rem' }} /> @chill_tech_ltd
                   </a>
                 </div>
+
+                <div className="contact-info-item">
+                  <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: 4 }}>Office Address</div>
+                  <div style={{ color: 'var(--text)', fontWeight: 500, fontSize: '0.92rem', lineHeight: 1.5 }}>
+                    31 Grace Court, Chois Oasis,<br />
+                    Abijo GRA, Ibeju-Lekki,<br />
+                    Lagos, Nigeria
+                  </div>
+                </div>
               </div>
             </div>
 

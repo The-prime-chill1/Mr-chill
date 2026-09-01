@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { 
   FiCheckCircle, FiClock, FiZap, FiSmartphone, FiShield, FiCode, FiCpu, 
   FiHeadphones, FiArrowRight, FiMessageSquare, FiChevronDown, FiExternalLink, FiDollarSign,
-  FiBriefcase, FiShoppingCart, FiFeather, FiBookOpen, FiSend, FiBarChart2, FiHome, FiTerminal, FiSun, FiMoon
+  FiBriefcase, FiShoppingCart, FiFeather, FiBookOpen, FiSend, FiBarChart2, FiHome, FiTerminal, FiSun, FiMoon,
+  FiLayers, FiCloud, FiRefreshCw
 } from 'react-icons/fi';
 import Logo from './Logo';
 import { profile, projects, testimonials } from '../data';
@@ -12,13 +13,17 @@ import StarBorder from './reactbits/StarBorder';
 // 1. Services Data
 const SERVICES = [
   { title: 'Business Websites', icon: FiBriefcase, desc: 'Corporate websites that project authority, build trust, and turn visitors into leads.' },
-  { title: 'E-commerce Stores', icon: FiShoppingCart, desc: 'High-converting online shops with fast product catalogs and checkout integrations.' },
-  { title: 'Portfolio Websites', icon: FiFeather, desc: 'Sleek, personal portfolio sites for creatives, developers, and executives.' },
-  { title: 'School & Academic Portals', icon: FiBookOpen, desc: 'Tailored platforms for educational institutions, courses, and student portals.' },
-  { title: 'Landing Pages', icon: FiSend, desc: 'High-speed, conversion-focused landing pages built to maximize marketing campaigns.' },
-  { title: 'Admin Dashboards', icon: FiBarChart2, desc: 'Custom data management systems, analytics dashboards, and web software portals.' },
-  { title: 'Real Estate Portals', icon: FiHome, desc: 'Property listing showcases, interactive map viewings, and investor portals.' },
-  { title: 'Custom Web Applications', icon: FiTerminal, desc: 'Full-stack custom web apps built to solve unique business and operational needs.' },
+  { title: 'iOS & Android Mobile Apps', icon: FiSmartphone, desc: 'Cross-platform mobile applications for iOS & Android with smooth UI, offline caching, and push notifications.' },
+  { title: 'E-commerce Stores', icon: FiShoppingCart, desc: 'High-converting online shops with fast product catalogs, order tracking, and checkout integrations.' },
+  { title: 'Custom Web Applications', icon: FiTerminal, desc: 'Full-stack custom web apps built with React, Node.js, and cloud backends to solve operational needs.' },
+  { title: 'Progressive Web Apps (PWA)', icon: FiLayers, desc: 'Fast, installable web apps that run offline and provide native mobile-like user experiences.' },
+  { title: 'Real Estate & Property Portals', icon: FiHome, desc: 'Property listing showcases, interactive map viewings, investor portals, and plot allocation tools.' },
+  { title: 'SaaS Product Engineering', icon: FiCpu, desc: 'Scalable multi-tenant Software-as-a-Service platforms built for recurring revenue and high traffic.' },
+  { title: 'School & Academic Portals', icon: FiBookOpen, desc: 'Tailored platforms for educational institutions, online courses, and student portals.' },
+  { title: 'Admin & Analytics Dashboards', icon: FiBarChart2, desc: 'Custom data management systems, analytics dashboards, and operational web software portals.' },
+  { title: 'API Integration & Cloud Backend', icon: FiCloud, desc: 'Custom RESTful APIs, payment gateway integrations (Paystack/Stripe), and cloud database architecture.' },
+  { title: 'High-Conversion Landing Pages', icon: FiSend, desc: 'High-speed, conversion-focused landing pages engineered to maximize marketing ad campaigns.' },
+  { title: 'App Maintenance & Optimization', icon: FiRefreshCw, desc: 'Continuous updates, bug fixes, speed tuning, App Store / Play Store publishing, and security audits.' },
 ];
 
 // 2. Features / Why Choose
@@ -85,6 +90,9 @@ export default function WorkWithMe() {
     'WhatsApp Live Chat',
     'E-Commerce / Payment Gateway',
     'Admin Dashboard',
+    'Mobile App (iOS/Android)',
+    'Push Notifications System',
+    'Progressive Web App (PWA)',
     'Custom Animations & 3D',
     'Multi-language Support',
   ];
@@ -103,6 +111,10 @@ export default function WorkWithMe() {
     if (siteType === 'E-commerce Store') base = 300000;
     if (siteType === 'Real Estate Portal') base = 350000;
     if (siteType === 'Custom Web Application') base = 400000;
+    if (siteType === 'iOS & Android Mobile App') base = 450000;
+    if (siteType === 'Cross-Platform Web & Mobile App') base = 600000;
+    if (siteType === 'Progressive Web App (PWA)') base = 320000;
+    if (siteType === 'SaaS Platform') base = 500000;
 
     if (pageCount === '4-7 Pages') base += 50000;
     if (pageCount === '8-15 Pages') base += 100000;
@@ -404,18 +416,22 @@ I'd like to get started on my project!`;
             <div className="estimator-grid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 24, marginBottom: 32 }}>
               {/* Website Type */}
               <div>
-                <label style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text)', display: 'block', marginBottom: 10 }}>Website Type</label>
+                <label style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text)', display: 'block', marginBottom: 10 }}>Project / Platform Type</label>
                 <select
                   value={siteType}
                   onChange={(e) => setSiteType(e.target.value)}
                   className="estimator-select"
                 >
                   <option value="Business Website">Business Website</option>
+                  <option value="iOS & Android Mobile App">iOS &amp; Android Mobile App</option>
+                  <option value="Cross-Platform Web & Mobile App">Cross-Platform Web &amp; Mobile App</option>
                   <option value="E-commerce Store">E-commerce Store</option>
-                  <option value="Portfolio Website">Portfolio Website</option>
-                  <option value="Landing Page">Landing Page</option>
+                  <option value="Progressive Web App (PWA)">Progressive Web App (PWA)</option>
                   <option value="Real Estate Portal">Real Estate Portal</option>
+                  <option value="SaaS Platform">SaaS Platform</option>
                   <option value="Custom Web Application">Custom Web Application</option>
+                  <option value="Landing Page">Landing Page</option>
+                  <option value="Portfolio Website">Portfolio Website</option>
                 </select>
               </div>
 

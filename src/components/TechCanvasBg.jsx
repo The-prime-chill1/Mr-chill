@@ -202,7 +202,7 @@ export default function TechCanvasBg() {
 
         const grad = ctx.createLinearGradient(com.x, com.y, com.x - com.vx * 15, com.y - com.vy * 15);
         grad.addColorStop(0, com.color);
-        grad.addColorStop(1, 'transparent');
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
 
         ctx.beginPath();
         ctx.moveTo(com.x, com.y);

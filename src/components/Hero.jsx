@@ -102,12 +102,12 @@ export default function Hero({ onDownloadCV, onViewCV, cvUrl }) {
 
         {/* Role Text */}
         <p className="hero-role">
-          {profile.role || "Software Engineering Student • Web Developer • Technology Entrepreneur"}
+          {profile.role || "Advanced Diploma in Software Engineering (ADSE) • Web Developer • Technology Entrepreneur"}
         </p>
 
         {/* Bio Paragraph */}
         <p className="hero-bio">
-          {profile.heroBio || "Software Engineering student at Aptech, Founder of CHILL TECH LTD, and General Manager at CHIL Investment Ltd — managing multi-million naira real estate portfolios while engineering modern, high-performance digital solutions across e-commerce, real estate, gadgets, and web tech."}
+          {profile.heroBio || "Studying for an Advanced Diploma in Software Engineering (ADSE) at Aptech, Founder of CHILL TECH LTD, and General Manager at CHIL Investment Ltd — managing multi-million naira real estate portfolios while engineering modern, high-performance digital solutions across e-commerce, real estate, gadgets, and web tech."}
         </p>
 
         {/* CTA Buttons */}

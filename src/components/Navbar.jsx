@@ -8,14 +8,14 @@ import {
 import Logo from './Logo';
 
 const NAV_LINKS = [
-  { id: 'top',          icon: FiHome,       label: 'Home',         href: '#top' },
-  { id: 'about',        icon: FiUser,       label: 'About',        href: '#about' },
-  { id: 'skills',       icon: FiBarChart2,  label: 'Skills',       href: '#skills' },
-  { id: 'portfolio',    icon: FiGrid,       label: 'Portfolio',    href: '#portfolio' },
-  { id: 'work-with-me', icon: FiBriefcase,  label: 'Work With Me', href: '#/work-with-me' },
+  { id: 'top',          icon: FiHome,          label: 'Home',         href: '#top' },
+  { id: 'about',        icon: FiUser,          label: 'About',        href: '#about' },
+  { id: 'skills',       icon: FiBarChart2,     label: 'Skills',       href: '#skills' },
+  { id: 'portfolio',    icon: FiGrid,          label: 'Portfolio',    href: '#portfolio' },
+  { id: 'work-with-me', icon: FiBriefcase,     label: 'Work With Me', href: '#/work-with-me' },
   { id: 'quote',        icon: FiMessageSquare, label: 'Get Quote',   href: '#/quote' },
-  { id: 'faq',          icon: FiHelpCircle, label: 'FAQ',          href: '#/faq' },
-  { id: 'contact',      icon: FiMail,       label: 'Contact',      href: '#contact' },
+  { id: 'faq',          icon: FiHelpCircle,    label: 'FAQ',          href: '#/faq' },
+  { id: 'contact',      icon: FiMail,          label: 'Contact',      href: '#contact' },
 ];
 
 export default function Navbar({ onDownloadCV, onViewCV, cvUrl }) {

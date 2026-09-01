@@ -13,6 +13,8 @@ const SECTIONS = [
     title: '1. Introduction',
     body: `Welcome to CHILL TECH LTD ("we", "our", "us"). We are committed to protecting the personal information you share with us. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or engage with our services.
 
+Our registered office is located at: 31 Grace Court, Chois Oasis, Abijo GRA, Ibeju-Lekki, Lagos, Nigeria.
+
 Please read this policy carefully. If you disagree with any part, please discontinue use of our site.`,
   },
   {

@@ -54,7 +54,7 @@ export default function CVPage() {
           <header className="cv-header">
             <h1 className="cv-name">LAMIDI ABDULHAMEED OLAWALE</h1>
             <div className="cv-subtitle">
-              SOFTWARE ENGINEERING STUDENT • WEB DEVELOPER • TECHNOLOGY ENTREPRENEUR
+              ADVANCED DIPLOMA IN SOFTWARE ENGINEERING (ADSE) • WEB DEVELOPER • TECHNOLOGY ENTREPRENEUR
             </div>
             
             <div className="cv-contact-block">
@@ -70,7 +70,7 @@ export default function CVPage() {
           <section className="cv-sec">
             <h2 className="cv-sec-title">PROFESSIONAL SUMMARY</h2>
             <p className="cv-p">
-              Software Engineering student at <strong>Aptech Computer Education</strong> with practical experience designing, developing, deploying, and improving modern web applications. Founder of <strong>CHILL TECH LTD</strong>, with hands-on experience delivering digital solutions for businesses across e-commerce, real estate, logistics, education, and business services. Also a <strong>General Manager at CHIL Investment Ltd</strong>, providing real-world experience in operations, stakeholder management, client relations, and leadership. Brings a strong combination of technical problem-solving, business awareness, communication, initiative, and a continuous learning mindset.
+              Advanced Diploma in Software Engineering (ADSE) student at <strong>Aptech Computer Education</strong> with practical experience designing, developing, deploying, and improving modern web applications. Founder of <strong>CHILL TECH LTD</strong>, with hands-on experience delivering digital solutions for businesses across e-commerce, real estate, logistics, education, and business services. Also a <strong>General Manager at CHIL Investment Ltd</strong>, providing real-world experience in operations, stakeholder management, client relations, and leadership. Brings a strong combination of technical problem-solving, business awareness, communication, initiative, and a continuous learning mindset.
             </p>
           </section>
 
@@ -175,9 +175,9 @@ export default function CVPage() {
             <div className="cv-edu-head">
               <span className="cv-edu-title">APTECH COMPUTER EDUCATION</span>
             </div>
-            <div className="cv-edu-sub">Software Engineering Student | Present</div>
+            <div className="cv-edu-sub">Advanced Diploma in Software Engineering (ADSE) | Present</div>
             <p className="cv-p" style={{ marginTop: 4 }}>
-              Currently studying Software Engineering with practical training in programming, web development, databases, software design, and modern application development.
+              Currently pursuing an Advanced Diploma in Software Engineering (ADSE) with practical training in programming, web development, databases, software design, and modern application development.
             </p>
             <p className="cv-p" style={{ marginTop: 4, fontSize: '0.84rem' }}>
               <strong>Relevant Coursework:</strong> Programming Principles & Techniques • Logic Building & C Programming • Modern Website Development • UI/UX Responsive Design • Frontend Development with React • Object-Oriented Programming • Database Management with SQL • Generative AI
