@@ -97,6 +97,9 @@ export default function Hero({ onDownloadCV, onViewCV, cvUrl }) {
 
         {/* Headline */}
         <h1 className="hero-headline">
+          <span style={{ display: 'block', fontSize: 'clamp(0.9rem, 2vw, 1.15rem)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 8, opacity: 0.95 }}>
+            CHILL TECH LTD &bull; Web Design &amp; Software Development
+          </span>
           Hi, I'm <span className="gradient-text">MR CHILL</span>
         </h1>
 

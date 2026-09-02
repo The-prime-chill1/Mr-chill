@@ -13,20 +13,37 @@
       content="WxWbrgkWywJxZOuVQ46WUON1bWocgAgEUQfMOxOpXSs"
     />
 
-    <title>CHILL TECH LTD</title>
+    <title>CHILL TECH LTD – Web Design & Software Development</title>
 
     <meta
       name="description"
-      content="CHILL TECH LTD is a technology company specializing in professional website design, web development, UI/UX design, software solutions, and digital services."
+      content="CHILL TECH LTD – Professional website design, web development, UI/UX, and custom software solutions. Let's build your digital presence today."
     />
 
-    <!-- Organization Structured Data (JSON-LD) for SEO -->
+    <link rel="canonical" href="https://chilltechltd.com/" />
+
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://chilltechltd.com/" />
+    <meta property="og:title" content="CHILL TECH LTD – Web Design & Software Development" />
+    <meta property="og:description" content="Professional website design, web development, UI/UX, and custom software solutions. Let's build your digital presence today." />
+    <meta property="og:image" content="https://chilltechltd.com/src/assets/chill-tech-logo.jpeg" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@chill_tech_ltd" />
+    <meta name="twitter:title" content="CHILL TECH LTD – Web Design & Software Development" />
+    <meta name="twitter:description" content="Professional website design, web development, UI/UX, and custom software solutions. Let's build your digital presence today." />
+    <meta name="twitter:image" content="https://chilltechltd.com/src/assets/chill-tech-logo.jpeg" />
+
+    <!-- ===== SCHEMA 1: Organization ===== -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "CHILL TECH LTD",
       "alternateName": "Chill Tech",
+      "slogan": "INNOVATE. BUILD. EMPOWER.",
       "url": "https://chilltechltd.com",
       "logo": "https://chilltechltd.com/src/assets/chill-tech-logo.jpeg",
       "description": "CHILL TECH LTD is a technology company specializing in professional website design, web development, UI/UX design, software solutions, and digital services.",
@@ -49,6 +66,65 @@
         "https://github.com/The-prime-chill1",
         "https://wa.me/2349137632195"
       ]
+    }
+    </script>
+
+    <!-- ===== SCHEMA 2: BreadcrumbList ===== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://chilltechltd.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Services",
+          "item": "https://chilltechltd.com/#skills"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Portfolio",
+          "item": "https://chilltechltd.com/#portfolio"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Quote",
+          "item": "https://chilltechltd.com/#/quote"
+        }
+      ]
+    }
+    </script>
+
+    <!-- ===== SCHEMA 3: Service ===== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Web Design & Software Development",
+      "serviceType": "Web Design & Development",
+      "provider": {
+        "@type": "Organization",
+        "name": "CHILL TECH LTD",
+        "url": "https://chilltechltd.com"
+      },
+      "areaServed": "Worldwide",
+      "description": "Professional website design, web development, UI/UX design, custom software solutions, and digital services.",
+      "offers": {
+        "@type": "Offer",
+        "priceSpecification": {
+          "@type": "PriceSpecification",
+          "price": "Contact for quote",
+          "priceCurrency": "USD"
+        }
+      }
     }
     </script>
 
