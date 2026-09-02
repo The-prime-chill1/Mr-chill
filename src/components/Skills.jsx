@@ -1,23 +1,47 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, useInView, animate } from 'framer-motion';
 import { FiGitBranch, FiCode, FiLayers, FiCpu } from 'react-icons/fi';
-import { SiReact, SiJavascript, SiHtml5, SiFirebase, SiNodedotjs, SiGithub, SiVercel, SiNetlify, SiFigma } from 'react-icons/si';
-import { DiVisualstudio, DiCss3 } from 'react-icons/di';
+import {
+  SiReact,
+  SiJavascript,
+  SiTypescript,
+  SiPython,
+  SiCplusplus,
+  SiHtml5,
+  SiFirebase,
+  SiNodedotjs,
+  SiGithub,
+  SiVercel,
+  SiNetlify,
+  SiFigma,
+  SiMysql,
+  SiVite
+} from 'react-icons/si';
+import { FaJava } from 'react-icons/fa6';
+import { DiCss3, DiVisualstudio } from 'react-icons/di';
 import { skills } from '../data';
 import GlassIcons from './reactbits/GlassIcons';
 
-// Comprehensive tech stack icons grid
+// Comprehensive tech stack icons grid (18 core technologies)
 const TECH_STACK = [
   { name: 'React', icon: SiReact, color: '#00c2ff' },
   { name: 'JavaScript', icon: SiJavascript, color: '#f7df1e' },
+  { name: 'TypeScript', icon: SiTypescript, color: '#3178c6' },
+  { name: 'Python', icon: SiPython, color: '#3776ab' },
+  { name: 'Java', icon: FaJava, color: '#e76f00' },
+  { name: 'C++', icon: SiCplusplus, color: '#00599c' },
   { name: 'HTML5', icon: SiHtml5, color: '#e34f26' },
   { name: 'CSS3', icon: DiCss3, color: '#1572b6' },
-  { name: 'Firebase', icon: SiFirebase, color: '#ffca28' },
   { name: 'Node.js', icon: SiNodedotjs, color: '#22c55e' },
+  { name: 'MySQL / SQL', icon: SiMysql, color: '#00758f' },
+  { name: 'Firebase', icon: SiFirebase, color: '#ffca28' },
+  { name: 'Vite', icon: SiVite, color: '#9333ea' },
   { name: 'Git', icon: FiGitBranch, color: '#f05032' },
-  { name: 'GitHub', icon: SiGithub, color: '#ffffff' },
-  { name: 'Vercel', icon: SiVercel, color: '#00c2ff' },
+  { name: 'GitHub', icon: SiGithub, color: 'var(--text)' },
+  { name: 'Vercel', icon: SiVercel, color: 'var(--cyan)' },
+  { name: 'Netlify', icon: SiNetlify, color: '#00c7b7' },
   { name: 'Figma', icon: SiFigma, color: '#a855f7' },
+  { name: 'VS Code', icon: DiVisualstudio, color: '#007acc' },
 ];
 
 function SkillBar({ name, level }) {
@@ -102,37 +126,43 @@ export default function Skills() {
 
         {/* Tech Stack Icon Grid */}
         <div style={{ marginBottom: 56 }}>
-          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1rem, 2.5vw, 1.15rem)', marginBottom: 20, textAlign: 'center', color: 'var(--cyan)' }}>
+          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1rem, 2.5vw, 1.2rem)', marginBottom: 24, textAlign: 'center', color: 'var(--cyan)' }}>
             Core Technology Stack
           </h3>
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 95px), 1fr))',
-              gap: 'clamp(8px, 2vw, 16px)',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 100px), 1fr))',
+              gap: 'clamp(10px, 2vw, 16px)',
             }}
           >
-            {TECH_STACK.map((tech) => {
+            {TECH_STACK.map((tech, idx) => {
               const IconComp = tech.icon;
               return (
                 <motion.div
                   key={tech.name}
-                  whileHover={{ y: -4, scale: 1.03 }}
-                  transition={{ type: 'spring', stiffness: 300 }}
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-30px' }}
+                  transition={{ duration: 0.35, delay: idx * 0.03 }}
+                  whileHover={{ y: -5, scale: 1.05 }}
                   className="glass"
                   style={{
-                    padding: 'clamp(12px, 3vw, 18px) clamp(8px, 2vw, 12px)',
+                    padding: 'clamp(14px, 2.5vw, 18px) clamp(8px, 2vw, 12px)',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: 8,
-                    borderRadius: '14px',
+                    gap: 10,
+                    borderRadius: 14,
                     textAlign: 'center',
+                    cursor: 'default',
+                    minHeight: 92,
+                    boxSizing: 'border-box',
                   }}
                 >
-                  <IconComp style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', color: tech.color, filter: `drop-shadow(0 0 8px ${tech.color}66)` }} />
-                  <span style={{ fontSize: 'clamp(0.68rem, 2vw, 0.78rem)', fontWeight: 600, color: 'var(--text)' }}>{tech.name}</span>
+                  <IconComp style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.1rem)', color: tech.color, filter: `drop-shadow(0 0 10px ${tech.color}55)` }} />
+                  <span style={{ fontSize: 'clamp(0.72rem, 1.8vw, 0.82rem)', fontWeight: 600, color: 'var(--text)', lineHeight: 1.2 }}>{tech.name}</span>
                 </motion.div>
               );
             })}

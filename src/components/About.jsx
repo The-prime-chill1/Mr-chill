@@ -74,7 +74,7 @@ export default function About() {
           >
             <span className="eyebrow">About Me</span>
             <h2 className="section-title">
-              Building at the intersection of <span className="gradient-text">real estate & tech</span>
+              Building <span className="gradient-text">technology solutions</span> that move businesses forward
             </h2>
             
             <p style={{ color: 'var(--text-dim)', lineHeight: 1.8, fontSize: '1.02rem', marginBottom: 16 }}>

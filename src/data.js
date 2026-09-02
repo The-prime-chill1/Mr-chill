@@ -5,8 +5,8 @@
 
 export const profile = {
   name: "Lamidi Abdulhameed Olawale",
-  tagline: "ADVANCED DIPLOMA IN SOFTWARE ENGINEERING (ADSE) • FOUNDER @ CHILL TECH LTD • GENERAL MANAGER @ CHIL INVESTMENT",
-  role: "Advanced Diploma in Software Engineering (ADSE) • Web Developer • Technology Entrepreneur",
+  tagline: "FOUNDER & CEO @ CHILL TECH LTD • TECHNOLOGY ENTREPRENEUR • SOFTWARE DEVELOPER",
+  role: "Founder & CEO • Technology Entrepreneur • Software Developer",
   headlineSub: "General Manager & Tech Entrepreneur",
   email: "chilltech2k26@gmail.com",
   officialEmail: "chilltech2k26@gmail.com",
@@ -17,19 +17,19 @@ export const profile = {
   twitter: "https://x.com/chill_tech_ltd",
   instagram: "https://instagram.com/chill_tech_ltd",
   tiktok: "https://www.tiktok.com/@chill_tech_ltd",
-  heroBio: "Studying for an Advanced Diploma in Software Engineering (ADSE) at Aptech, Founder of CHILL TECH LTD, and General Manager at CHIL Investment Ltd — managing multi-million naira real estate portfolios while engineering modern, high-performance digital solutions across e-commerce, real estate, gadgets, and web tech.",
-  bio: "Advanced Diploma in Software Engineering (ADSE) student at Aptech Computer Education with practical experience designing, developing, deploying, and improving modern web applications. Founder of CHILL TECH LTD and General Manager at CHIL Investment Ltd, combining technical problem-solving with operational leadership.",
+  heroBio: "I'm the Founder & CEO of CHILL TECH LTD, where I lead the development of modern digital solutions that combine software engineering, creative design, and business strategy. From high-converting websites and e-commerce platforms to dashboards, SaaS products, and full-scale web applications, I build digital experiences designed to help businesses grow.",
+  bio: "Founder & CEO of CHILL TECH LTD — a technology company built on the belief that every business deserves a powerful digital presence. I lead the company's technical direction, combining software engineering with business strategy to deliver digital solutions that create real impact.",
   aboutFull: [
-    "I’m Lamidi Abdulhameed Olawale, a passionate Web Developer and the founder of CHILL TECH LTD, focused on building modern, responsive, and high-performance digital solutions for businesses and individuals.",
-    "My experience spans Frontend Development, React.js, JavaScript, HTML, CSS, UI/UX Design, and modern web technologies. I enjoy turning ideas into functional, visually engaging websites that solve real-world problems.",
-    "Beyond technology, I have a strong background in leadership, discipline, and organization, having held multiple leadership positions throughout my academic journey. These experiences shaped my ability to take responsibility, work with people, and lead with confidence.",
-    "My long-term vision is to grow CHILL TECH LTD into a full-service company combining technology, real estate, and gadgets/electronics, creating innovative solutions and opportunities across different industries.",
-    "I’m constantly learning, building, and improving — with the goal of becoming a highly skilled technology professional and building products that make a meaningful impact."
+    "I'm Lamidi Abdulhameed Olawale — Founder & CEO of CHILL TECH LTD and General Manager at CHIL Investment Ltd. I design and build modern, high-performance websites and digital solutions that help businesses grow, compete, and win online.",
+    "With expertise in React.js, JavaScript, HTML, CSS, UI/UX Design, and modern web technologies, I specialise in turning business objectives into clean, functional, and visually compelling digital experiences — from landing pages to full web applications.",
+    "As Founder & CEO, I oversee every project end-to-end: from the first client conversation and strategy session, through design, development, and deployment, to ongoing support and improvement. My clients get a technology partner — not just a developer.",
+    "Alongside CHILL TECH LTD, I serve as General Manager at CHIL Investment Ltd, where I manage multi-million naira real estate portfolios and lead investor relations. This dual role sharpens my ability to think commercially and execute under pressure.",
+    "My vision is to grow CHILL TECH LTD into a leading full-service technology company — delivering world-class digital products, software solutions, and technology innovation for businesses across Nigeria and beyond."
   ],
 };
 
 export const stats = [
-  { label: "Projects Delivered", value: 7, suffix: "+" },
+  { label: "Projects Delivered", value: 20, suffix: "+" },
   { label: "Investors Served", value: 500, suffix: "+" },
   { label: "Plots Allocated", value: 1000, suffix: "+" },
   { label: "Client Satisfaction", value: 98, suffix: "%" },
@@ -54,7 +54,7 @@ export const education = [
 
 export const experience = [
   {
-    role: "Founder & Web Developer",
+    role: "Founder & CEO",
     org: "CHILL TECH LTD",
     location: "Nigeria",
     period: "Present",
@@ -69,7 +69,7 @@ export const experience = [
     ],
     achievements: [
       "Founded and lead CHILL TECH LTD, combining technology development with business-focused digital solutions",
-      "Successfully delivered 7+ web projects across different industries",
+      "Successfully delivered 20+ websites and web applications across diverse industries — with select projects featured in the portfolio",
     ],
   },
   {
@@ -93,6 +93,49 @@ export const experience = [
 
 export const skills = [
   {
+    category: "Languages & Programming",
+    items: [
+      { name: "JavaScript (ES6+)", level: 88 },
+      { name: "TypeScript", level: 82 },
+      { name: "Python", level: 81 },
+      { name: "Java", level: 80 },
+      { name: "C Programming", level: 80 },
+      { name: "C++", level: 80 },
+      { name: "SQL", level: 83 },
+      { name: "XML", level: 80 },
+      { name: "HTML5", level: 95 },
+      { name: "CSS3", level: 92 },
+    ],
+  },
+  {
+    category: "Web & Mobile Development",
+    items: [
+      { name: "React / Vite", level: 88 },
+      { name: "Node.js / Express / REST APIs", level: 82 },
+      { name: "Progressive Web Apps (PWA)", level: 86 },
+      { name: "Mobile Apps (React Native)", level: 80 },
+      { name: "Database Management (SQL / MySQL)", level: 82 },
+    ],
+  },
+  {
+    category: "Design & UI/UX",
+    items: [
+      { name: "UI/UX Design", level: 82 },
+      { name: "Wireframing & Prototyping", level: 80 },
+      { name: "Responsive Design", level: 92 },
+      { name: "Figma", level: 80 },
+    ],
+  },
+  {
+    category: "Tools & Platforms",
+    items: [
+      { name: "Git / GitHub", level: 86 },
+      { name: "Vercel / Netlify", level: 88 },
+      { name: "VS Code", level: 90 },
+      { name: "Generative AI Tools", level: 85 },
+    ],
+  },
+  {
     category: "Real Estate & Business",
     items: [
       { name: "Property Investment", level: 92 },
@@ -101,50 +144,40 @@ export const skills = [
       { name: "Land Documentation & Sales Strategy", level: 85 },
     ],
   },
-  {
-    category: "Web & Mobile Development",
-    items: [
-      { name: "React / Vite", level: 88 },
-      { name: "Mobile Apps (iOS & Android / React Native)", level: 84 },
-      { name: "Progressive Web Apps (PWA)", level: 86 },
-      { name: "JavaScript (ES6+) / TypeScript", level: 82 },
-      { name: "Node.js / Express / REST APIs", level: 78 },
-    ],
-  },
-  {
-    category: "Design & UI/UX",
-    items: [
-      { name: "UI/UX Design", level: 82 },
-      { name: "Wireframing & Prototyping", level: 78 },
-      { name: "Responsive Design", level: 88 },
-    ],
-  },
-  {
-    category: "Tools & Platforms",
-    items: [
-      { name: "Git / GitHub", level: 86 },
-      { name: "Vercel / Netlify", level: 88 },
-      { name: "Figma", level: 76 },
-    ],
-  },
 ];
 
 export const tools = [
+  { label: "JavaScript", color: "yellow" },
+  { label: "Python", color: "blue" },
+  { label: "Java", color: "orange" },
+  { label: "C", color: "indigo" },
+  { label: "C++", color: "purple" },
+  { label: "SQL", color: "cyan" },
+  { label: "XML", color: "green" },
+  { label: "TypeScript", color: "blue" },
+  { label: "React", color: "cyan" },
+  { label: "Node.js", color: "green" },
+  { label: "HTML5", color: "orange" },
+  { label: "CSS3", color: "blue" },
   { label: "Git", color: "orange" },
   { label: "GitHub", color: "indigo" },
   { label: "Figma", color: "purple" },
   { label: "Vercel", color: "blue" },
   { label: "Netlify", color: "green" },
   { label: "VS Code", color: "blue" },
+  { label: "MySQL", color: "cyan" },
 ];
 
 export const achievements = [
-  "Managing real estate investments for 500+ investors across Nigeria",
-  "Successfully delivered 7+ web projects for diverse industries",
-  "Operating across Lagos, Ogun, and Oyo States",
-  "Maintaining 98% client satisfaction rate at CHIL Investment Ltd",
-  "Built and launched multiple production-ready web applications",
-  "Increased investor portfolio by 40% year-on-year",
+  "Founded & built CHILL TECH LTD from the ground up — delivering high-performance websites and digital solutions for clients across multiple industries",
+  "Successfully designed, developed, and deployed 20+ websites and web applications for clients across real estate, logistics, education, e-commerce, and more — with select projects showcased in the portfolio",
+  "Capable of building any type of website — from business landing pages, e-commerce stores, and portfolios, to booking platforms, dashboards, SaaS products, and full web applications",
+  "Achieved a 98% client satisfaction rate across all delivered projects — driven by consistent quality, communication, and results",
+  "Serves as General Manager at CHIL Investment Ltd, overseeing real estate investments for 500+ investors across Nigeria",
+  "Supervised the successful allocation of 1,000+ plots across multiple estate locations in Lagos, Ogun, and Oyo States",
+  "Grew the CHIL Investment Ltd investor portfolio by 40% year-on-year through strategic management and investor relations",
+  "First Student Provost in the history of Police Secondary School, Akure — recognised for exceptional leadership, discipline, and responsibility",
+  "Represented Nigeria as a delegate at the 21st UNIDO General Conference, Riyadh — the Global Industry Summit attended by world leaders and government ministers",
 ];
 
 export const languages = [

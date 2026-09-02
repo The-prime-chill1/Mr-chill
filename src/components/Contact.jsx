@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FiMail, FiPhone, FiCheck, FiCopy, FiMessageSquare, FiGithub } from 'react-icons/fi';
 import { SiTiktok, SiInstagram, SiX } from 'react-icons/si';
+import emailjs from '@emailjs/browser';
 import { profile } from '../data';
 import LightRays from './reactbits/LightRays';
 import StarBorder from './reactbits/StarBorder';
@@ -15,8 +16,8 @@ export default function Contact() {
   const [copiedOfficial, setCopiedOfficial] = useState(false);
 
   useEffect(() => {
-    if (window.emailjs) {
-      window.emailjs.init({ publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY });
+    if (import.meta.env.VITE_EMAILJS_PUBLIC_KEY) {
+      emailjs.init({ publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY });
     }
   }, []);
 
@@ -38,8 +39,8 @@ export default function Contact() {
     e.preventDefault();
     setStatus('sending');
 
-    if (window.emailjs && import.meta.env.VITE_EMAILJS_SERVICE_ID && import.meta.env.VITE_EMAILJS_SERVICE_ID.startsWith('service_')) {
-      window.emailjs
+    if (emailjs && import.meta.env.VITE_EMAILJS_SERVICE_ID && import.meta.env.VITE_EMAILJS_SERVICE_ID.startsWith('service_')) {
+      emailjs
         .send(
           import.meta.env.VITE_EMAILJS_SERVICE_ID,
           import.meta.env.VITE_EMAILJS_TEMPLATE_ID,

@@ -97,10 +97,11 @@ export default function Hero({ onDownloadCV, onViewCV, cvUrl }) {
 
         {/* Headline */}
         <h1 className="hero-headline">
-          <span style={{ display: 'block', fontSize: 'clamp(0.9rem, 2vw, 1.15rem)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 8, opacity: 0.95 }}>
-            CHILL TECH LTD &bull; Web Design &amp; Software Development
+          <span style={{ display: 'block', fontSize: 'clamp(0.75rem, 1.8vw, 1rem)', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 12, opacity: 0.95 }}>
+            CHILL TECH LTD &bull; Technology &bull; Web Development &bull; Digital Solutions
           </span>
-          Hi, I'm <span className="gradient-text">MR CHILL</span>
+          <span className="hero-hi">Hi, I'm </span>
+          <span className="hero-name-bold">MR CHILL</span>
         </h1>
 
         {/* Role Text */}
@@ -215,6 +216,18 @@ export default function Hero({ onDownloadCV, onViewCV, cvUrl }) {
           line-height: 1.1;
           word-break: break-word;
           width: 100%;
+        }
+
+        .hero-hi {
+          color: var(--text-main);
+          font-weight: 800;
+        }
+
+        .hero-name-bold {
+          display: inline-block;
+          color: #00c2ff;
+          font-weight: 900;
+          letter-spacing: 0.02em;
         }
 
         /* ── Role ── */

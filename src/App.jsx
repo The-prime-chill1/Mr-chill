@@ -127,8 +127,8 @@ export default function App() {
           <Suspense fallback={<SectionFallback />}>
             <About />
             <Experience />
-            <Skills />
             <Achievements />
+            <Skills />
             <Portfolio />
 
             <Contact />

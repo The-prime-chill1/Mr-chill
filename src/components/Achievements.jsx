@@ -1,50 +1,53 @@
 import { motion } from 'framer-motion';
-import { FiTrendingUp, FiUsers, FiMapPin, FiAward, FiBarChart2, FiCheckCircle } from 'react-icons/fi';
+import { FiTrendingUp, FiUsers, FiMapPin, FiAward, FiBarChart2, FiCheckCircle, FiGlobe, FiStar } from 'react-icons/fi';
 import { achievements } from '../data';
 
-const ICONS = [FiUsers, FiCheckCircle, FiMapPin, FiAward, FiTrendingUp, FiBarChart2];
+const ICONS = [FiStar, FiCheckCircle, FiAward, FiUsers, FiMapPin, FiTrendingUp, FiBarChart2, FiGlobe];
 
 export default function Achievements() {
   return (
     <section className="floating-card section-tight">
       <div className="container">
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <span className="eyebrow">By The Numbers</span>
+          <span className="eyebrow">Track Record</span>
           <h2 className="section-title" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)' }}>
-            Professional <span className="gradient-text">Achievements</span>
+            Key <span className="gradient-text">Achievements</span>
           </h2>
+          <p style={{ color: 'var(--text-dim)', maxWidth: 560, margin: '12px auto 0', fontSize: '0.95rem', lineHeight: 1.7 }}>
+            A snapshot of what CHILL TECH LTD and its founder have built, managed, and delivered.
+          </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: 'clamp(12px, 2.5vw, 18px)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: 'clamp(12px, 2.5vw, 18px)' }}>
           {achievements.map((text, idx) => {
             const Icon = ICONS[idx % ICONS.length];
             return (
               <motion.div
-                key={text}
+                key={idx}
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.4, delay: idx * 0.06 }}
                 className="glass"
-                style={{ padding: 'clamp(14px, 3vw, 18px) clamp(14px, 3vw, 20px)', display: 'flex', gap: 12, alignItems: 'flex-start' }}
+                style={{ padding: 'clamp(16px, 3vw, 22px)', display: 'flex', gap: 14, alignItems: 'flex-start' }}
               >
                 <span
                   style={{
                     flexShrink: 0,
-                    width: 36,
-                    height: 36,
-                    borderRadius: 10,
+                    width: 40,
+                    height: 40,
+                    borderRadius: 12,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    background: 'linear-gradient(135deg, rgba(47,141,255,0.15), rgba(91,110,232,0.15))',
+                    background: 'linear-gradient(135deg, rgba(47,141,255,0.18), rgba(91,110,232,0.18))',
                     color: 'var(--electric-blue)',
-                    fontSize: '1rem',
+                    fontSize: '1.1rem',
                   }}
                 >
                   <Icon />
                 </span>
-                <span style={{ fontSize: 'clamp(0.82rem, 2vw, 0.88rem)', color: 'var(--text-dim)', lineHeight: 1.5, paddingTop: 4 }}>{text}</span>
+                <span style={{ fontSize: 'clamp(0.84rem, 2vw, 0.9rem)', color: 'var(--text-dim)', lineHeight: 1.6, paddingTop: 6 }}>{text}</span>
               </motion.div>
             );
           })}
