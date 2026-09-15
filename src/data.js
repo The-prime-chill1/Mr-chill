@@ -209,6 +209,13 @@ export const projects = [
     featured: false,
   },
   {
+    title: "Al-Irshaad Islamic Institute",
+    description: "Premier online international Islamic school providing 1-on-1 Qur'an recitation, applied Tajweed, 3-cycle Hifdh memorization, and Arabic education worldwide.",
+    tech: ["React", "CSS", "SEO", "Vercel"],
+    link: "https://www.al-irshaadislamicinstitute.com/",
+    featured: false,
+  },
+  {
     title: "Ali Institute",
     description: "Educational platform for Quran memorisation.",
     tech: ["React", "CSS", "Vercel"],
@@ -258,6 +265,13 @@ export const testimonials = [
     name: "Alh. Laide Asiwaju",
     role: "Founder & CEO, Amsolf Prints and Packed",
     project: "Commercial Printing & Packaging Platform",
+    rating: 5,
+  },
+  {
+    quote: "Chill Tech developed an exceptional online international Islamic school platform for Al-Irshaad. The virtual classroom architecture, curriculum display, and student enrollment experience are truly world-class.",
+    name: "Ustaadh Naasir Akinbolanle Jamiu",
+    role: "Founder & Director, Al-Irshaad Islamic Institute",
+    project: "International Online Islamic School",
     rating: 5,
   },
   {

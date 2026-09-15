@@ -242,6 +242,11 @@ export default function CVPage() {
                   <td>React • CSS • SEO • Vercel</td>
                 </tr>
                 <tr>
+                  <td><strong>Al-Irshaad Islamic Institute</strong></td>
+                  <td>Online international Islamic school delivering 1-on-1 Qur'an, Tajweed, and Arabic education worldwide.</td>
+                  <td>React • CSS • SEO • Vercel</td>
+                </tr>
+                <tr>
                   <td><strong>LEGACY.streetwear</strong></td>
                   <td>Fashion e-commerce platform with product catalogue and brand storytelling.</td>
                   <td>React • CSS • Vercel</td>
