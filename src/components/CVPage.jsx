@@ -237,9 +237,9 @@ export default function CVPage() {
                   <td>React • CSS • Netlify</td>
                 </tr>
                 <tr>
-                  <td><strong>Royal Furniture</strong></td>
-                  <td>Furniture brand website with gallery and custom order functionality.</td>
-                  <td>React • CSS • Vercel</td>
+                  <td><strong>Amsolf Prints and Packed</strong></td>
+                  <td>Commercial printing, Holy Qur'an publishing, packaging, and corporate branding platform.</td>
+                  <td>React • CSS • SEO • Vercel</td>
                 </tr>
                 <tr>
                   <td><strong>LEGACY.streetwear</strong></td>

@@ -9,10 +9,10 @@ const CATEGORIES = ['All', 'Real Estate', 'E-Commerce', 'Logistics', 'Fintech', 
 function categorizeProject(project) {
   const desc = (project.title + ' ' + project.description).toLowerCase();
   if (desc.includes('estate') || desc.includes('investment') || desc.includes('property')) return 'Real Estate';
+  if (desc.includes('printing') || desc.includes('packaging') || desc.includes('amsolf')) return 'E-Commerce';
   if (desc.includes('institute') || desc.includes('quran') || desc.includes('education') || desc.includes('recruitment')) return 'Education';
-  if (desc.includes('logistics') || desc.includes('cargo') || desc.includes('transbridge')) return 'Logistics';
+  if (desc.includes('logistics') || desc.includes('cargo') || desc.includes('transbridge') || desc.includes('freight') || desc.includes('shipping') || desc.includes('motors') || desc.includes('dealership')) return 'Logistics';
   if (desc.includes('fintech') || desc.includes('expense') || desc.includes('budget')) return 'Fintech';
-  if (desc.includes('motors') || desc.includes('dealership')) return 'Logistics';
   return 'E-Commerce';
 }
 
@@ -29,18 +29,18 @@ function getCategoryColor(cat) {
   return CATEGORY_GRADIENTS[cat] || ['#0c1222', '#00c2ff'];
 }
 
-// Lazy screenshot thumbnail — loads via Microlink CDN, falls back to gradient
+// Lazy screenshot thumbnail — loads live website screenshot via Microlink CDN
 function ProjectThumbnail({ url, title, category }) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
   const [colors] = useState(() => getCategoryColor(category));
 
-  // Microlink screenshot API — free, edge-cached, returns a screenshot image
-  const screenshotUrl = `https://api.microlink.io/?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url&type=jpeg&quality=60&viewport.width=1280&viewport.height=720`;
+  // Microlink screenshot API — fetches live screenshot of the website
+  const screenshotUrl = `https://api.microlink.io/?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url&type=jpeg&quality=75&viewport.width=1280&viewport.height=750`;
 
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden' }}>
-      {/* Gradient placeholder — always visible underneath */}
+    <div style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden', background: '#0a0f1d' }}>
+      {/* Gradient placeholder — always visible underneath while loading */}
       <div
         style={{
           position: 'absolute',
@@ -61,7 +61,7 @@ function ProjectThumbnail({ url, title, category }) {
         </span>
       </div>
 
-      {/* Actual screenshot — lazy loaded, hidden until loaded */}
+      {/* Actual live website screenshot */}
       {!failed && (
         <img
           src={screenshotUrl}
