@@ -3,27 +3,42 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   FiHome, FiUser, FiBarChart2, FiGrid, FiMail,
   FiDownload, FiEye, FiBriefcase, FiHelpCircle, FiSun, FiMoon, FiMessageSquare,
-  FiMenu, FiX
+  FiMenu, FiX, FiShield
 } from 'react-icons/fi';
 import Logo from './Logo';
 
-const NAV_LINKS = [
-  { id: 'top',          icon: FiHome,          label: 'Home',         href: '#top' },
-  { id: 'about',        icon: FiUser,          label: 'About',        href: '#about' },
-  { id: 'skills',       icon: FiBarChart2,     label: 'Skills',       href: '#skills' },
-  { id: 'portfolio',    icon: FiGrid,          label: 'Portfolio',    href: '#portfolio' },
-  { id: 'work-with-me', icon: FiBriefcase,     label: 'Work With Me', href: '#/work-with-me' },
-  { id: 'quote',        icon: FiMessageSquare, label: 'Get Quote',    href: '#/quote' },
-  { id: 'faq',          icon: FiHelpCircle,    label: 'FAQ',          href: '#/faq' },
-  { id: 'contact',      icon: FiMail,          label: 'Contact',      href: '#contact' },
+// Desktop navigation links (clean, uncluttered without FAQ)
+const DESKTOP_NAV_LINKS = [
+  { id: 'top', icon: FiHome, label: 'Home', href: '#top' },
+  { id: 'about', icon: FiUser, label: 'About', href: '#about' },
+  { id: 'skills', icon: FiBarChart2, label: 'Skills', href: '#skills' },
+  { id: 'portfolio', icon: FiGrid, label: 'Portfolio', href: '#portfolio' },
+  { id: 'work-with-me', icon: FiBriefcase, label: 'Work With Me', href: '#/work-with-me' },
+  { id: 'quote', icon: FiMessageSquare, label: 'Get Quote', href: '#/quote' },
+  { id: 'contact', icon: FiMail, label: 'Contact', href: '#contact' },
 ];
+
+// Mobile navigation links (includes FAQ and Privacy Policy)
+const MOBILE_NAV_LINKS = [
+  { id: 'top', icon: FiHome, label: 'Home', href: '#top' },
+  { id: 'about', icon: FiUser, label: 'About', href: '#about' },
+  { id: 'skills', icon: FiBarChart2, label: 'Skills', href: '#skills' },
+  { id: 'portfolio', icon: FiGrid, label: 'Portfolio', href: '#portfolio' },
+  { id: 'work-with-me', icon: FiBriefcase, label: 'Work With Me', href: '#/work-with-me' },
+  { id: 'quote', icon: FiMessageSquare, label: 'Get Quote', href: '#/quote' },
+  { id: 'faq', icon: FiHelpCircle, label: 'FAQ', href: '#/faq' },
+  { id: 'privacy', icon: FiShield, label: 'Privacy Policy', href: '#/privacy' },
+  { id: 'contact', icon: FiMail, label: 'Contact', href: '#contact' },
+];
+
 
 export default function Navbar({ onDownloadCV, onViewCV, cvUrl }) {
   const [active, setActive] = useState('top');
-  const [theme, setTheme]   = useState(() => localStorage.getItem('chill_tech_theme') || 'light');
+  const [theme, setTheme] = useState(() => localStorage.getItem('chill_tech_theme') || 'light');
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const observerRef = useRef(null);
+  const navContainerRef = useRef(null);
 
   /* ── Theme sync ── */
   useEffect(() => {
@@ -38,13 +53,37 @@ export default function Navbar({ onDownloadCV, onViewCV, cvUrl }) {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  /* ── Section observer for active state ── */
+  /* ── Close mobile menu on outside click or escape key ── */
   useEffect(() => {
-    const sections = NAV_LINKS.map(l => document.getElementById(l.id)).filter(Boolean);
+    const handleClickOutside = (e) => {
+      if (navContainerRef.current && !navContainerRef.current.contains(e.target)) {
+        setMobileMenuOpen(false);
+      }
+    };
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setMobileMenuOpen(false);
+    };
+
+    if (mobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside, { passive: true });
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [mobileMenuOpen]);
+
+  /* ── Section observer for active state on home ── */
+  useEffect(() => {
+    const allSections = [...DESKTOP_NAV_LINKS, ...MOBILE_NAV_LINKS];
+    const sections = allSections.map(l => document.getElementById(l.id)).filter(Boolean);
     observerRef.current = new IntersectionObserver(
       entries => entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id); }),
       { rootMargin: '-30% 0px -40% 0px', threshold: 0 }
@@ -53,26 +92,43 @@ export default function Navbar({ onDownloadCV, onViewCV, cvUrl }) {
     return () => observerRef.current?.disconnect();
   }, []);
 
+  const handleNavLinkClick = (e, href, id) => {
+    setMobileMenuOpen(false);
+    if (href.startsWith('#/')) {
+      // route link, let normal hash router handle it
+      return;
+    }
+    if (href.startsWith('#')) {
+      const targetEl = document.getElementById(id);
+      if (targetEl) {
+        e.preventDefault();
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setActive(id);
+      }
+    }
+  };
+
   return (
-    <header className={`navbar-header ${scrolled ? 'is-scrolled' : ''}`}>
+    <header className={`navbar-header ${scrolled ? 'is-scrolled' : ''}`} ref={navContainerRef}>
       <div className="navbar-container">
-        
+
         {/* Brand / Logo */}
-        <a href="#top" className="navbar-brand">
+        <a href="#top" className="navbar-brand" onClick={(e) => handleNavLinkClick(e, '#top', 'top')}>
           <div className="logo-ring">
             <Logo width={36} style={{ borderRadius: '50%' }} />
           </div>
           <span className="brand-name">Chill<span className="brand-accent">Tech</span></span>
         </a>
 
-        {/* Desktop Nav Links */}
+        {/* Desktop Nav Links (Clean & uncrowded without FAQ) */}
         <nav className="desktop-nav" aria-label="Primary navigation">
-          {NAV_LINKS.map(({ id, icon: Icon, label, href }) => {
+          {DESKTOP_NAV_LINKS.map(({ id, icon: Icon, label, href }) => {
             const isActive = active === id;
             return (
               <a
                 key={id}
                 href={href || `#${id}`}
+                onClick={(e) => handleNavLinkClick(e, href || `#${id}`, id)}
                 className={`nav-link ${isActive ? 'is-active' : ''}`}
               >
                 <Icon className="nav-link-icon" />
@@ -91,7 +147,7 @@ export default function Navbar({ onDownloadCV, onViewCV, cvUrl }) {
 
         {/* Action Controls (CV + Theme + Mobile toggle) */}
         <div className="navbar-actions">
-          
+
           <a
             href="#/cv"
             className="btn-nav-ghost"
@@ -126,6 +182,7 @@ export default function Navbar({ onDownloadCV, onViewCV, cvUrl }) {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="mobile-menu-btn"
             aria-label="Toggle navigation menu"
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <FiX /> : <FiMenu />}
           </button>
@@ -134,29 +191,30 @@ export default function Navbar({ onDownloadCV, onViewCV, cvUrl }) {
 
       </div>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Drawer Menu (Includes FAQ and Privacy Policy) */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            initial={{ opacity: 0, y: -10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
             className="mobile-drawer"
           >
             <div className="mobile-drawer-inner">
-              {NAV_LINKS.map(({ id, icon: Icon, label, href }) => (
+              {MOBILE_NAV_LINKS.map(({ id, icon: Icon, label, href }) => (
                 <a
                   key={id}
                   href={href || `#${id}`}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={(e) => handleNavLinkClick(e, href || `#${id}`, id)}
                   className={`mobile-nav-link ${active === id ? 'is-active' : ''}`}
                 >
                   <Icon className="mobile-link-icon" />
                   <span>{label}</span>
                 </a>
               ))}
-              
+
+
               <div className="mobile-actions-row">
                 <a
                   href="#/cv"
@@ -176,6 +234,7 @@ export default function Navbar({ onDownloadCV, onViewCV, cvUrl }) {
           </motion.div>
         )}
       </AnimatePresence>
+
 
       <style>{`
         .navbar-header {
@@ -504,3 +563,4 @@ export default function Navbar({ onDownloadCV, onViewCV, cvUrl }) {
     </header>
   );
 }
+

@@ -67,33 +67,35 @@ export default function FAQPage() {
     <div className="faq-page">
       {/* ── Sticky Header ── */}
       <header className="faq-header">
-        <a href="#/" className="faq-logo" aria-label="Home" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{
-            width: 42, height: 42, borderRadius: '50%', overflow: 'hidden',
-            background: '#fff', display: 'flex', alignItems: 'center',
-            justifyContent: 'center', flexShrink: 0,
-            border: '2px solid rgba(0,194,255,0.3)',
-          }}>
-            <Logo width={38} />
-          </div>
-          <span className="faq-logo-name" style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.05rem', color: 'var(--text)' }}>
-            CHILL <span className="gradient-text">TECH</span>
-          </span>
-        </a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <a href="#/" className="faq-back-btn" aria-label="Back to Homepage">
+            <FiArrowLeft /> <span>Home</span>
+          </a>
+          <a href="#/" className="faq-logo" aria-label="Chill Tech Home">
+            <div style={{
+              width: 38, height: 38, borderRadius: '50%', overflow: 'hidden',
+              background: '#fff', display: 'flex', alignItems: 'center',
+              justifyContent: 'center', flexShrink: 0,
+              border: '1.5px solid rgba(0,194,255,0.3)',
+            }}>
+              <Logo width={34} />
+            </div>
+            <span className="faq-logo-name" style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.02rem', color: 'var(--text)' }}>
+              CHILL <span className="gradient-text">TECH</span>
+            </span>
+          </a>
+        </div>
 
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
           <button
             onClick={toggleTheme}
-            className="btn btn-ghost"
+            className="btn btn-ghost faq-theme-btn"
             aria-label="Toggle theme"
-            style={{ padding: '8px 14px', color: theme === 'dark' ? '#f59e0b' : '#3b82f6' }}
+            style={{ padding: '8px 12px', color: theme === 'dark' ? '#f59e0b' : '#3b82f6' }}
           >
             {theme === 'dark' ? <FiSun /> : <FiMoon />}
           </button>
-          <a href="#/" className="btn btn-ghost faq-home-btn" style={{ padding: '8px 18px', fontSize: '0.82rem' }}>
-            <FiArrowLeft /> Home
-          </a>
-          <a href="#/work-with-me" className="btn btn-primary faq-cta-btn" style={{ padding: '8px 20px', fontSize: '0.82rem' }}>
+          <a href="#/work-with-me" className="btn btn-primary faq-cta-btn" style={{ padding: '8px 18px', fontSize: '0.82rem' }}>
             Hire Me <FiArrowRight />
           </a>
         </div>
@@ -280,23 +282,47 @@ export default function FAQPage() {
         .faq-header {
           position: sticky; top: 0; z-index: 50;
           display: flex; align-items: center; justify-content: space-between;
-          padding: 14px 32px; gap: 12px;
+          padding: 12px 28px; gap: 12px;
           background: var(--bg-card);
           border-bottom: 1px solid var(--panel-border);
           backdrop-filter: blur(16px);
           -webkit-backdrop-filter: blur(16px);
         }
-        .faq-logo { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+        .faq-back-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 7px 14px;
+          border-radius: 999px;
+          background: var(--bg-card-hover);
+          border: 1px solid var(--panel-border);
+          color: var(--text);
+          font-size: 0.82rem;
+          font-weight: 600;
+          text-decoration: none;
+          transition: all 0.2s ease;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+        .faq-back-btn:hover {
+          color: #00c2ff;
+          border-color: rgba(0, 194, 255, 0.4);
+          transform: translateX(-2px);
+        }
+        .faq-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; }
         .faq-hero { padding-top: 0; }
 
         @media (max-width: 768px) {
-          .faq-header { padding: 10px 16px; gap: 8px; }
+          .faq-header { padding: 10px 14px; gap: 8px; }
           .faq-logo-name { display: none; }
-          .faq-home-btn { display: none; }
-          .faq-cta-btn { padding: 8px 14px !important; font-size: 0.78rem !important; }
+          .faq-back-btn { padding: 6px 12px; font-size: 0.78rem; }
+          .faq-cta-btn { padding: 7px 12px !important; font-size: 0.78rem !important; }
+          .faq-theme-btn { padding: 7px 10px !important; }
         }
         @media (max-width: 480px) {
-          .faq-header { padding: 8px 12px; }
+          .faq-header { padding: 8px 10px; gap: 6px; }
+          .faq-back-btn { padding: 5px 10px; font-size: 0.75rem; }
+          .faq-cta-btn { padding: 6px 10px !important; font-size: 0.74rem !important; }
         }
       `}</style>
     </div>

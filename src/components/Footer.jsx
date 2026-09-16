@@ -13,12 +13,13 @@ const SOCIALS = [
 ];
 
 const NAV_LINKS = [
-  { label: 'Home',           href: '#top' },
-  { label: 'About Me',       href: '#about' },
-  { label: 'Skills & Tech',  href: '#skills' },
-  { label: 'Featured Work',  href: '#portfolio' },
-  { label: 'Contact Me',     href: '#contact' },
+  { label: 'Home',                href: '#top' },
+  { label: 'About Company & CEO', href: '#/about' },
+  { label: 'Skills & Full Stack', href: '#/skills' },
+  { label: 'Featured Work',       href: '#portfolio' },
+  { label: 'Contact Me',          href: '#contact' },
 ];
+
 
 const SERVICES = [
   'Full-Stack Web Development',
@@ -29,12 +30,14 @@ const SERVICES = [
 ];
 
 const QUICK_LINKS = [
-  { label: 'Work With Me',   href: '#/work-with-me' },
-  { label: 'Request a Quote', href: '#/quote' },
-  { label: 'Client Reviews', href: '#/reviews', star: true },
-  { label: 'FAQ Page',       href: '#/faq' },
-  { label: 'Privacy & Terms', href: '#/privacy' },
+  { label: 'About Company & CEO', href: '#/about' },
+  { label: 'Work With Me',      href: '#/work-with-me' },
+  { label: 'Request a Quote',   href: '#/quote' },
+  { label: 'Client Reviews',    href: '#/reviews', star: true },
+  { label: 'FAQ Page',          href: '#/faq' },
+  { label: 'Privacy & Terms',   href: '#/privacy' },
 ];
+
 
 export default function Footer() {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -479,7 +482,15 @@ export default function Footer() {
             margin-top: 4px;
           }
         }
+
+        @media (max-width: 420px) {
+          .pro-footer-links-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+          }
+        }
       `}</style>
     </footer>
   );
 }
+

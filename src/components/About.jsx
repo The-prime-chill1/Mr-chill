@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useInView, animate } from 'framer-motion';
-import { profile, stats, education, languages } from '../data';
+import { FiArrowRight, FiCheckCircle, FiUser, FiBriefcase, FiCode } from 'react-icons/fi';
+import { profile, stats } from '../data';
 import headshot from '../assets/lamidi-headshot.jpg';
 
 function Counter({ value, suffix }) {
@@ -30,7 +31,8 @@ export default function About() {
   return (
     <section id="about" className="floating-card section">
       <div className="container">
-        <div style={{ display: 'grid', gridTemplateColumns: '0.85fr 1.15fr', gap: 64, alignItems: 'center' }} className="about-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: '0.85fr 1.15fr', gap: 54, alignItems: 'center' }} className="about-grid">
+          {/* Left: Founder Headshot */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -44,14 +46,23 @@ export default function About() {
                 padding: 10,
                 position: 'relative',
                 overflow: 'hidden',
+                borderRadius: 20,
               }}
             >
               <img
                 src={headshot}
                 alt="Lamidi Abdulhameed Olawale at the Global Industry Summit, 21st UNIDO General Conference, Riyadh"
-                style={{ width: '100%', borderRadius: 12 }}
+                style={{ width: '100%', borderRadius: 14, display: 'block' }}
                 loading="lazy"
               />
+              <div style={{ padding: '12px 6px 4px' }}>
+                <div style={{ fontWeight: 800, fontSize: '0.95rem', color: 'var(--text)' }}>
+                  Lamidi Abdulhameed Olawale
+                </div>
+                <div style={{ fontSize: '0.78rem', color: 'var(--cyan)', marginTop: 2 }}>
+                  Founder & CEO @ CHILL TECH LTD • GM @ CHIL Investment Ltd
+                </div>
+              </div>
             </div>
             <div
               style={{
@@ -66,85 +77,84 @@ export default function About() {
             />
           </motion.div>
 
+          {/* Right: Concise Content & Learn More */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.7 }}
           >
-            <span className="eyebrow">About Me</span>
+            <span className="eyebrow">About CHILL TECH & Founder</span>
             <h2 className="section-title">
               Building <span className="gradient-text">technology solutions</span> that move businesses forward
             </h2>
-            
-            <p style={{ color: 'var(--text-dim)', lineHeight: 1.8, fontSize: '1.02rem', marginBottom: 16 }}>
-              {profile.bio}
+
+            <p style={{ color: 'var(--text-dim)', lineHeight: 1.75, fontSize: '1rem', marginBottom: 14 }}>
+              <strong>CHILL TECH LTD</strong> is a digital engineering company dedicated to transforming business goals into modern, high-performing websites and custom software solutions.
             </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginTop: 16 }}>
-              {profile.aboutFull?.map((paragraph, index) => (
-                <p key={index} style={{ color: 'var(--text-dim)', lineHeight: 1.75, fontSize: '0.96rem', margin: 0 }}>
-                  {paragraph}
-                </p>
-              ))}
+            <p style={{ color: 'var(--text-dim)', lineHeight: 1.75, fontSize: '0.94rem', marginBottom: 20 }}>
+              Led by Founder & CEO <strong>Lamidi Abdulhameed Olawale</strong> (studying ADSE Software Engineering at Aptech and serving as General Manager at CHIL Investment Ltd), we combine engineering precision with commercial strategy to deliver results that elevate your brand.
+            </p>
+
+            {/* Quick Feature Badges */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, marginBottom: 26 }} className="about-badges-grid">
+              <div className="glass" style={{ padding: '10px 14px', borderRadius: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <FiCode style={{ color: 'var(--cyan)', fontSize: '1.1rem', flexShrink: 0 }} />
+                <span style={{ fontSize: '0.82rem', fontWeight: 600 }}>Full-Stack Web Engineering</span>
+              </div>
+              <div className="glass" style={{ padding: '10px 14px', borderRadius: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <FiBriefcase style={{ color: 'var(--electric-blue)', fontSize: '1.1rem', flexShrink: 0 }} />
+                <span style={{ fontSize: '0.82rem', fontWeight: 600 }}>Real Estate & E-Commerce</span>
+              </div>
             </div>
 
-            <div style={{ marginTop: 40 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14 }} className="stats-grid">
+            {/* Action Buttons: Learn More & CV */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', marginBottom: 30 }}>
+              <a
+                href="#/about"
+                className="btn btn-primary"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', fontSize: '0.92rem' }}
+              >
+                Learn More (Company & CEO) <FiArrowRight />
+              </a>
+              <a
+                href="#/cv"
+                className="btn btn-ghost"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 20px', fontSize: '0.92rem' }}
+              >
+                <FiUser /> Read Full CV
+              </a>
+            </div>
+
+            {/* Stats Grid Counters */}
+            <div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }} className="stats-grid">
                 {stats.map((s) => (
-                  <div key={s.label} className="glass" style={{ padding: '18px 10px', textAlign: 'center' }}>
-                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.4rem' }} className="gradient-text">
+                  <div key={s.label} className="glass" style={{ padding: '14px 8px', textAlign: 'center', borderRadius: 14 }}>
+                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.3rem' }} className="gradient-text">
                       <Counter value={s.value} suffix={s.suffix} />
                     </div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginTop: 6 }}>{s.label}</div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: 4, lineHeight: 1.3 }}>{s.label}</div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div style={{ marginTop: 40 }}>
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', marginBottom: 16 }}>Education</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                {education.map((e) => (
-                  <div
-                    key={e.school}
-                    className="glass"
-                    style={{ padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}
-                  >
-                    <div>
-                      <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>{e.school}</div>
-                      <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)' }}>{e.detail}</div>
-                    </div>
-                    <span style={{ fontSize: '0.78rem', color: 'var(--cyan)' }}>{e.period}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div style={{ marginTop: 28, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-              {languages.map((l) => (
-                <span
-                  key={l.name}
-                  className="glass"
-                  style={{ padding: '8px 16px', fontSize: '0.8rem', display: 'flex', gap: 6, alignItems: 'center' }}
-                >
-                  <strong>{l.name}</strong>
-                  <span style={{ color: 'var(--text-dim)' }}>· {l.level}</span>
-                </span>
-              ))}
-            </div>
           </motion.div>
         </div>
       </div>
 
       <style>{`
         @media (max-width: 900px) {
-          .about-grid { grid-template-columns: 1fr !important; }
+          .about-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
         }
-        @media (max-width: 480px) {
+        @media (max-width: 540px) {
+          .about-badges-grid { grid-template-columns: 1fr !important; }
           .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
       `}</style>
     </section>
   );
 }
+

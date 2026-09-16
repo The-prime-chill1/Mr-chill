@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   FiCheckCircle, FiClock, FiZap, FiSmartphone, FiShield, FiCode, FiCpu, 
-  FiHeadphones, FiArrowRight, FiMessageSquare, FiChevronDown, FiExternalLink, FiDollarSign,
+  FiHeadphones, FiArrowRight, FiArrowLeft, FiMessageSquare, FiChevronDown, FiExternalLink, FiDollarSign,
   FiBriefcase, FiShoppingCart, FiFeather, FiBookOpen, FiSend, FiBarChart2, FiHome, FiTerminal, FiSun, FiMoon,
   FiLayers, FiCloud, FiRefreshCw
 } from 'react-icons/fi';
@@ -147,29 +147,31 @@ I'd like to get started on my project!`;
     <div className="work-page">
       {/* Sticky Header Nav */}
       <header className="work-header">
-        <a href="#/" className="work-logo" aria-label="Home" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ width: 42, height: 42, borderRadius: '50%', overflow: 'hidden', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <Logo width={38} />
-          </div>
-          <span className="work-logo-name" style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.05rem', color: 'var(--text)' }}>
-            CHILL <span className="gradient-text">TECH</span>
-          </span>
-        </a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <a href="#/" className="work-back-btn" aria-label="Back to Homepage">
+            <FiArrowLeft /> <span>Home</span>
+          </a>
+          <a href="#/" className="work-logo" aria-label="Chill Tech Home">
+            <div style={{ width: 38, height: 38, borderRadius: '50%', overflow: 'hidden', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1.5px solid rgba(0, 194, 255, 0.3)' }}>
+              <Logo width={34} />
+            </div>
+            <span className="work-logo-name" style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.02rem', color: 'var(--text)' }}>
+              CHILL <span className="gradient-text">TECH</span>
+            </span>
+          </a>
+        </div>
 
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
           <button
             onClick={toggleTheme}
-            className="btn btn-ghost"
+            className="btn btn-ghost work-theme-btn"
             aria-label={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
             title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-            style={{ padding: '8px 14px', color: theme === 'dark' ? '#f59e0b' : '#3b82f6' }}
+            style={{ padding: '8px 12px', color: theme === 'dark' ? '#f59e0b' : '#3b82f6' }}
           >
             {theme === 'dark' ? <FiSun /> : <FiMoon />}
           </button>
-          <a href="#/" className="btn btn-ghost work-home-btn" style={{ padding: '8px 18px', fontSize: '0.82rem' }}>
-            ← Home
-          </a>
-          <a href={`mailto:${profile.email}?subject=${encodeURIComponent('Project Inquiry — CHILL TECH LTD')}`} className="btn btn-primary work-start-btn" style={{ padding: '8px 20px', fontSize: '0.82rem' }}>
+          <a href={`mailto:${profile.email}?subject=${encodeURIComponent('Project Inquiry — CHILL TECH LTD')}`} className="btn btn-primary work-start-btn" style={{ padding: '8px 18px', fontSize: '0.82rem' }}>
             Start a Project
           </a>
         </div>
@@ -646,8 +648,29 @@ I'd like to get started on my project!`;
 
       <style>{`
         .work-page { min-height: 100vh; background: var(--bg-dark); color: var(--text); }
-        .work-header { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 14px 32px; background: var(--bg-card); border-bottom: 1px solid var(--panel-border); backdrop-filter: blur(16px); gap: 12px; }
-        .work-logo { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+        .work-header { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 12px 28px; background: var(--bg-card); border-bottom: 1px solid var(--panel-border); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); gap: 12px; }
+        .work-back-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 7px 14px;
+          border-radius: 999px;
+          background: var(--bg-card-hover);
+          border: 1px solid var(--panel-border);
+          color: var(--text);
+          font-size: 0.82rem;
+          font-weight: 600;
+          text-decoration: none;
+          transition: all 0.2s ease;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+        .work-back-btn:hover {
+          color: #00c2ff;
+          border-color: rgba(0, 194, 255, 0.4);
+          transform: translateX(-2px);
+        }
+        .work-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; }
         .work-hero { position: relative; overflow: hidden; padding-top: 40px; }
         .work-hero-glow { position: absolute; inset: 0; background: radial-gradient(circle at 50% 30%, rgba(0, 194, 255, 0.18) 0%, transparent 70%); pointer-events: none; }
         .work-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(0, 194, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 194, 255, 0.03) 1px, transparent 1px); background-size: 44px 44px; pointer-events: none; }
@@ -655,14 +678,17 @@ I'd like to get started on my project!`;
         .estimator-select { width: 100%; padding: 12px 16px; border-radius: 10px; background: var(--bg-card-hover); border: 1px solid var(--panel-border); color: var(--text); font-family: var(--font-body); font-size: 0.9rem; outline: none; }
         .estimator-select:focus { border-color: #00c2ff; }
         @media (max-width: 768px) {
-          .work-header { padding: 10px 16px; gap: 8px; }
+          .work-header { padding: 10px 14px; gap: 8px; }
           .work-logo-name { display: none; }
-          .work-home-btn { display: none; }
-          .work-start-btn { padding: 8px 14px !important; font-size: 0.78rem !important; }
+          .work-back-btn { padding: 6px 12px; font-size: 0.78rem; }
+          .work-start-btn { padding: 7px 12px !important; font-size: 0.78rem !important; }
+          .work-theme-btn { padding: 7px 10px !important; }
           .work-section { margin-top: 56px; }
         }
         @media (max-width: 480px) {
-          .work-header { padding: 8px 12px; }
+          .work-header { padding: 8px 10px; gap: 6px; }
+          .work-back-btn { padding: 5px 10px; font-size: 0.75rem; }
+          .work-start-btn { padding: 6px 10px !important; font-size: 0.74rem !important; }
           .work-section { margin-top: 40px; }
         }
       `}</style>

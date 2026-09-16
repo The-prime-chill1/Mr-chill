@@ -42,7 +42,7 @@ export default function Experience() {
                     }}
                   >
                     <div>
-                      <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem' }}>{job.role}</h3>
+                      <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', margin: '0 0 4px' }}>{job.role}</h3>
                       <div style={{ color: 'var(--cyan)', fontSize: '0.92rem', marginTop: 2 }}>
                         {job.org} · {job.location}
                       </div>
@@ -60,7 +60,7 @@ export default function Experience() {
                     </span>
                   </div>
 
-                  <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8, marginBottom: job.achievements.length ? 18 : 0 }}>
+                  <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 8, marginBottom: job.achievements.length ? 18 : 0 }}>
                     {job.points.map((p) => (
                       <li key={p} style={{ display: 'flex', gap: 10, fontSize: '0.9rem', color: 'var(--text-dim)', lineHeight: 1.5 }}>
                         <span style={{ color: 'var(--electric-blue)', flexShrink: 0 }}>—</span>
@@ -97,3 +97,5 @@ export default function Experience() {
     </section>
   );
 }
+
+

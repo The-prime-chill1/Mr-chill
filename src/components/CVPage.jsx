@@ -28,8 +28,8 @@ export default function CVPage() {
     <div className="cv-page-container">
       {/* Top Control Bar (Hidden when printing) */}
       <div className="cv-action-bar no-print">
-        <a href="#/" className="cv-back-btn">
-          <FiArrowLeft /> Back to Portfolio
+        <a href="#/" className="cv-back-btn" aria-label="Back to Homepage">
+          <FiArrowLeft /> <span>Home</span>
         </a>
         <div style={{ display: 'flex', gap: 12 }}>
           <button onClick={handlePrint} className="cv-action-btn primary">
@@ -56,7 +56,7 @@ export default function CVPage() {
             <div className="cv-subtitle">
               ADVANCED DIPLOMA IN SOFTWARE ENGINEERING (ADSE) • WEB DEVELOPER • TECHNOLOGY ENTREPRENEUR
             </div>
-            
+
             <div className="cv-contact-block">
               <div>31 Grace Court, Chois Oasis, Abijo GRA, Ibeju-Lekki, Lagos, Nigeria</div>
               <div>+234 913 763 2195 • chilltech2k26@gmail.com • lamidiabdulhameedolawale@gmail.com</div>
@@ -135,7 +135,7 @@ export default function CVPage() {
           {/* PROFESSIONAL EXPERIENCE */}
           <section className="cv-sec">
             <h2 className="cv-sec-title">PROFESSIONAL EXPERIENCE</h2>
-            
+
             {/* Job 1 */}
             <div className="cv-job-block">
               <div className="cv-job-head">
@@ -215,45 +215,50 @@ export default function CVPage() {
             <table className="cv-table-projects">
               <thead>
                 <tr>
-                  <th style={{ width: '26%' }}>PROJECT</th>
-                  <th style={{ width: '50%' }}>DESCRIPTION</th>
+                  <th style={{ width: '28%' }}>PROJECT</th>
+                  <th style={{ width: '48%' }}>DESCRIPTION</th>
                   <th style={{ width: '24%' }}>TECHNOLOGY</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><strong>CHIL Investment Ltd</strong></td>
-                  <td>Real estate investment platform with property showcases and investment tools.</td>
-                  <td>React • Three.js • CSS</td>
+                  <td><strong>CHIL Investment Ltd</strong><br /><span style={{ fontSize: '0.72rem', color: '#0284c7' }}>chil-investment-ltd.vercel.app</span></td>
+                  <td>Real estate investment portal with property showcase, investment calculator, and client management.</td>
+                  <td>React • Three.js • CSS • Vercel</td>
                 </tr>
                 <tr>
-                  <td><strong>Queen Smile</strong></td>
-                  <td>E-commerce platform with product presentation and WhatsApp ordering.</td>
-                  <td>React • CSS • Vercel</td>
+                  <td><strong>TransBridge Logistics</strong><br /><span style={{ fontSize: '0.72rem', color: '#0284c7' }}>trans-bridge-logistics.vercel.app</span></td>
+                  <td>International freight forwarding and supply chain platform between the UK and Nigeria.</td>
+                  <td>React • Three.js • CSS • Vercel</td>
                 </tr>
                 <tr>
-                  <td><strong>Dave Cargo</strong></td>
-                  <td>Logistics platform connecting the UK and Nigeria with cargo tracking.</td>
-                  <td>React • CSS • Netlify</td>
-                </tr>
-                <tr>
-                  <td><strong>Amsolf Prints and Packed</strong></td>
-                  <td>Commercial printing, Holy Qur'an publishing, packaging, and corporate branding platform.</td>
+                  <td><strong>Amsolf Prints and Packed</strong><br /><span style={{ fontSize: '0.72rem', color: '#0284c7' }}>amsolfprintsandpacked.com</span></td>
+                  <td>Commercial printing, Holy Qur'an publishing, custom packaging, and corporate branding platform.</td>
                   <td>React • CSS • SEO • Vercel</td>
                 </tr>
                 <tr>
-                  <td><strong>Al-Irshaad Islamic Institute</strong></td>
+                  <td><strong>Al-Irshaad Islamic Institute</strong><br /><span style={{ fontSize: '0.72rem', color: '#0284c7' }}>al-irshaadislamicinstitute.com</span></td>
                   <td>Online international Islamic school delivering 1-on-1 Qur'an, Tajweed, and Arabic education worldwide.</td>
                   <td>React • CSS • SEO • Vercel</td>
                 </tr>
                 <tr>
-                  <td><strong>LEGACY.streetwear</strong></td>
-                  <td>Fashion e-commerce platform with product catalogue and brand storytelling.</td>
+                  <td><strong>Ali Institute</strong><br /><span style={{ fontSize: '0.72rem', color: '#0284c7' }}>ali-institute-for-qur-an-memorizati.vercel.app</span></td>
+                  <td>Educational portal for Quran memorisation, curriculum schedules, and student registration.</td>
                   <td>React • CSS • Vercel</td>
                 </tr>
                 <tr>
-                  <td><strong>Mr. Chills Expense Tracker</strong></td>
-                  <td>Expense management application with budget tracking and analytics.</td>
+                  <td><strong>Carrio Motors</strong><br /><span style={{ fontSize: '0.72rem', color: '#0284c7' }}>carrio-motors-opal.vercel.app</span></td>
+                  <td>Automotive dealership platform showcasing premium vehicles — Academic Distinction Project.</td>
+                  <td>React • CSS • Vercel</td>
+                </tr>
+                <tr>
+                  <td><strong>Olorunayo Agbeirin Ajo</strong><br /><span style={{ fontSize: '0.72rem', color: '#0284c7' }}>olorunayo-afgbeirinajo-recruitment.vercel.app</span></td>
+                  <td>Recruitment and candidate onboarding portal for organization initiatives and empowerment programs.</td>
+                  <td>React • CSS • Vercel</td>
+                </tr>
+                <tr>
+                  <td><strong>Mr. Chills Expense Tracker</strong><br /><span style={{ fontSize: '0.72rem', color: '#0284c7' }}>mrchill-expense-tracker.netlify.app</span></td>
+                  <td>Fintech expense tracking and personal finance analytics application with budget breakdown.</td>
                   <td>React • Netlify</td>
                 </tr>
               </tbody>
@@ -264,12 +269,13 @@ export default function CVPage() {
           <section className="cv-sec">
             <h2 className="cv-sec-title">LEADERSHIP & PROFESSIONAL EXPERIENCE HIGHLIGHTS</h2>
             <ul className="cv-ul">
-              <li>Founded and lead CHILL TECH LTD, combining technology development with business-focused digital solutions.</li>
-              <li>Delivered 7+ web projects across different industries.</li>
-              <li>Manage professional responsibilities alongside ongoing Software Engineering studies.</li>
+              <li>Founded and lead CHILL TECH LTD, delivering 20+ responsive web projects and business digital solutions.</li>
+              <li>Successfully deployed and hosted platforms across real estate, e-commerce, logistics, education, and fintech.</li>
+              <li>Manage executive General Manager responsibilities at CHIL Investment Ltd alongside ongoing Software Engineering studies.</li>
               <li>Selected as the first Student Provost in the history of Police Secondary School, Akure.</li>
-              <li>Experience working directly with clients, stakeholders, investors, and business partners.</li>
+              <li>Experience working directly with international delegates, stakeholders, investors, and business partners.</li>
             </ul>
+
           </section>
 
           {/* ADDITIONAL INFORMATION */}
@@ -324,11 +330,21 @@ export default function CVPage() {
         .cv-back-btn {
           display: inline-flex;
           align-items: center;
-          gap: 8px;
+          gap: 6px;
+          padding: 8px 16px;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.12);
           color: #00c2ff;
           text-decoration: none;
           font-weight: 600;
-          font-size: 0.95rem;
+          font-size: 0.88rem;
+          transition: all 0.2s ease;
+        }
+        .cv-back-btn:hover {
+          background: rgba(0, 194, 255, 0.15);
+          border-color: rgba(0, 194, 255, 0.4);
+          transform: translateX(-2px);
         }
         .cv-action-btn {
           display: inline-flex;

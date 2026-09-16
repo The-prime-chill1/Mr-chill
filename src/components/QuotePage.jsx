@@ -528,7 +528,7 @@ export default function QuotePage() {
             Your project estimate has been sent via WhatsApp. Lamidi will reply within <strong style={{ color: 'var(--electric-blue)' }}>24 hours</strong> with a full proposal.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <a href="/" style={{
+            <a href="#/" style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
               padding: '12px 24px', borderRadius: 999,
               background: 'linear-gradient(135deg,#00c2ff,#0080ff)',
@@ -564,7 +564,7 @@ export default function QuotePage() {
           borderRadius: 999, padding: '8px 10px 8px 12px',
           boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
         }}>
-          <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', flexShrink: 0 }}>
+          <a href="#/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', flexShrink: 0 }}>
             <div style={{
               width: 32, height: 32, borderRadius: '50%',
               border: '2px solid rgba(0,194,255,0.4)',
@@ -598,19 +598,19 @@ export default function QuotePage() {
               }}>
               {theme === 'dark' ? <FiSun /> : <FiMoon />}
             </button>
-            <a href="/"
+            <a href="#/"
               className="quote-nav-btn"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 5,
-                fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-dim)',
+                fontSize: '0.78rem', fontWeight: 600, color: 'var(--text)',
                 textDecoration: 'none', padding: '7px 12px', borderRadius: 999,
                 border: '1px solid var(--panel-border)', background: 'var(--bg-card)',
                 transition: 'all 0.2s', whiteSpace: 'nowrap',
               }}
               onMouseEnter={(e) => { e.currentTarget.style.color = '#00c2ff'; e.currentTarget.style.borderColor = 'rgba(0,194,255,0.4)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-dim)'; e.currentTarget.style.borderColor = 'var(--panel-border)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text)'; e.currentTarget.style.borderColor = 'var(--panel-border)'; }}
             >
-              <FiArrowLeft /> <span className="quote-btn-label">Portfolio</span>
+              <FiArrowLeft /> <span>Home</span>
             </a>
           </div>
         </div>

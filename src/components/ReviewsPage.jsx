@@ -369,7 +369,7 @@ export default function ReviewsPage() {
         }}>
 
           {/* Brand */}
-          <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', flexShrink: 0 }}>
+          <a href="#/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', flexShrink: 0 }}>
             <div style={{
               width: 30, height: 30, borderRadius: '50%',
               border: '2px solid rgba(0,194,255,0.4)',
@@ -408,21 +408,21 @@ export default function ReviewsPage() {
               {theme === 'dark' ? <FiSun style={{ color: '#f59e0b' }} /> : <FiMoon style={{ color: '#3b82f6' }} />}
             </button>
 
-            {/* Portfolio link */}
-            <a href="/"
+            {/* Home link */}
+            <a href="#/"
               className="reviews-nav-btn"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 5,
-                fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-dim)',
+                fontSize: '0.78rem', fontWeight: 600, color: 'var(--text)',
                 textDecoration: 'none', padding: '7px 12px', borderRadius: 999,
                 border: '1px solid var(--panel-border)',
                 background: 'var(--bg-card)',
                 transition: 'all 0.2s', whiteSpace: 'nowrap',
               }}
               onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--electric-blue)'; e.currentTarget.style.borderColor = 'rgba(0,194,255,0.4)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-dim)'; e.currentTarget.style.borderColor = 'var(--panel-border)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text)'; e.currentTarget.style.borderColor = 'var(--panel-border)'; }}
             >
-              <FiArrowLeft style={{ fontSize: '0.85rem' }} /> <span className="reviews-btn-label">Portfolio</span>
+              <FiArrowLeft style={{ fontSize: '0.85rem' }} /> <span>Home</span>
             </a>
 
             {/* Hire Me link */}
@@ -568,7 +568,7 @@ export default function ReviewsPage() {
               Let's build something extraordinary together. Reach out today and let's start your project.
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <a href="/"
+              <a href="#/"
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
                   padding: '12px 26px', borderRadius: 999,

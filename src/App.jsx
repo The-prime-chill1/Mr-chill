@@ -9,16 +9,20 @@ import QuotePage from './components/QuotePage';
 import WorkWithMe from './components/WorkWithMe';
 import CVPage from './components/CVPage';
 import ReviewsPage from './components/ReviewsPage';
+import AboutPage from './components/AboutPage';
+import SkillsPage from './components/SkillsPage';
 
-const About       = lazy(() => import('./components/About'));
-const Experience  = lazy(() => import('./components/Experience'));
-const Skills      = lazy(() => import('./components/Skills'));
+const About = lazy(() => import('./components/About'));
+const Experience = lazy(() => import('./components/Experience'));
 const Achievements = lazy(() => import('./components/Achievements'));
-const Portfolio   = lazy(() => import('./components/Portfolio'));
+const Skills = lazy(() => import('./components/Skills'));
+const Portfolio = lazy(() => import('./components/Portfolio'));
 
-const FAQ          = lazy(() => import('./components/FAQ'));
-const Contact     = lazy(() => import('./components/Contact'));
-const Footer      = lazy(() => import('./components/Footer'));
+
+const FAQ = lazy(() => import('./components/FAQ'));
+const Contact = lazy(() => import('./components/Contact'));
+const Footer = lazy(() => import('./components/Footer'));
+
 
 const CV_URL = '/cv/Lamidi_Abdulhameed_Olawale_CV.pdf';
 const CV_FILENAME = 'Lamidi_Abdulhameed_Olawale_CV.pdf';
@@ -106,6 +110,16 @@ export default function App() {
     return <ReviewsPage />;
   }
 
+  // ── About Page (standalone, About Company & CEO) ──
+  if (route === '/about' || route === '/about-us') {
+    return <AboutPage />;
+  }
+
+  // ── Skills Page (standalone, Full Tech Stack) ──
+  if (route === '/skills') {
+    return <SkillsPage />;
+  }
+
   // ── Main Portfolio ──
   return (
     <>
@@ -134,8 +148,10 @@ export default function App() {
             <Contact />
             <Footer />
           </Suspense>
+
         </main>
       </motion.div>
     </>
   );
 }
+
