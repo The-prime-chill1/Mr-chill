@@ -256,11 +256,6 @@ export default function CVPage() {
                   <td>Recruitment and candidate onboarding portal for organization initiatives and empowerment programs.</td>
                   <td>React • CSS • Vercel</td>
                 </tr>
-                <tr>
-                  <td><strong>Mr. Chills Expense Tracker</strong><br /><span style={{ fontSize: '0.72rem', color: '#0284c7' }}>mrchill-expense-tracker.netlify.app</span></td>
-                  <td>Fintech expense tracking and personal finance analytics application with budget breakdown.</td>
-                  <td>React • Netlify</td>
-                </tr>
               </tbody>
             </table>
           </section>

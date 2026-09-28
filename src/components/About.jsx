@@ -47,14 +47,23 @@ export default function About() {
                 position: 'relative',
                 overflow: 'hidden',
                 borderRadius: 20,
+                maxWidth: 420,
+                margin: '0 auto',
               }}
             >
-              <img
-                src={headshot}
-                alt="Lamidi Abdulhameed Olawale at the Global Industry Summit, 21st UNIDO General Conference, Riyadh"
-                style={{ width: '100%', borderRadius: 14, display: 'block' }}
-                loading="lazy"
-              />
+              <div style={{ width: '100%', borderRadius: 14, overflow: 'hidden' }}>
+                <img
+                  src={headshot}
+                  alt="Lamidi Abdulhameed Olawale at the Global Industry Summit, 21st UNIDO General Conference, Riyadh"
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    display: 'block',
+                    borderRadius: 14,
+                  }}
+                  loading="lazy"
+                />
+              </div>
               <div style={{ padding: '12px 6px 4px' }}>
                 <div style={{ fontWeight: 800, fontSize: '0.95rem', color: 'var(--text)' }}>
                   Lamidi Abdulhameed Olawale

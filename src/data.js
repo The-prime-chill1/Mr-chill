@@ -178,6 +178,7 @@ export const achievements = [
   "Grew the CHIL Investment Ltd investor portfolio by 40% year-on-year through strategic management and investor relations",
   "First Student Provost in the history of Police Secondary School, Akure — recognised for exceptional leadership, discipline, and responsibility",
   "Represented Nigeria as a delegate at the 21st UNIDO General Conference, Riyadh — the Global Industry Summit attended by world leaders and government ministers",
+  "Developed the award‑winning Budget Basics app for the TechWiz competition, demonstrating ability to work under pressure and deliver high‑impact solutions.",
 ];
 
 export const languages = [
@@ -223,13 +224,6 @@ export const projects = [
     featured: false,
   },
   {
-    title: "Mr. Chills Expense Tracker",
-    description: "Fintech budget tracking and personal finance analytics application — Academic School Project.",
-    tech: ["React", "Netlify"],
-    link: "https://agent-6a12c2049b12b62ef--mrchill-expense-tracker.netlify.app",
-    featured: false,
-  },
-  {
     title: "Carrio Motors",
     description: "Automotive dealership platform showcasing premium vehicles — Academic School Project awarded with Distinction.",
     tech: ["React", "CSS", "Vercel"],
@@ -242,6 +236,14 @@ export const projects = [
     tech: ["React", "CSS", "Vercel"],
     link: "https://olorunayo-afgbeirinajo-recruitment.vercel.app/",
     featured: false,
+  },
+  {
+    title: "Budget Basics",
+    description: "Smart student personal finance and budgeting platform engineered under intense pressure for the global Aptech TechWiz competition, featuring 50/30/20 analytics, expense logging, and technical documentation.",
+    tech: ["React", "Vite", "CSS", "Vercel"],
+    link: "https://budgetbasics-two.vercel.app",
+    video: "https://youtu.be/F4XqTGBhddY",
+    featured: true,
   },
 ];
 

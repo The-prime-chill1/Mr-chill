@@ -32,7 +32,7 @@ export default function AboutPage() {
           </a>
           <div className="about-nav-brand">
             <Logo width={26} style={{ borderRadius: '50%' }} />
-            <span>Chill<strong className="gradient-text">Tech</strong></span>
+            <span>CHILL <strong className="gradient-text">TECH LTD</strong></span>
           </div>
           <a href="#/cv" className="about-nav-cv-btn">
             Read CV
@@ -756,6 +756,7 @@ export default function AboutPage() {
 
         .founder-headshot {
           width: 100%;
+          height: auto;
           border-radius: 14px;
           display: block;
         }

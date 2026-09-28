@@ -117,7 +117,7 @@ export default function Navbar({ onDownloadCV, onViewCV, cvUrl }) {
           <div className="logo-ring">
             <Logo width={36} style={{ borderRadius: '50%' }} />
           </div>
-          <span className="brand-name">Chill<span className="brand-accent">Tech</span></span>
+          <span className="brand-name">CHILL <span className="brand-accent">TECH LTD</span></span>
         </a>
 
         {/* Desktop Nav Links (Clean & uncrowded without FAQ) */}
@@ -278,11 +278,13 @@ export default function Navbar({ onDownloadCV, onViewCV, cvUrl }) {
           align-items: center;
           gap: 10px;
           text-decoration: none;
+          flex-shrink: 0;
+          white-space: nowrap;
         }
 
         .logo-ring {
-          width: 40px;
-          height: 40px;
+          width: 38px;
+          height: 38px;
           border-radius: 50%;
           border: 2px solid rgba(0, 194, 255, 0.5);
           box-shadow: 0 0 12px rgba(0, 194, 255, 0.3);
@@ -291,6 +293,7 @@ export default function Navbar({ onDownloadCV, onViewCV, cvUrl }) {
           align-items: center;
           justify-content: center;
           overflow: hidden;
+          flex-shrink: 0;
           transition: transform 0.3s ease;
         }
 
@@ -300,10 +303,14 @@ export default function Navbar({ onDownloadCV, onViewCV, cvUrl }) {
 
         .brand-name {
           font-family: var(--font-display, 'Outfit', sans-serif);
-          font-weight: 700;
-          font-size: 1.15rem;
+          font-weight: 800;
+          font-size: 1.05rem;
           color: var(--text, #f8fafc);
-          letter-spacing: -0.02em;
+          letter-spacing: -0.01em;
+          white-space: nowrap;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
         }
 
         .brand-accent {
@@ -539,6 +546,26 @@ export default function Navbar({ onDownloadCV, onViewCV, cvUrl }) {
         }
 
         /* Responsive Breakpoints */
+        @media (max-width: 1280px) {
+          .nav-link {
+            padding: 7px 10px;
+            font-size: 0.82rem;
+            gap: 4px;
+          }
+          .nav-link-icon {
+            display: none;
+          }
+          .btn-label-desktop {
+            display: none;
+          }
+          .btn-nav-ghost, .btn-nav-primary {
+            padding: 7px 10px;
+          }
+          .brand-name {
+            font-size: 0.98rem;
+          }
+        }
+
         @media (max-width: 1080px) {
           .desktop-nav {
             display: none;

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import SplashScreen from './components/SplashScreen';
-import PrivacyPolicy from './components/PrivacyPolicy';
+import LegalPolicy from './components/LegalPolicy';
 import FAQPage from './components/FAQPage';
 import QuotePage from './components/QuotePage';
 import WorkWithMe from './components/WorkWithMe';
@@ -11,6 +11,8 @@ import CVPage from './components/CVPage';
 import ReviewsPage from './components/ReviewsPage';
 import AboutPage from './components/AboutPage';
 import SkillsPage from './components/SkillsPage';
+import PortfolioPage from './components/PortfolioPage';
+import ContactPage from './components/ContactPage';
 
 const About = lazy(() => import('./components/About'));
 const Experience = lazy(() => import('./components/Experience'));
@@ -87,7 +89,7 @@ export default function App() {
 
   // ── Privacy Policy page (standalone, no sidebar/splash) ──
   if (route === '/privacy') {
-    return <PrivacyPolicy />;
+    return <LegalPolicy />;
   }
 
   // ── FAQ page (standalone, no sidebar/splash) ──
@@ -118,6 +120,16 @@ export default function App() {
   // ── Skills Page (standalone, Full Tech Stack) ──
   if (route === '/skills') {
     return <SkillsPage />;
+  }
+
+  // ── Standalone Portfolio Page ──
+  if (route === '/portfolio') {
+    return <PortfolioPage />;
+  }
+
+  // ── Standalone Contact Page ──
+  if (route === '/contact') {
+    return <ContactPage />;
   }
 
   // ── Main Portfolio ──
