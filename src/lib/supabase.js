@@ -23,3 +23,10 @@ export async function insertSupabaseRow(table, payload) {
   if (error) throw error;
   return null;
 }
+
+export async function sendEnquiryAcknowledgement(payload) {
+  if (!supabase) throw new Error('Supabase environment variables are not configured.');
+  const { data, error } = await supabase.functions.invoke('enquiry-autoreply', { body: payload });
+  if (error) throw error;
+  return data;
+}

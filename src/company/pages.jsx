@@ -11,7 +11,7 @@ import companyLogo from '../assets/chill-tech-logo.jpeg';
 import headshot from '../assets/lamidi-headshot.jpg';
 import { companyProjects, projectCategories, services, solutions, values } from './content';
 import { usePageMeta } from './SiteLayout';
-import { insertSupabaseRow, isSupabaseConfigured } from '../lib/supabase';
+import { insertSupabaseRow, isSupabaseConfigured, sendEnquiryAcknowledgement } from '../lib/supabase';
 
 const CV_URL = '/cv/Lamidi_Abdulhameed_Olawale_CV.pdf';
 const LINKEDIN_URL = 'https://www.linkedin.com/in/lamidi-abdulhameed-olawale-740985428';
@@ -81,7 +81,7 @@ function CTASection({ title = 'Have a business challenge worth solving?', text =
       <motion.div {...rise}>
         <span className="eyebrow">Start a conversation</span>
         <h2>{title}</h2><p>{text}</p>
-        <div className="button-row"><Link className="button button-light" to="/contact">Work With CHILL TECH <FiArrowUpRight /></Link><Link className="button button-outline-light" to="/projects">View Our Work</Link></div>
+        <div className="button-row"><Link className="button button-light" to="/enquiry">Work With CHILL TECH <FiArrowUpRight /></Link><Link className="button button-outline-light" to="/projects">View Our Work</Link></div>
       </motion.div>
     </section>
   );
@@ -97,7 +97,7 @@ export function HomePage() {
           <span className="eyebrow eyebrow-light">Digital engineering · Nigeria to the world</span>
           <h1>We build digital solutions that move businesses <em>forward.</em></h1>
           <p>From modern websites and custom software to intelligent business technology solutions, CHILL TECH LTD helps businesses turn ambitious ideas into practical digital experiences.</p>
-          <div className="button-row"><Link className="button button-primary" to="/services">Explore Our Services <FiArrowRight /></Link><Link className="button button-secondary" to="/projects">View Our Work</Link><Link className="section-link" to="/contact">Work With CHILL TECH <FiArrowUpRight /></Link></div>
+          <div className="button-row"><Link className="button button-primary" to="/services">Explore Our Services <FiArrowRight /></Link><Link className="button button-secondary" to="/projects">View Our Work</Link><Link className="section-link" to="/enquiry">Work With CHILL TECH <FiArrowUpRight /></Link></div>
         </motion.div>
         <motion.div className="company-hero-visual" initial={{ opacity: 0, scale: 0.88, rotate: 4 }} animate={{ opacity: 1, scale: 1, rotate: 0 }} transition={{ duration: 0.9, delay: 0.15 }}>
           <div className="hero-orbit hero-orbit-one" /><div className="hero-orbit hero-orbit-two" />
@@ -216,18 +216,32 @@ export function CEOPortfolioPage() {
   <section className="portfolio-contact section-pad"><span className="eyebrow">Professional contact</span><h2>Let’s connect.</h2><div><a href={`mailto:${profile.personalEmail}`}><FiMail /> {profile.personalEmail}</a><a href={`tel:${profile.phone.replace(/\s/g, '')}`}><FiPhone /> {profile.phone}</a><a href={profile.github} target="_blank" rel="noreferrer"><FiGithub /> GitHub</a><a href={LINKEDIN_URL} target="_blank" rel="noreferrer"><FiGlobe /> LinkedIn</a><span><FiMapPin /> Nigeria · Open to global opportunities</span></div></section></PageShell>;
 }
 
-function ContactSubmissionForm() {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', company: '', service: 'Website development', message: '' });
+function ContactSubmissionForm({
+  heading = 'Tell us what you want to build.',
+  intro = 'Your details are submitted securely to the CHILL TECH LTD project inbox.',
+}) {
+  const [form, setForm] = useState({ name: '', email: '', phone: '', company: '', service: 'Website development', message: '', website: '' });
   const [submission, setSubmission] = useState({ state: 'idle', message: '' });
   const updateField = (field, value) => setForm((current) => ({ ...current, [field]: value }));
   const submit = async (event) => {
     event.preventDefault();
+    if (form.website) return setSubmission({ state: 'success', message: 'Thank you. Your enquiry has been received.' });
     setSubmission({ state: 'loading', message: 'Sending your enquiry…' });
     try {
       const message = form.company ? `Company: ${form.company}\n\n${form.message}` : form.message;
-      await insertSupabaseRow('enquiries', { full_name: form.name, email: form.email, phone: form.phone || null, service: form.service, message, status: 'new' });
-      setSubmission({ state: 'success', message: 'Your enquiry has been received. CHILL TECH LTD will respond shortly.' });
-      setForm({ name: '', email: '', phone: '', company: '', service: 'Website development', message: '' });
+      const submittedName = form.name.trim().split(/\s+/)[0];
+      const submittedEmail = form.email.trim().toLowerCase();
+      const submittedService = form.service.toLowerCase();
+      await insertSupabaseRow('enquiries', { full_name: form.name.trim(), email: submittedEmail, phone: form.phone.trim() || null, service: form.service, message, status: 'new' });
+      let acknowledgementSent = false;
+      try {
+        await sendEnquiryAcknowledgement({ name: form.name.trim(), email: submittedEmail, phone: form.phone.trim(), company: form.company.trim(), service: form.service, message: form.message.trim(), website: form.website });
+        acknowledgementSent = true;
+      } catch {
+        acknowledgementSent = false;
+      }
+      setSubmission({ state: 'success', message: `Thank you, ${submittedName}. Your ${submittedService} enquiry has been received securely. CHILL TECH LTD will review it and contact you through ${submittedEmail}.${acknowledgementSent ? ' A confirmation email has also been sent.' : ''}` });
+      setForm({ name: '', email: '', phone: '', company: '', service: 'Website development', message: '', website: '' });
     } catch (error) {
       setSubmission({ state: 'error', message: error.message });
     }
@@ -235,17 +249,23 @@ function ContactSubmissionForm() {
 
   return (
     <section className="contact-form-section section-pad">
-      <div><span className="eyebrow">Project enquiry</span><h2>Tell us what you want to build.</h2><p>Your details are submitted securely to the CHILL TECH LTD project inbox.</p></div>
+      <div><span className="eyebrow">Project enquiry</span><h2>{heading}</h2><p>{intro}</p></div>
       <form onSubmit={submit}>
+        <label className="form-honeypot" aria-hidden="true">Website<input tabIndex="-1" autoComplete="off" value={form.website} onChange={(event) => updateField('website', event.target.value)} /></label>
         <div className="form-pair"><label>Name<input required value={form.name} onChange={(event) => updateField('name', event.target.value)} /></label><label>Email<input required type="email" value={form.email} onChange={(event) => updateField('email', event.target.value)} /></label></div>
         <div className="form-pair"><label>Phone<input value={form.phone} onChange={(event) => updateField('phone', event.target.value)} /></label><label>Company<input value={form.company} onChange={(event) => updateField('company', event.target.value)} /></label></div>
         <label>Service<select value={form.service} onChange={(event) => updateField('service', event.target.value)}><option>Website development</option><option>Custom software</option><option>E-commerce</option><option>UI/UX design</option><option>Business technology solution</option><option>Other</option></select></label>
         <label>Project details<textarea required minLength="10" value={form.message} onChange={(event) => updateField('message', event.target.value)} placeholder="Describe your goal, required features, and preferred timeline." /></label>
         <button className="button button-primary" type="submit" disabled={submission.state === 'loading'}><FiSend /> {submission.state === 'loading' ? 'Sending…' : 'Submit Enquiry'}</button>
-        {submission.message && <p className={`form-status ${submission.state}`}>{submission.message}</p>}
+        {submission.message && <p className={`form-status ${submission.state}`} role="status" aria-live="polite">{submission.message}</p>}
       </form>
     </section>
   );
+}
+
+export function CompanyEnquiryPage() {
+  usePageMeta('Start a Project', 'Submit a secure project enquiry to CHILL TECH LTD for web development, custom software, e-commerce, UI/UX, and business technology solutions.', '/enquiry');
+  return <PageShell><section className="page-hero section-pad"><span className="eyebrow eyebrow-light">Start a project</span><h1>Bring us the business goal. We’ll help shape the technology.</h1><p>Tell CHILL TECH LTD what you want to launch, improve, or automate. Your enquiry goes directly into our secure project dashboard for review.</p></section><ContactSubmissionForm heading="Start with a clear project brief." intro="Share the essentials below. After submission, you will receive an immediate confirmation on this page and the enquiry will be available to our team in the secure admin dashboard." /><section className="contact-note section-pad"><span>What happens next</span><div><p><strong>01</strong> Your enquiry is saved securely</p><p><strong>02</strong> The company reviews your requirements</p><p><strong>03</strong> We contact you to clarify the scope</p><p><strong>04</strong> You receive the appropriate proposal or next step</p></div></section></PageShell>;
 }
 
 export function CompanyContactPage() {

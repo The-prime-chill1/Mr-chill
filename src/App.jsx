@@ -5,6 +5,7 @@ import {
   AboutCompanyPage,
   CEOPortfolioPage,
   CompanyContactPage,
+  CompanyEnquiryPage,
   CompanyFAQPage,
   CompanyPrivacyPage,
   CompanyReviewsPage,
@@ -33,11 +34,12 @@ export default function App() {
           <Route path="solutions" element={<SolutionsPage />} />
           <Route path="portfolio" element={<CEOPortfolioPage />} />
           <Route path="contact" element={<CompanyContactPage />} />
+          <Route path="enquiry" element={<CompanyEnquiryPage />} />
           <Route path="faq" element={<CompanyFAQPage />} />
           <Route path="privacy" element={<CompanyPrivacyPage />} />
           <Route path="reviews" element={<CompanyReviewsPage />} />
           <Route path="invoice" element={<InvoiceGeneratorPage />} />
-          <Route path="work-with-me" element={<Navigate to="/contact" replace />} />
+          <Route path="work-with-me" element={<Navigate to="/enquiry" replace />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
         <Route path="cv" element={<CVPage />} />

@@ -34,7 +34,7 @@ export function usePageMeta(title, description, path = '') {
     setMeta('meta[name="description"]', ['name', 'description'], description);
     setMeta('meta[property="og:title"]', ['property', 'og:title'], fullTitle);
     setMeta('meta[property="og:description"]', ['property', 'og:description'], description);
-    setMeta('meta[property="og:url"]', ['property', 'og:url'], `https://chilltechltd.com${path}`);
+    setMeta('meta[property="og:url"]', ['property', 'og:url'], `https://www.chilltechltd.com${path}`);
 
     let canonical = document.querySelector('link[rel="canonical"]');
     if (!canonical) {
@@ -42,7 +42,7 @@ export function usePageMeta(title, description, path = '') {
       canonical.setAttribute('rel', 'canonical');
       document.head.appendChild(canonical);
     }
-    canonical.setAttribute('href', `https://chilltechltd.com${path}`);
+    canonical.setAttribute('href', `https://www.chilltechltd.com${path}`);
   }, [title, description, path]);
 }
 
@@ -81,7 +81,7 @@ export default function SiteLayout() {
           ))}
         </nav>
 
-        <Link className="company-header-cta" to="/contact">Work With Us <FiArrowUpRight /></Link>
+        <Link className="company-header-cta" to="/enquiry">Work With Us <FiArrowUpRight /></Link>
         <button className="company-menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen((value) => !value)}>
           {menuOpen ? <FiX /> : <FiMenu />}
         </button>
@@ -95,7 +95,7 @@ export default function SiteLayout() {
                 <NavLink key={to} to={to} end={to === '/'}><span>0{index + 1}</span>{label}</NavLink>
               ))}
             </nav>
-            <Link className="button button-primary" to="/contact">Work With CHILL TECH <FiArrowUpRight /></Link>
+            <Link className="button button-primary" to="/enquiry">Work With CHILL TECH <FiArrowUpRight /></Link>
           </motion.div>
         )}
       </AnimatePresence>
@@ -107,7 +107,7 @@ export default function SiteLayout() {
       <footer id="site-footer" className="company-footer">
         <div className="company-footer-callout">
           <div><span>Ready to move forward?</span><h2>Let’s build the right technology for your business.</h2></div>
-          <Link className="button button-primary" to="/contact">Start a Project <FiArrowUpRight /></Link>
+          <Link className="button button-primary" to="/enquiry">Start a Project <FiArrowUpRight /></Link>
         </div>
         <div className="company-footer-top">
           <div>
@@ -126,7 +126,7 @@ export default function SiteLayout() {
           </div>
           <div className="company-footer-nav">
             <span>Resources</span>
-            <Link to="/reviews">Reviews</Link><Link to="/faq">FAQ</Link><Link to="/privacy">Privacy & Terms</Link><Link to="/invoice">Invoice Generator</Link>
+            <Link to="/enquiry">Project Enquiry</Link><Link to="/reviews">Reviews</Link><Link to="/faq">FAQ</Link><Link to="/privacy">Privacy & Terms</Link><Link to="/invoice">Invoice Generator</Link>
           </div>
           <div className="company-footer-nav">
             <span>Connect</span>

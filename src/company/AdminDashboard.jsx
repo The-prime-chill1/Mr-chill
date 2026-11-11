@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FiArrowLeft, FiBriefcase, FiFileText, FiInbox, FiLogOut, FiPlus, FiRefreshCw, FiStar, FiTrash2 } from 'react-icons/fi';
+import { FiArrowLeft, FiBriefcase, FiCheckCircle, FiFileText, FiInbox, FiKey, FiLock, FiLogOut, FiPlus, FiRefreshCw, FiShield, FiStar, FiTrash2 } from 'react-icons/fi';
 import companyLogo from '../assets/chill-tech-logo.jpeg';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
 
@@ -9,12 +9,30 @@ const emptyProject = { title: '', slug: '', description: '', category: '', techn
 const formatDate = (value) => value ? new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value)) : '—';
 const slugify = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
+function AdminAuthLayout({ children }) {
+  return (
+    <div className="admin-auth-page">
+      <aside className="admin-auth-showcase">
+        <Link className="admin-auth-brand" to="/"><img src={companyLogo} alt="CHILL TECH LTD" /><span><strong>CHILL TECH LTD</strong><small>Secure administration</small></span></Link>
+        <div className="admin-auth-showcase-copy"><span><FiShield /> Private company workspace</span><h2>Manage the work behind the website.</h2><p>Review enquiries, approve client feedback, manage invoices, and maintain published company projects from one protected dashboard.</p></div>
+        <div className="admin-auth-trust"><span><FiLock /> Supabase authentication</span><span><FiCheckCircle /> Role-protected access</span><span><FiKey /> Secure password recovery</span></div>
+        <small>CHILL TECH LTD · Innovate. Build. Empower.</small>
+      </aside>
+      <section className="admin-auth-form-panel">{children}</section>
+    </div>
+  );
+}
+
 export default function AdminDashboard() {
   const [session, setSession] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
+  const [authMode, setAuthMode] = useState(() => new URLSearchParams(window.location.search).get('mode') === 'forgot' ? 'forgot' : 'login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [authError, setAuthError] = useState('');
+  const [authNotice, setAuthNotice] = useState('');
   const [authSubmitting, setAuthSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   const [records, setRecords] = useState({ enquiries: [], reviews: [], invoices: [], projects: [] });
@@ -34,7 +52,14 @@ export default function AdminDashboard() {
       setSession(data.session);
       setAuthLoading(false);
     });
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => setSession(nextSession));
+    const { data: listener } = supabase.auth.onAuthStateChange((event, nextSession) => {
+      setSession(nextSession);
+      if (event === 'PASSWORD_RECOVERY') {
+        setAuthMode('recovery');
+        setAuthError('');
+        setAuthNotice('Your recovery link is verified. Choose a new password.');
+      }
+    });
     return () => listener.subscription.unsubscribe();
   }, []);
 
@@ -64,16 +89,68 @@ export default function AdminDashboard() {
   const login = async (event) => {
     event.preventDefault();
     setAuthError('');
+    setAuthNotice('');
     if (!supabase) return setAuthError('Supabase is not configured.');
     setAuthSubmitting(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) setAuthError(error.message);
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.trim().toLowerCase(),
+      password,
+    });
+    if (error) {
+      setAuthError(error.message === 'Invalid login credentials'
+        ? 'Supabase rejected these credentials. Confirm that this user exists in Authentication, is confirmed, and has the correct password.'
+        : error.message);
+    }
     setAuthSubmitting(false);
+  };
+
+  const requestPasswordReset = async (event) => {
+    event.preventDefault();
+    if (authSubmitting) return;
+    setAuthError('');
+    setAuthNotice('');
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedEmail) return setAuthError('Enter the administrator email address.');
+    if (!supabase) return setAuthError('Supabase is not configured.');
+
+    setAuthSubmitting(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, {
+      redirectTo: `${window.location.origin}/admin`,
+    });
+    setAuthSubmitting(false);
+    if (error) {
+      const isRateLimited = error.message.toLowerCase().includes('rate limit');
+      return setAuthError(isRateLimited
+        ? 'Supabase has temporarily paused reset emails because its email limit was reached. Check for an earlier recovery email or wait for the hourly limit to reset before requesting one new link.'
+        : error.message);
+    }
+    setAuthNotice('If this email belongs to an administrator, Supabase has sent a secure password-reset link. Check the inbox and spam folder.');
+  };
+
+  const updatePassword = async (event) => {
+    event.preventDefault();
+    setAuthError('');
+    if (newPassword.length < 8) return setAuthError('Your new password must contain at least 8 characters.');
+    if (newPassword !== confirmPassword) return setAuthError('The new passwords do not match.');
+    if (!supabase) return setAuthError('Supabase is not configured.');
+
+    setAuthSubmitting(true);
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    setAuthSubmitting(false);
+    if (error) return setAuthError(error.message);
+
+    await supabase.auth.signOut();
+    window.history.replaceState({}, document.title, '/admin');
+    setNewPassword('');
+    setConfirmPassword('');
+    setAuthMode('login');
+    setAuthNotice('Password updated successfully. Sign in with your new password.');
   };
 
   const logout = async () => {
     await supabase?.auth.signOut();
     setPassword('');
+    setAuthMode('login');
   };
 
   const updateRecord = async (table, id, changes) => {
@@ -107,22 +184,50 @@ export default function AdminDashboard() {
 
   if (authLoading) return <div className="admin-loading">Loading secure dashboard…</div>;
 
-  if (!isSupabaseConfigured) return <div className="admin-auth-page"><div className="admin-auth-card"><img src={companyLogo} alt="CHILL TECH LTD" /><h1>Supabase is not configured.</h1><p>Add the Vite Supabase environment variables and restart the application.</p><Link to="/">Return to website</Link></div></div>;
+  if (!isSupabaseConfigured) return <AdminAuthLayout><div className="admin-auth-card"><img src={companyLogo} alt="CHILL TECH LTD" /><h1>Supabase is not configured.</h1><p>Add the Vite Supabase environment variables and restart the application.</p><Link to="/">Return to website</Link></div></AdminAuthLayout>;
 
-  if (!session) return (
-    <div className="admin-auth-page">
-      <form className="admin-auth-card" onSubmit={login}>
-        <img src={companyLogo} alt="CHILL TECH LTD" /><span>Secure administration</span><h1>Admin login</h1><p>Sign in with the administrator account configured in Supabase Authentication.</p>
-        <label>Email<input type="email" required autoComplete="username" value={email} onChange={(event) => setEmail(event.target.value)} /></label>
-        <label>Password<input type="password" required autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} /></label>
+  if (authMode === 'recovery') return (
+    <AdminAuthLayout>
+      <form className="admin-auth-card" onSubmit={updatePassword}>
+        <img src={companyLogo} alt="CHILL TECH LTD" /><span>Secure recovery</span><h1>Choose a new password</h1><p>Use a strong password that you do not use on another website.</p>
+        <label>New password<input type="password" required minLength="8" autoComplete="new-password" value={newPassword} onChange={(event) => setNewPassword(event.target.value)} /></label>
+        <label>Confirm new password<input type="password" required minLength="8" autoComplete="new-password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} /></label>
+        {authNotice && <p className="admin-success">{authNotice}</p>}
         {authError && <p className="admin-error">{authError}</p>}
-        <button className="button button-primary" type="submit" disabled={authSubmitting}>{authSubmitting ? 'Signing in…' : 'Sign in'}</button>
-        <Link to="/"><FiArrowLeft /> Return to company website</Link>
+        <button className="button button-primary" type="submit" disabled={authSubmitting}>{authSubmitting ? 'Updating…' : 'Update password'}</button>
       </form>
-    </div>
+    </AdminAuthLayout>
   );
 
-  if (!isAdmin) return <div className="admin-auth-page"><div className="admin-auth-card"><h1>Access denied.</h1><p>This Supabase account does not have the required administrator role.</p><button className="button button-primary" type="button" onClick={logout}>Sign out</button></div></div>;
+  if (!session && authMode === 'forgot') return (
+    <AdminAuthLayout>
+      <form className="admin-auth-card" onSubmit={requestPasswordReset}>
+        <img src={companyLogo} alt="CHILL TECH LTD" /><span>Account recovery</span><h1>Forgot password?</h1><p>Enter the administrator email and we will send a secure recovery link.</p>
+        <label>Email<input type="email" required autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} /></label>
+        {authNotice && <p className="admin-success">{authNotice}</p>}
+        {authError && <p className="admin-error">{authError}</p>}
+        <button className="button button-primary" type="submit" disabled={authSubmitting}>{authSubmitting ? 'Sending…' : 'Send reset link'}</button>
+        <small className="admin-recovery-note">Request one link only. If you already requested one, check your inbox and spam folder before trying again.</small>
+        <button className="admin-link-button" type="button" onClick={() => { setAuthMode('login'); setAuthError(''); setAuthNotice(''); window.history.replaceState({}, document.title, '/admin'); }}><FiArrowLeft /> Back to admin login</button>
+      </form>
+    </AdminAuthLayout>
+  );
+
+  if (!session) return (
+    <AdminAuthLayout>
+      <form className="admin-auth-card" onSubmit={login}>
+        <img src={companyLogo} alt="CHILL TECH LTD" /><span>Secure administration</span><h1>Admin login</h1>
+        <label>Email<input type="email" required autoComplete="username" value={email} onChange={(event) => setEmail(event.target.value)} /></label>
+        <div className="admin-password-field"><div><label htmlFor="admin-password">Password</label><button type="button" onClick={() => { setAuthMode('forgot'); setAuthError(''); setAuthNotice(''); window.history.replaceState({}, document.title, '/admin?mode=forgot'); }}>Forgot password?</button></div><input id="admin-password" type="password" required autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} /></div>
+        {authNotice && <p className="admin-success">{authNotice}</p>}
+        {authError && <p className="admin-error">{authError}</p>}
+        <button className="button button-primary" type="submit" disabled={authSubmitting}>{authSubmitting ? 'Signing in…' : 'Sign in'}</button>
+        <div className="admin-auth-actions"><Link to="/"><FiArrowLeft /> Return to company website</Link><span><FiLock /> Protected access</span></div>
+      </form>
+    </AdminAuthLayout>
+  );
+
+  if (!isAdmin) return <AdminAuthLayout><div className="admin-auth-card"><h1>Access denied.</h1><p>This Supabase account does not have the required administrator role.</p><button className="button button-primary" type="button" onClick={logout}>Sign out</button></div></AdminAuthLayout>;
 
   return (
     <div className="admin-shell">

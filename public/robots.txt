@@ -1,6 +1,7 @@
-# robots.txt for CHILL TECH LTD (https://chilltechltd.com)
+# robots.txt for CHILL TECH LTD (https://www.chilltechltd.com)
 User-agent: *
 Allow: /
+Disallow: /admin
 
 # Sitemap URL
-Sitemap: https://chilltechltd.com/sitemap.xml
+Sitemap: https://www.chilltechltd.com/sitemap.xml
