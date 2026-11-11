@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FiStar, FiChevronLeft, FiChevronRight, FiCheckCircle,
@@ -369,7 +370,7 @@ export default function ReviewsPage() {
         }}>
 
           {/* Brand */}
-          <a href="#/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', flexShrink: 0 }}>
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', flexShrink: 0 }}>
             <div style={{
               width: 30, height: 30, borderRadius: '50%',
               border: '2px solid rgba(0,194,255,0.4)',
@@ -384,7 +385,7 @@ export default function ReviewsPage() {
             }}>
               Chill<span style={{ color: 'var(--electric-blue)' }}>Tech</span>
             </span>
-          </a>
+          </Link>
 
 
           {/* Actions */}
@@ -409,7 +410,7 @@ export default function ReviewsPage() {
             </button>
 
             {/* Home link */}
-            <a href="#/"
+            <Link to="/"
               className="reviews-nav-btn"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 5,
@@ -423,10 +424,10 @@ export default function ReviewsPage() {
               onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text)'; e.currentTarget.style.borderColor = 'var(--panel-border)'; }}
             >
               <FiArrowLeft style={{ fontSize: '0.85rem' }} /> <span>Home</span>
-            </a>
+            </Link>
 
             {/* Hire Me link */}
-            <a href="#/quote"
+            <Link to="/quote"
               className="reviews-nav-btn reviews-nav-btn-primary"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 5,
@@ -441,7 +442,7 @@ export default function ReviewsPage() {
               onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; }}
             >
               <FiHome style={{ fontSize: '0.8rem' }} /> <span className="reviews-btn-label">Hire Me</span>
-            </a>
+            </Link>
           </div>
         </div>
       </header>
@@ -568,7 +569,7 @@ export default function ReviewsPage() {
               Let's build something extraordinary together. Reach out today and let's start your project.
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <a href="#/"
+              <Link to="/"
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
                   padding: '12px 26px', borderRadius: 999,
@@ -581,9 +582,9 @@ export default function ReviewsPage() {
                 onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.87'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; }}
               >
-                <FiHome style={{ fontSize: '0.88rem' }} /> View My Portfolio
-              </a>
-              <a href="#/quote"
+                <FiHome style={{ fontSize: '0.88rem' }} /> View Company Website
+              </Link>
+              <Link to="/quote"
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
                   padding: '12px 26px', borderRadius: 999,
@@ -596,7 +597,7 @@ export default function ReviewsPage() {
                 onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(0,194,255,0.06)'; }}
               >
                 <FiMessageSquare style={{ fontSize: '0.9rem' }} /> Get a Quote
-              </a>
+              </Link>
             </div>
           </div>
         </motion.div>

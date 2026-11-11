@@ -8,7 +8,7 @@ export default function Hero({ onDownloadCV, onViewCV, cvUrl }) {
   // 4 Static Tech Icons around the logo ring
   const techOrbits = [
     { icon: SiReact,      color: '#00c2ff', top: '10%', left: '-22%' },
-    { icon: SiJavascript, color: '#f7df1e', top: '70%', left: '-25%' },
+    { icon: SiisJavascript, color: '#f7df1e', top: '70%', left: '-25%' },
     { icon: SiNodedotjs,  color: '#22c55e', top: '10%', right: '-22%' },
     { icon: SiFigma,      color: '#a855f7', top: '70%', right: '-25%' },
   ];

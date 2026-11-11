@@ -15,8 +15,8 @@
   --panel-border: rgba(255, 255, 255, 0.08);
   --panel-border-glow: rgba(0, 194, 255, 0.35);
 
-  --font-display: 'Outfit', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-display: 'Bricolage Grotesque', sans-serif;
+  --font-body: 'Manrope', sans-serif;
 
   --radius-sm: 12px;
   --radius-card: 24px;
@@ -59,6 +59,7 @@ body {
   background: var(--bg-dark);
   color: var(--text);
   font-family: var(--font-body);
+  min-width: 320px;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
@@ -545,6 +546,28 @@ img {
 
 .glass {
   contain: layout style;
+}
+
+.route-fallback {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  place-items: center;
+  background: #11110f;
+  color: #ddff4f;
+}
+
+.route-fallback span {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: clamp(3rem, 10vw, 8rem);
+  font-weight: 800;
+  letter-spacing: -0.12em;
+  animation: route-fallback-pulse 900ms ease-in-out infinite alternate;
+}
+
+@keyframes route-fallback-pulse {
+  to { opacity: 0.35; transform: scale(0.92); }
 }
 
 

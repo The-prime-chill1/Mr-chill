@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { FiArrowLeft, FiEye, FiDownload } from 'react-icons/fi';
+import { FiArrowLeft } from 'react-icons/fi';
 import Logo from './Logo';
 import Contact from './Contact';
 
@@ -27,11 +27,11 @@ export default function ContactPage() {
           </div>
 
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <a href="#/cv" className="contact-nav-btn ghost">
-              <FiEye /> <span>CV</span>
+            <a href="#/about" className="contact-nav-btn ghost">
+              <span>About Us</span>
             </a>
             <a href="#/work-with-me" className="contact-nav-btn primary">
-              <span>Hire Me</span>
+              <span>Start a Project</span>
             </a>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   FiArrowLeft, FiCode, FiAward, FiCheckCircle, FiTarget,
@@ -13,30 +14,21 @@ export default function AboutPage() {
     window.scrollTo(0, 0);
   }, []);
 
-  const handleDownloadCV = () => {
-    const link = document.createElement('a');
-    link.href = '/cv/Lamidi_Abdulhameed_Olawale_CV.pdf';
-    link.download = 'Lamidi_Abdulhameed_Olawale_CV.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   return (
     <div className="about-page-wrapper">
       {/* Top Header Navigation Bar */}
       <header className="about-page-nav">
         <div className="about-page-nav-inner">
-          <a href="#/" className="about-back-btn" aria-label="Back to Homepage">
+          <Link to="/" className="about-back-btn" aria-label="Back to Homepage">
             <FiArrowLeft /> <span>Home</span>
-          </a>
+          </Link>
           <div className="about-nav-brand">
             <Logo width={26} style={{ borderRadius: '50%' }} />
             <span>CHILL <strong className="gradient-text">TECH LTD</strong></span>
           </div>
-          <a href="#/cv" className="about-nav-cv-btn">
-            Read CV
-          </a>
+          <Link to="/quote" className="about-nav-cv-btn">
+            Get a Quote
+          </Link>
         </div>
       </header>
 
@@ -206,6 +198,15 @@ export default function AboutPage() {
               <p className="founder-p">
                 Currently pursuing an <strong>Advanced Diploma in Software Engineering (ADSE)</strong> at Aptech Computer Education, I bring deep practical expertise in React.js, JavaScript, modern CSS architecture, UI/UX design, database systems, and cloud deployment pipelines.
               </p>
+
+              <div className="founder-portfolio-actions">
+                <a href="#/portfolio" className="btn btn-primary">
+                  View Portfolio <FiArrowRight />
+                </a>
+                <a href="#/cv" className="btn btn-ghost">
+                  View CV
+                </a>
+              </div>
 
               {/* Dual Leadership Card */}
               <div className="glass dual-role-card">
@@ -437,20 +438,18 @@ export default function AboutPage() {
           className="glass about-cta-banner"
         >
 
-          <h2>Ready to bring your project or idea to life?</h2>
+          <h2>Ready to build with CHILL TECH LTD?</h2>
           <p>
             Whether you need a brand-new website, an e-commerce platform, a real estate portal, or software consultation, let's talk and build something exceptional together.
           </p>
           <div className="about-cta-btns">
-            <a href="#/work-with-me" className="btn btn-primary">
-              Work With Me <FiArrowRight />
-            </a>
-            <a href="#/quote" className="btn btn-ghost">
+            <Link to="/contact" className="btn btn-primary">
+              Work With Chill Tech <FiArrowRight />
+            </Link>
+            <Link to="/quote" className="btn btn-ghost">
               Request a Quote
-            </a>
-            <button onClick={handleDownloadCV} className="btn btn-ghost">
-              Download Full CV
-            </button>
+            </Link>
+            <Link to="/portfolio" className="btn btn-ghost">View Founder Portfolio</Link>
           </div>
         </motion.section>
 
@@ -461,7 +460,7 @@ export default function AboutPage() {
         <div className="container">
           <div className="about-page-footer-inner">
             <span>© {new Date().getFullYear()} CHILL TECH LTD. All rights reserved.</span>
-            <a href="#/" className="about-footer-home-link">Back to Homepage</a>
+            <Link to="/" className="about-footer-home-link">Back to Homepage</Link>
           </div>
         </div>
       </footer>
@@ -825,6 +824,13 @@ export default function AboutPage() {
           margin-bottom: 16px;
         }
 
+        .founder-portfolio-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin: 22px 0 26px;
+        }
+
         .dual-role-card {
           padding: 20px;
           border-radius: 16px;
@@ -1079,6 +1085,11 @@ export default function AboutPage() {
           }
           .about-cta-banner p {
             font-size: 0.88rem;
+          }
+          .founder-portfolio-actions .btn,
+          .about-cta-btns .btn {
+            width: 100%;
+            justify-content: center;
           }
         }
       `}</style>

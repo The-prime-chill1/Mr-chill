@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FiChevronDown, FiHelpCircle, FiMessageSquare,
@@ -68,10 +69,10 @@ export default function FAQPage() {
       {/* ── Sticky Header ── */}
       <header className="faq-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <a href="#/" className="faq-back-btn" aria-label="Back to Homepage">
+          <Link to="/" className="faq-back-btn" aria-label="Back to Homepage">
             <FiArrowLeft /> <span>Home</span>
-          </a>
-          <a href="#/" className="faq-logo" aria-label="Chill Tech Home">
+          </Link>
+          <Link to="/" className="faq-logo" aria-label="Chill Tech Home">
             <div style={{
               width: 38, height: 38, borderRadius: '50%', overflow: 'hidden',
               background: '#fff', display: 'flex', alignItems: 'center',
@@ -83,7 +84,7 @@ export default function FAQPage() {
             <span className="faq-logo-name" style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.02rem', color: 'var(--text)' }}>
               CHILL <span className="gradient-text">TECH</span>
             </span>
-          </a>
+          </Link>
         </div>
 
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
@@ -95,9 +96,9 @@ export default function FAQPage() {
           >
             {theme === 'dark' ? <FiSun /> : <FiMoon />}
           </button>
-          <a href="#/work-with-me" className="btn btn-primary faq-cta-btn" style={{ padding: '8px 18px', fontSize: '0.82rem' }}>
+          <Link to="/contact" className="btn btn-primary faq-cta-btn" style={{ padding: '8px 18px', fontSize: '0.82rem' }}>
             Hire Me <FiArrowRight />
-          </a>
+          </Link>
         </div>
       </header>
 
@@ -261,9 +262,9 @@ export default function FAQPage() {
           </div>
 
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            <a href="#/quote" className="btn btn-primary" style={{ padding: '10px 20px', fontSize: '0.85rem' }}>
+            <Link to="/quote" className="btn btn-primary" style={{ padding: '10px 20px', fontSize: '0.85rem' }}>
               Get a Quote <FiArrowRight />
-            </a>
+            </Link>
             <a
               href={profile.whatsapp}
               target="_blank"

@@ -1,0 +1,235 @@
+/* ============================================================
+   CHILL TECH — Light-Themed Brand Splash Screen with Enter Site CTA
+   Matches the crisp white light theme of the main portfolio.
+   ============================================================ */
+
+.splash-container {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: var(--bg, #f8fafc);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  user-select: none;
+  padding: 24px;
+}
+
+/* Light Cyber Grid */
+.splash-grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(0, 194, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 194, 255, 0.08) 1px, transparent 1px);
+  background-size: 44px 44px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.75;
+}
+
+/* Ambient Blue Bloom Gradient */
+.splash-radial-glow {
+  position: absolute;
+  width: clamp(320px, 85vw, 700px);
+  height: clamp(320px, 85vw, 700px);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(0, 194, 255, 0.15) 0%,
+    rgba(129, 140, 248, 0.08) 40%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Horizontal Light Flare Beam */
+.splash-lens-flare {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 194, 255, 0.15) 20%,
+    rgba(0, 194, 255, 0.6) 50%,
+    rgba(0, 194, 255, 0.15) 80%,
+    transparent 100%
+  );
+  box-shadow: 0 0 20px rgba(0, 194, 255, 0.4);
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* Main Content Container */
+.splash-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+}
+
+/* Status Pill */
+.splash-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(0, 194, 255, 0.08);
+  border: 1px solid rgba(0, 194, 255, 0.25);
+  color: #0284c7;
+  font-family: var(--font-display, 'Outfit', sans-serif);
+  font-size: clamp(0.68rem, 2vw, 0.78rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+}
+
+.splash-pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #0284c7;
+  box-shadow: 0 0 10px rgba(2, 132, 199, 0.8);
+  animation: splash-dot-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes splash-dot-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.5; }
+}
+
+/* Logo Box */
+.splash-logo-box {
+  position: relative;
+  width: clamp(140px, 32vw, 210px);
+  height: clamp(140px, 32vw, 210px);
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid rgba(0, 194, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.08),
+    0 0 35px rgba(0, 194, 255, 0.2),
+    0 0 0 10px rgba(0, 194, 255, 0.05);
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+
+/* Typography for Light Mode */
+.splash-text-group {
+  margin-bottom: 24px;
+}
+
+.splash-title {
+  font-family: var(--font-display, 'Outfit', sans-serif);
+  font-weight: 800;
+  font-size: clamp(1.6rem, 5vw, 2.6rem);
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0 0 10px 0;
+}
+
+.splash-accent {
+  background: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.splash-subtitle {
+  font-size: clamp(0.88rem, 2.5vw, 1.05rem);
+  color: #475569;
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+/* Feature Chips for Light Mode */
+.splash-features-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.splash-feature-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: #334155;
+  font-size: clamp(0.75rem, 2vw, 0.84rem);
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.chip-icon {
+  color: #0284c7;
+  font-size: 0.95rem;
+}
+
+/* Enter Site Button */
+.splash-enter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 36px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #00c2ff 0%, #2f8dff 100%);
+  color: #ffffff;
+  font-family: var(--font-display, 'Outfit', sans-serif);
+  font-weight: 800;
+  font-size: clamp(0.95rem, 2.5vw, 1.08rem);
+  letter-spacing: 0.06em;
+  border: none;
+  cursor: pointer;
+  box-shadow: 
+    0 12px 28px rgba(0, 194, 255, 0.35),
+    0 0 0 2px rgba(0, 194, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.splash-enter-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 
+    0 18px 36px rgba(0, 194, 255, 0.5),
+    0 0 0 3px rgba(0, 194, 255, 0.3);
+}
+
+.splash-enter-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.enter-btn-arrow {
+  font-size: 1.25rem;
+  transition: transform 0.3s ease;
+}
+
+.splash-enter-btn:hover .enter-btn-arrow {
+  transform: translateX(5px);
+}
+
+@media (max-width: 480px) {
+  .splash-features-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+}

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, useInView, animate } from 'framer-motion';
 import { FiArrowRight, FiCheckCircle, FiUser, FiBriefcase, FiCode } from 'react-icons/fi';
 import { profile, stats } from '../data';
@@ -120,20 +121,20 @@ export default function About() {
 
             {/* Action Buttons: Learn More & CV */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', marginBottom: 30 }}>
-              <a
-                href="#/about"
+              <Link
+                to="/about"
                 className="btn btn-primary"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', fontSize: '0.92rem' }}
               >
                 Learn More (Company & CEO) <FiArrowRight />
-              </a>
-              <a
-                href="#/cv"
+              </Link>
+              <Link
+                to="/cv"
                 className="btn btn-ghost"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 20px', fontSize: '0.92rem' }}
               >
                 <FiUser /> Read Full CV
-              </a>
+              </Link>
             </div>
 
             {/* Stats Grid Counters */}

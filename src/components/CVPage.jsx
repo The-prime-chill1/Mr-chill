@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   FiArrowLeft, FiPrinter, FiDownload, FiMail, FiPhone,
-  FiMapPin, FiGlobe, FiLinkedin, FiGithub
+  FiMapPin, FiGlobe, FiGithub
 } from 'react-icons/fi';
 import { profile, experience, education } from '../data';
 
@@ -18,7 +19,7 @@ export default function CVPage() {
   const handleDownloadPDF = () => {
     const link = document.createElement('a');
     link.href = '/cv/Lamidi_Abdulhameed_Olawale_CV.pdf';
-    link.download = 'Lamidi_Abdulhameed_Olawale_CV.pdf';
+    link.download = 'Lamidi-Abdulhameed-Olawale-CV.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -28,9 +29,9 @@ export default function CVPage() {
     <div className="cv-page-container">
       {/* Top Control Bar (Hidden when printing) */}
       <div className="cv-action-bar no-print">
-        <a href="#/" className="cv-back-btn" aria-label="Back to Homepage">
-          <FiArrowLeft /> <span>Home</span>
-        </a>
+        <Link to="/portfolio" className="cv-back-btn" aria-label="Back to CEO portfolio">
+          <FiArrowLeft /> <span>CEO Portfolio</span>
+        </Link>
         <div style={{ display: 'flex', gap: 12 }}>
           <button onClick={handlePrint} className="cv-action-btn primary">
             <FiPrinter /> Print / Save PDF

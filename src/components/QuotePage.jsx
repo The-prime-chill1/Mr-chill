@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FiArrowLeft, FiSun, FiMoon, FiSend, FiCheckCircle,
@@ -528,14 +529,14 @@ export default function QuotePage() {
             Your project estimate has been sent via WhatsApp. Lamidi will reply within <strong style={{ color: 'var(--electric-blue)' }}>24 hours</strong> with a full proposal.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <a href="#/" style={{
+            <Link to="/" style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
               padding: '12px 24px', borderRadius: 999,
               background: 'linear-gradient(135deg,#00c2ff,#0080ff)',
               color: '#000', fontWeight: 700, fontSize: '0.9rem', textDecoration: 'none',
             }}>
-              <FiArrowLeft /> Back to Portfolio
-            </a>
+              <FiArrowLeft /> Back to Company Website
+            </Link>
             <button onClick={() => { setSubmitted(false); setStep(0); setType(null); setFeatures([]); }}
               style={{
                 padding: '12px 24px', borderRadius: 999,
@@ -564,7 +565,7 @@ export default function QuotePage() {
           borderRadius: 999, padding: '8px 10px 8px 12px',
           boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
         }}>
-          <a href="#/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', flexShrink: 0 }}>
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', flexShrink: 0 }}>
             <div style={{
               width: 32, height: 32, borderRadius: '50%',
               border: '2px solid rgba(0,194,255,0.4)',
@@ -575,7 +576,7 @@ export default function QuotePage() {
             <span className="quote-brand-text" style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '0.92rem', color: 'var(--text)' }}>
               Chill<span style={{ color: 'var(--electric-blue)' }}>Tech</span>
             </span>
-          </a>
+          </Link>
 
           {/* Center label — hidden on mobile */}
           <div className="quote-center-label" style={{
@@ -598,7 +599,7 @@ export default function QuotePage() {
               }}>
               {theme === 'dark' ? <FiSun /> : <FiMoon />}
             </button>
-            <a href="#/"
+            <Link to="/"
               className="quote-nav-btn"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 5,
@@ -611,7 +612,7 @@ export default function QuotePage() {
               onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text)'; e.currentTarget.style.borderColor = 'var(--panel-border)'; }}
             >
               <FiArrowLeft /> <span>Home</span>
-            </a>
+            </Link>
           </div>
         </div>
       </header>

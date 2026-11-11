@@ -13,9 +13,12 @@ export const profile = {
   personalEmail: "lamidiabdulhameedolawale@gmail.com",
   phone: "+234 913 763 2195",
   whatsapp: "https://wa.me/2349137632195",
+  whatsappChannel: "https://whatsapp.com/channel/0029Vb8vAl2KwqSToq1syb15",
   github: "https://github.com/The-prime-chill1",
+  linkedin: "https://www.linkedin.com/in/lamidi-abdulhameed-olawale-740985428",
   twitter: "https://x.com/chill_tech_ltd",
   instagram: "https://instagram.com/chill_tech_ltd",
+  threads: "https://www.threads.net/@chill_tech_ltd",
   tiktok: "https://www.tiktok.com/@chill_tech_ltd",
   heroBio: "I'm the Founder & CEO of CHILL TECH LTD, where I lead the development of modern digital solutions that combine software engineering, creative design, and business strategy. From high-converting websites and e-commerce platforms to dashboards, SaaS products, and full-scale web applications, I build digital experiences designed to help businesses grow.",
   bio: "Founder & CEO of CHILL TECH LTD — a technology company built on the belief that every business deserves a powerful digital presence. I lead the company's technical direction, combining software engineering with business strategy to deliver digital solutions that create real impact.",
@@ -187,14 +190,6 @@ export const languages = [
 ];
 
 export const projects = [
-  {
-    title: "CHIL Investment Ltd",
-    description:
-      "Real estate investment portal with interactive property showcase, investment calculator, and client management system.",
-    tech: ["React", "Three.js", "CSS"],
-    link: "https://chil-investment-ltd.vercel.app/",
-    featured: true,
-  },
   {
     title: "TransBridge Logistics",
     description: "Door-to-door international freight forwarding and supply chain platform between the United Kingdom and Nigeria.",

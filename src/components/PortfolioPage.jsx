@@ -7,7 +7,7 @@ import Portfolio from './Portfolio';
 export default function PortfolioPage() {
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'Portfolio & Works — CHILL TECH LTD';
+    document.title = 'Founder Portfolio & CV — CHILL TECH LTD';
     return () => {
       document.title = 'CHILL TECH LTD';
     };
@@ -29,10 +29,10 @@ export default function PortfolioPage() {
 
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             <a href="#/cv" className="portfolio-nav-btn ghost">
-              <FiEye /> <span>CV</span>
+              <FiEye /> <span>View CV</span>
             </a>
             <a href="#/quote" className="portfolio-nav-btn primary">
-              <span>Hire Us</span>
+              <span>Work With Chill Tech</span>
             </a>
           </div>
         </div>
@@ -40,6 +40,20 @@ export default function PortfolioPage() {
 
       {/* Main Content */}
       <main className="portfolio-page-main">
+        <motion.section
+          className="founder-portfolio-hero"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
+        >
+          <span>Founder portfolio</span>
+          <h1>Lamidi Abdulhameed Olawale</h1>
+          <p>Founder & CEO of CHILL TECH LTD, software developer, and technology entrepreneur. Explore selected work below or open the full professional CV.</p>
+          <div>
+            <a href="#/cv" className="portfolio-nav-btn primary"><FiEye /> View Full CV</a>
+            <a href="/cv/Lamidi_Abdulhameed_Olawale_CV.pdf" download className="portfolio-nav-btn ghost"><FiDownload /> Download CV</a>
+          </div>
+        </motion.section>
         <Portfolio />
       </main>
 
@@ -148,12 +162,65 @@ export default function PortfolioPage() {
           padding-top: 24px;
         }
 
+        .founder-portfolio-hero {
+          width: min(1120px, calc(100% - 32px));
+          margin: 26px auto 34px;
+          padding: clamp(28px, 5vw, 58px);
+          border: 1px solid var(--panel-border, rgba(255,255,255,0.08));
+          border-radius: 28px;
+          background: radial-gradient(circle at 85% 10%, rgba(0,194,255,0.16), transparent 35%), rgba(255,255,255,0.025);
+          text-align: center;
+        }
+
+        .founder-portfolio-hero > span {
+          color: var(--cyan, #00c2ff);
+          font-size: 0.76rem;
+          font-weight: 800;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+        }
+
+        .founder-portfolio-hero h1 {
+          margin: 12px 0;
+          font-family: var(--font-display, sans-serif);
+          font-size: clamp(2rem, 5vw, 4.5rem);
+          line-height: 1;
+        }
+
+        .founder-portfolio-hero p {
+          max-width: 720px;
+          margin: 0 auto 24px;
+          color: var(--text-dim);
+          line-height: 1.7;
+        }
+
+        .founder-portfolio-hero > div {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
         @media (max-width: 600px) {
           .portfolio-page-nav {
             padding: 10px 14px;
           }
           .portfolio-nav-brand span {
             font-size: 0.9rem;
+          }
+          .portfolio-page-nav-inner > div:last-child .primary {
+            display: none;
+          }
+          .founder-portfolio-hero {
+            width: calc(100% - 20px);
+            margin-top: 10px;
+            border-radius: 20px;
+          }
+          .founder-portfolio-hero > div {
+            flex-direction: column;
+          }
+          .founder-portfolio-hero .portfolio-nav-btn {
+            justify-content: center;
           }
         }
       `}</style>

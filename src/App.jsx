@@ -1,169 +1,47 @@
-import { useState, useEffect, Suspense, lazy } from 'react';
-import { motion } from 'framer-motion';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import SplashScreen from './components/SplashScreen';
-import LegalPolicy from './components/LegalPolicy';
-import FAQPage from './components/FAQPage';
-import QuotePage from './components/QuotePage';
-import WorkWithMe from './components/WorkWithMe';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import SiteLayout from './company/SiteLayout';
+import {
+  AboutCompanyPage,
+  CEOPortfolioPage,
+  CompanyContactPage,
+  CompanyFAQPage,
+  CompanyPrivacyPage,
+  CompanyReviewsPage,
+  HomePage,
+  InvoiceGeneratorPage,
+  NotFoundPage,
+  ProjectDetailPage,
+  ProjectsPage,
+  ServicesPage,
+  SolutionsPage,
+} from './company/pages';
 import CVPage from './components/CVPage';
-import ReviewsPage from './components/ReviewsPage';
-import AboutPage from './components/AboutPage';
-import SkillsPage from './components/SkillsPage';
-import PortfolioPage from './components/PortfolioPage';
-import ContactPage from './components/ContactPage';
-
-const About = lazy(() => import('./components/About'));
-const Experience = lazy(() => import('./components/Experience'));
-const Achievements = lazy(() => import('./components/Achievements'));
-const Skills = lazy(() => import('./components/Skills'));
-const Portfolio = lazy(() => import('./components/Portfolio'));
-
-
-const FAQ = lazy(() => import('./components/FAQ'));
-const Contact = lazy(() => import('./components/Contact'));
-const Footer = lazy(() => import('./components/Footer'));
-
-
-const CV_URL = '/cv/Lamidi_Abdulhameed_Olawale_CV.pdf';
-const CV_FILENAME = 'Lamidi_Abdulhameed_Olawale_CV.pdf';
-
-function SectionFallback() {
-  return <div className="floating-card" style={{ minHeight: 200 }} />;
-}
-
-/** Minimal hash-based router — no extra dependencies required */
-function useHashRoute() {
-  const getHash = () => window.location.hash.replace('#', '') || '/';
-  const [route, setRoute] = useState(getHash);
-
-  useEffect(() => {
-    const onHashChange = () => setRoute(getHash());
-    window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
-  }, []);
-
-  return route;
-}
+import QuotePage from './components/QuotePage';
+import './company/company.css';
 
 export default function App() {
-  const route = useHashRoute();
-  const [showSplash, setShowSplash] = useState(true);
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('chill_tech_theme') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-  }, []);
-
-  useEffect(() => {
-    // Only show splash screen once per session (skip on privacy page)
-    const hasSeenSplash = sessionStorage.getItem('chill_tech_splash_seen');
-    if (hasSeenSplash === 'true' || route === '/privacy' || route === '/cv') {
-      setShowSplash(false);
-    }
-  }, [route]);
-
-  const handleSplashComplete = () => {
-    setShowSplash(false);
-    sessionStorage.setItem('chill_tech_splash_seen', 'true');
-  };
-
-  const handleDownloadCV = () => {
-    const link = document.createElement('a');
-    link.href = CV_URL;
-    link.download = CV_FILENAME;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const handleViewCV = () => {
-    window.location.hash = '#/cv';
-  };
-
-  // ── Standalone CV Page ──
-  if (route === '/cv') {
-    return <CVPage />;
-  }
-
-  // ── Privacy Policy page (standalone, no sidebar/splash) ──
-  if (route === '/privacy') {
-    return <LegalPolicy />;
-  }
-
-  // ── FAQ page (standalone, no sidebar/splash) ──
-  if (route === '/faq') {
-    return <FAQPage />;
-  }
-
-  // ── Quote page (standalone, no sidebar/splash) ──
-  if (route === '/quote') {
-    return <QuotePage />;
-  }
-
-  // ── Work With Me page (standalone, no sidebar/splash) ──
-  if (route === '/work-with-me') {
-    return <WorkWithMe />;
-  }
-
-  // ── Reviews page (standalone) ──
-  if (route === '/reviews') {
-    return <ReviewsPage />;
-  }
-
-  // ── About Page (standalone, About Company & CEO) ──
-  if (route === '/about' || route === '/about-us') {
-    return <AboutPage />;
-  }
-
-  // ── Skills Page (standalone, Full Tech Stack) ──
-  if (route === '/skills') {
-    return <SkillsPage />;
-  }
-
-  // ── Standalone Portfolio Page ──
-  if (route === '/portfolio') {
-    return <PortfolioPage />;
-  }
-
-  // ── Standalone Contact Page ──
-  if (route === '/contact') {
-    return <ContactPage />;
-  }
-
-  // ── Main Portfolio ──
   return (
-    <>
-      {/* Full-screen Intro Splash */}
-      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
-
-      {/* Top Navbar */}
-      <Navbar onDownloadCV={handleDownloadCV} onViewCV={handleViewCV} cvUrl={CV_URL} />
-
-      {/* Homepage — fades & glides up once splash exits */}
-      <motion.div
-        initial={{ opacity: 0, y: 25, scale: 0.98 }}
-        animate={{ opacity: showSplash ? 0 : 1, y: showSplash ? 25 : 0, scale: showSplash ? 0.98 : 1 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
-      >
-        <main className="page-shell">
-          <Hero onDownloadCV={handleDownloadCV} onViewCV={handleViewCV} cvUrl={CV_URL} />
-
-          <Suspense fallback={<SectionFallback />}>
-            <About />
-            <Experience />
-            <Achievements />
-            <Skills />
-            <Portfolio />
-
-            <Contact />
-            <Footer />
-          </Suspense>
-
-        </main>
-      </motion.div>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<SiteLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="about" element={<AboutCompanyPage />} />
+          <Route path="services" element={<ServicesPage />} />
+          <Route path="projects" element={<ProjectsPage />} />
+          <Route path="projects/:slug" element={<ProjectDetailPage />} />
+          <Route path="solutions" element={<SolutionsPage />} />
+          <Route path="portfolio" element={<CEOPortfolioPage />} />
+          <Route path="contact" element={<CompanyContactPage />} />
+          <Route path="faq" element={<CompanyFAQPage />} />
+          <Route path="privacy" element={<CompanyPrivacyPage />} />
+          <Route path="reviews" element={<CompanyReviewsPage />} />
+          <Route path="invoice" element={<InvoiceGeneratorPage />} />
+          <Route path="work-with-me" element={<Navigate to="/contact" replace />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+        <Route path="cv" element={<CVPage />} />
+        <Route path="quote" element={<QuotePage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
-
