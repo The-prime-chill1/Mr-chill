@@ -233,6 +233,9 @@ function ContactSubmissionForm({
       const submittedEmail = form.email.trim().toLowerCase();
       const submittedService = form.service.toLowerCase();
       await insertSupabaseRow('enquiries', { full_name: form.name.trim(), email: submittedEmail, phone: form.phone.trim() || null, service: form.service, message, status: 'new' });
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'generate_lead', { service: form.service });
+      }
       let acknowledgementSent = false;
       try {
         await sendEnquiryAcknowledgement({ name: form.name.trim(), email: submittedEmail, phone: form.phone.trim(), company: form.company.trim(), service: form.service, message: form.message.trim(), website: form.website });
@@ -295,8 +298,7 @@ export function CompanyPrivacyPage() {
   const sections = [
     ['Information we collect', 'We may collect information you voluntarily provide through email, WhatsApp, project briefs, quotations, invoices, or other direct communication. This can include your name, business name, contact details, project requirements, and billing information.'],
     ['How information is used', 'Information is used to respond to enquiries, prepare quotations and invoices, deliver agreed services, provide support, improve our website and services, maintain business records, and meet applicable legal or administrative obligations.'],
-    ['Cookies and website data', 'The website may use basic browser storage, analytics, or technical logs to support functionality, security, performance, and user experience. We do not claim to sell personal information.'],
-    ['Google Analytics', 'We use Google Analytics 4 to understand website visits, page usage, general traffic sources, device information, and performance. This helps CHILL TECH LTD improve its website and services. Google may process analytics information according to its own privacy policies and controls.'],
+    ['Cookies, analytics, and website data', 'The website uses Google Analytics 4 and Microsoft Clarity, and may use basic browser storage or technical logs to understand website visits, page usage, traffic sources, device information, interaction patterns, security, and performance. This helps CHILL TECH LTD improve its website, usability, and services. Google and Microsoft may process analytics information according to their own privacy policies and controls. We do not claim to sell personal information.'],
     ['Third-party services', 'Projects and website operations may use trusted third-party platforms such as hosting providers, deployment services, email services, analytics tools, payment services, or APIs. Their own terms and privacy policies may apply.'],
     ['Project invoices and payment', 'Clients must pay the fees, deposit, milestone amounts, taxes, discounts, and outstanding balance stated on the official invoice. Payment must follow the currency, method, due date, and schedule shown on that invoice. An invoice is tied to the approved scope or quotation; changes outside that scope may require a revised invoice.'],
     ['Late or incomplete payment', 'Where an invoice is overdue or a required milestone remains unpaid, CHILL TECH LTD may pause work, delay delivery, withhold deployment or transfer, or reschedule the project until payment obligations are resolved. Any special payment arrangement must be confirmed in writing.'],
