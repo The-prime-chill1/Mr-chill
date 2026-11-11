@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import SiteLayout from './company/SiteLayout';
+import AdminDashboard from './company/AdminDashboard';
 import {
   AboutCompanyPage,
   CEOPortfolioPage,
@@ -40,6 +41,7 @@ export default function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Route>
         <Route path="cv" element={<CVPage />} />
+        <Route path="admin" element={<AdminDashboard />} />
         <Route path="quote" element={<QuotePage />} />
       </Routes>
     </BrowserRouter>
