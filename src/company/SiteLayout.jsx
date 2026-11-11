@@ -47,10 +47,20 @@ export function usePageMeta(title, description, path = '') {
 }
 
 function ScrollManager() {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, [pathname]);
+    const analyticsTimer = window.setTimeout(() => {
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'page_view', {
+          page_title: document.title,
+          page_location: window.location.href,
+          page_path: `${pathname}${search}`,
+        });
+      }
+    }, 50);
+    return () => window.clearTimeout(analyticsTimer);
+  }, [pathname, search]);
   return null;
 }
 
