@@ -1,6 +1,8 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import SiteLayout from './company/SiteLayout';
 import AdminDashboard from './company/AdminDashboard';
+import InvoiceGeneratorPage from './company/InvoiceGeneratorPage';
+import { NewsArticlePage, NewsPage } from './company/NewsPages';
 import {
   AboutCompanyPage,
   CEOPortfolioPage,
@@ -10,7 +12,6 @@ import {
   CompanyPrivacyPage,
   CompanyReviewsPage,
   HomePage,
-  InvoiceGeneratorPage,
   NotFoundPage,
   ProjectDetailPage,
   ProjectsPage,
@@ -38,6 +39,8 @@ export default function App() {
           <Route path="faq" element={<CompanyFAQPage />} />
           <Route path="privacy" element={<CompanyPrivacyPage />} />
           <Route path="reviews" element={<CompanyReviewsPage />} />
+          <Route path="news" element={<NewsPage />} />
+          <Route path="news/:slug" element={<NewsArticlePage />} />
           <Route path="invoice" element={<InvoiceGeneratorPage />} />
           <Route path="work-with-me" element={<Navigate to="/enquiry" replace />} />
           <Route path="*" element={<NotFoundPage />} />

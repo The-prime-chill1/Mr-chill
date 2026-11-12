@@ -12,6 +12,7 @@ const navItems = [
   ['/services', 'Services'],
   ['/projects', 'Projects'],
   ['/solutions', 'Solutions'],
+  ['/news', 'News'],
   ['/contact', 'Contact'],
 ];
 
@@ -136,7 +137,7 @@ export default function SiteLayout() {
           </div>
           <div className="company-footer-nav">
             <span>Resources</span>
-            <Link to="/enquiry">Project Enquiry</Link><Link to="/reviews">Reviews</Link><Link to="/faq">FAQ</Link><Link to="/privacy">Privacy & Terms</Link><Link to="/invoice">Invoice Generator</Link>
+            <Link to="/news">News & Insights</Link><Link to="/enquiry">Project Enquiry</Link><Link to="/reviews">Reviews</Link><Link to="/faq">FAQ</Link><Link to="/privacy">Privacy & Terms</Link><Link to="/invoice">Invoice Generator</Link>
           </div>
           <div className="company-footer-nav">
             <span>Connect</span>

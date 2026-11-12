@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FiArrowLeft, FiBriefcase, FiCheckCircle, FiEye, FiEyeOff, FiFileText, FiInbox, FiKey, FiLock, FiLogOut, FiPlus, FiRefreshCw, FiShield, FiStar, FiTrash2 } from 'react-icons/fi';
+import { FiArrowLeft, FiBell, FiBookOpen, FiBriefcase, FiCheckCircle, FiChevronRight, FiEdit3, FiEye, FiEyeOff, FiFileText, FiHome, FiInbox, FiKey, FiLock, FiLogOut, FiPlus, FiRefreshCw, FiShield, FiStar, FiTrash2, FiX } from 'react-icons/fi';
 import companyLogo from '../assets/chill-tech-logo.jpeg';
 import { getAdminAuthPersistence, isSupabaseConfigured, setAdminAuthPersistence, supabase } from '../lib/supabase';
 
 const emptyProject = { title: '', slug: '', description: '', category: '', technologies: '', live_url: '', image_url: '', is_featured: false, is_published: false };
+const emptyNews = { title: '', slug: '', excerpt: '', content: '', category: 'Company news', cover_image_url: '', author_name: 'CHILL TECH LTD', is_featured: false, is_published: false, published_at: null };
 const rememberedAdminEmailKey = 'chill-tech-admin-email';
 const getPasswordRecoveryRedirect = () => import.meta.env.PROD
   ? 'https://www.chilltechltd.com/admin'
@@ -19,6 +20,7 @@ const getRememberedAdminEmail = () => {
 };
 
 const formatDate = (value) => value ? new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value)) : '—';
+const formatDashboardDate = () => new Intl.DateTimeFormat('en-NG', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
 const slugify = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
 function AdminAuthLayout({ children }) {
@@ -26,7 +28,7 @@ function AdminAuthLayout({ children }) {
     <div className="admin-auth-page">
       <aside className="admin-auth-showcase">
         <Link className="admin-auth-brand" to="/"><img src={companyLogo} alt="CHILL TECH LTD" /><span><strong>CHILL TECH LTD</strong><small>Secure administration</small></span></Link>
-        <div className="admin-auth-showcase-copy"><span><FiShield /> Private company workspace</span><h2>Manage the work behind the website.</h2><p>Review enquiries, approve client feedback, manage invoices, and maintain published company projects from one protected dashboard.</p></div>
+        <div className="admin-auth-showcase-copy"><span><FiShield /> Private company workspace</span><h2>Manage the work behind the website.</h2><p>Review enquiries, approve client feedback, manage invoices, and publish company projects and news from one protected dashboard.</p></div>
         <div className="admin-auth-trust"><span><FiLock /> Supabase authentication</span><span><FiCheckCircle /> Role-protected access</span><span><FiKey /> Secure password recovery</span></div>
         <small>CHILL TECH LTD · Innovate. Build. Empower.</small>
       </aside>
@@ -62,10 +64,13 @@ export default function AdminDashboard() {
   const [authNotice, setAuthNotice] = useState('');
   const [authSubmitting, setAuthSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
-  const [records, setRecords] = useState({ enquiries: [], reviews: [], invoices: [], projects: [] });
+  const [records, setRecords] = useState({ enquiries: [], reviews: [], invoices: [], projects: [], news: [] });
   const [loading, setLoading] = useState(false);
   const [notice, setNotice] = useState('');
   const [projectForm, setProjectForm] = useState(emptyProject);
+  const [newsForm, setNewsForm] = useState(emptyNews);
+  const [editingNewsId, setEditingNewsId] = useState(null);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   const isAdmin = session?.user?.app_metadata?.role === 'admin';
 
@@ -103,11 +108,17 @@ export default function AdminDashboard() {
     if (!supabase || !isAdmin) return;
     setLoading(true);
     setNotice('');
-    const tables = ['enquiries', 'reviews', 'invoices', 'projects'];
-    const results = await Promise.all(tables.map((table) => supabase.from(table).select('*').order('created_at', { ascending: false })));
+    const sources = [
+      { key: 'enquiries', table: 'enquiries' },
+      { key: 'reviews', table: 'reviews' },
+      { key: 'invoices', table: 'invoices' },
+      { key: 'projects', table: 'projects' },
+      { key: 'news', table: 'news_posts' },
+    ];
+    const results = await Promise.all(sources.map(({ table }) => supabase.from(table).select('*').order('created_at', { ascending: false })));
     const firstError = results.find((result) => result.error)?.error;
     if (firstError) setNotice(firstError.message);
-    setRecords(Object.fromEntries(tables.map((table, index) => [table, results[index].data || []])));
+    setRecords(Object.fromEntries(sources.map(({ key }, index) => [key, results[index].data || []])));
     setLoading(false);
   }, [isAdmin]);
 
@@ -115,20 +126,48 @@ export default function AdminDashboard() {
     if (isAdmin) loadRecords();
   }, [isAdmin, loadRecords]);
 
+  const dashboardCounts = useMemo(() => ({
+    enquiries: records.enquiries.filter((item) => item.status === 'new').length,
+    reviews: records.reviews.filter((item) => item.status === 'pending').length,
+    invoices: records.invoices.filter((item) => !['paid', 'cancelled'].includes(item.status)).length,
+    projects: records.projects.filter((item) => item.is_published).length,
+    newsDrafts: records.news.filter((item) => !item.is_published).length,
+  }), [records]);
+
   const stats = useMemo(() => [
-    ['New enquiries', records.enquiries.filter((item) => item.status === 'new').length, FiInbox],
-    ['Pending reviews', records.reviews.filter((item) => item.status === 'pending').length, FiStar],
-    ['Open invoices', records.invoices.filter((item) => !['paid', 'cancelled'].includes(item.status)).length, FiFileText],
-    ['Published projects', records.projects.filter((item) => item.is_published).length, FiBriefcase],
-  ], [records]);
+    { id: 'enquiries', label: 'New enquiries', value: dashboardCounts.enquiries, hint: 'Waiting for your response', Icon: FiInbox, tone: 'blue' },
+    { id: 'reviews', label: 'Pending reviews', value: dashboardCounts.reviews, hint: 'Waiting for approval', Icon: FiStar, tone: 'violet' },
+    { id: 'invoices', label: 'Open invoices', value: dashboardCounts.invoices, hint: 'Draft, sent or overdue', Icon: FiFileText, tone: 'amber' },
+    { id: 'projects', label: 'Live projects', value: dashboardCounts.projects, hint: 'Published on the website', Icon: FiBriefcase, tone: 'green' },
+  ], [dashboardCounts]);
 
   const adminTabs = useMemo(() => [
-    { id: 'overview', label: 'Overview', count: 0 },
-    { id: 'enquiries', label: 'Enquiries', count: records.enquiries.filter((item) => item.status === 'new').length },
-    { id: 'reviews', label: 'Reviews', count: records.reviews.filter((item) => item.status === 'pending').length },
-    { id: 'invoices', label: 'Invoices', count: records.invoices.filter((item) => !['paid', 'cancelled'].includes(item.status)).length },
-    { id: 'projects', label: 'Projects', count: 0 },
-  ], [records]);
+    { id: 'overview', label: 'Overview', mobileLabel: 'Home', count: 0, Icon: FiHome, description: 'A complete view of your workspace' },
+    { id: 'enquiries', label: 'Enquiries', mobileLabel: 'Enquiries', count: dashboardCounts.enquiries, Icon: FiInbox, description: 'Read and manage client enquiries' },
+    { id: 'reviews', label: 'Reviews', mobileLabel: 'Reviews', count: dashboardCounts.reviews, Icon: FiStar, description: 'Approve and manage client feedback' },
+    { id: 'invoices', label: 'Invoices', mobileLabel: 'Invoices', count: dashboardCounts.invoices, Icon: FiFileText, description: 'Track saved invoices and payment status' },
+    { id: 'projects', label: 'Projects', mobileLabel: 'Projects', count: 0, Icon: FiBriefcase, description: 'Create and publish portfolio projects' },
+    { id: 'news', label: 'News', mobileLabel: 'News', count: dashboardCounts.newsDrafts, Icon: FiBookOpen, description: 'Write and publish company news' },
+  ], [dashboardCounts]);
+
+  const notificationItems = useMemo(() => [
+    { id: 'enquiries', title: 'New client enquiries', message: `${dashboardCounts.enquiries} ${dashboardCounts.enquiries === 1 ? 'enquiry needs' : 'enquiries need'} a response`, count: dashboardCounts.enquiries, Icon: FiInbox },
+    { id: 'reviews', title: 'Reviews to approve', message: `${dashboardCounts.reviews} ${dashboardCounts.reviews === 1 ? 'review is' : 'reviews are'} waiting for approval`, count: dashboardCounts.reviews, Icon: FiStar },
+    { id: 'invoices', title: 'Open invoices', message: `${dashboardCounts.invoices} ${dashboardCounts.invoices === 1 ? 'invoice is' : 'invoices are'} still open`, count: dashboardCounts.invoices, Icon: FiFileText },
+  ].filter((item) => item.count > 0), [dashboardCounts]);
+
+  const notificationCount = notificationItems.reduce((total, item) => total + item.count, 0);
+  const activeTabDetails = adminTabs.find((tab) => tab.id === activeTab) || adminTabs[0];
+  const adminDisplayName = session?.user?.user_metadata?.full_name || 'Administrator';
+  const adminInitial = adminDisplayName.charAt(0).toUpperCase();
+  const currentHour = new Date().getHours();
+  const greeting = currentHour < 12 ? 'Good morning' : currentHour < 18 ? 'Good afternoon' : 'Good evening';
+
+  const selectAdminTab = (tabId) => {
+    setActiveTab(tabId);
+    setNotificationsOpen(false);
+    if (window.matchMedia('(max-width: 760px)').matches) window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const login = async (event) => {
     event.preventDefault();
@@ -237,6 +276,65 @@ export default function AdminDashboard() {
     }
   };
 
+  const editNewsPost = (item) => {
+    setEditingNewsId(item.id);
+    setNewsForm({
+      title: item.title || '',
+      slug: item.slug || '',
+      excerpt: item.excerpt || '',
+      content: item.content || '',
+      category: item.category || 'Company news',
+      cover_image_url: item.cover_image_url || '',
+      author_name: item.author_name || 'CHILL TECH LTD',
+      is_featured: Boolean(item.is_featured),
+      is_published: Boolean(item.is_published),
+      published_at: item.published_at || null,
+    });
+    window.requestAnimationFrame(() => document.querySelector('.admin-news-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  };
+
+  const cancelNewsEdit = () => {
+    setEditingNewsId(null);
+    setNewsForm(emptyNews);
+  };
+
+  const saveNewsPost = async (event) => {
+    event.preventDefault();
+    const now = new Date().toISOString();
+    const payload = {
+      title: newsForm.title.trim(),
+      slug: newsForm.slug.trim() || slugify(newsForm.title),
+      excerpt: newsForm.excerpt.trim(),
+      content: newsForm.content.trim(),
+      category: newsForm.category.trim() || 'Company news',
+      cover_image_url: newsForm.cover_image_url.trim() || null,
+      author_name: newsForm.author_name.trim() || 'CHILL TECH LTD',
+      is_featured: newsForm.is_featured,
+      is_published: newsForm.is_published,
+      published_at: newsForm.is_published ? (newsForm.published_at || now) : newsForm.published_at,
+      updated_at: now,
+    };
+    setNotice(editingNewsId ? 'Updating news post…' : 'Creating news post…');
+    const query = editingNewsId
+      ? supabase.from('news_posts').update(payload).eq('id', editingNewsId)
+      : supabase.from('news_posts').insert(payload);
+    const { error } = await query;
+    if (error) {
+      setNotice(error.message);
+      return;
+    }
+    setNotice(editingNewsId ? 'News post updated successfully.' : 'News post created successfully.');
+    setEditingNewsId(null);
+    setNewsForm(emptyNews);
+    loadRecords();
+  };
+
+  const toggleNewsPublication = (item, isPublished) => updateRecord('news_posts', item.id, {
+    is_published: isPublished,
+    published_at: isPublished ? (item.published_at || new Date().toISOString()) : item.published_at,
+    updated_at: new Date().toISOString(),
+  });
+
   if (authLoading) return <div className="admin-loading">Loading secure dashboard…</div>;
 
   if (!isSupabaseConfigured) return <AdminAuthLayout><div className="admin-auth-card"><img src={companyLogo} alt="CHILL TECH LTD" /><h1>Supabase is not configured.</h1><p>Add the Vite Supabase environment variables and restart the application.</p><Link to="/">Return to website</Link></div></AdminAuthLayout>;
@@ -288,24 +386,177 @@ export default function AdminDashboard() {
   return (
     <div className="admin-shell">
       <aside className="admin-sidebar">
-        <Link className="admin-brand" to="/"><img src={companyLogo} alt="" /><span><strong>CHILL TECH LTD</strong><small>Administration</small></span></Link>
-        <nav aria-label="Admin sections">{adminTabs.map((tab) => <button key={tab.id} type="button" className={activeTab === tab.id ? 'active' : ''} aria-current={activeTab === tab.id ? 'page' : undefined} onClick={() => setActiveTab(tab.id)}><span>{tab.label}</span>{tab.count > 0 && <strong aria-label={`${tab.count} requiring attention`}>{tab.count}</strong>}</button>)}</nav>
-        <button className="admin-logout" type="button" onClick={logout}><FiLogOut /> Sign out</button>
+        <div className="admin-sidebar-header">
+          <Link className="admin-brand" to="/">
+            <img src={companyLogo} alt="CHILL TECH LTD" />
+            <span><strong>CHILL TECH LTD</strong><small>Admin workspace</small></span>
+          </Link>
+          <span className="admin-workspace-chip"><FiShield /> Private workspace</span>
+        </div>
+        <nav aria-label="Admin sections">
+          {adminTabs.map(({ id, label, count, Icon }) => (
+            <button key={id} type="button" className={activeTab === id ? 'active' : ''} aria-current={activeTab === id ? 'page' : undefined} onClick={() => selectAdminTab(id)}>
+              <span><Icon /> {label}</span>
+              {count > 0 && <strong aria-label={`${count} requiring attention`}>{count}</strong>}
+            </button>
+          ))}
+        </nav>
+        <div className="admin-sidebar-account">
+          <span className="admin-avatar" aria-hidden="true">{adminInitial}</span>
+          <span><strong>{adminDisplayName}</strong><small>{session.user.email}</small></span>
+          <button type="button" onClick={logout} aria-label="Sign out" title="Sign out"><FiLogOut /></button>
+        </div>
       </aside>
-      <main className="admin-main">
-        <header><div><span>Private workspace</span><h1>{activeTab}</h1></div><button type="button" onClick={loadRecords} disabled={loading}><FiRefreshCw /> {loading ? 'Refreshing…' : 'Refresh data'}</button></header>
-        {notice && <div className="admin-notice">{notice}</div>}
+      <section className="admin-workspace">
+        <header className="admin-topbar">
+          <Link className="admin-mobile-brand" to="/">
+            <img src={companyLogo} alt="CHILL TECH LTD" />
+            <span><strong>CHILL TECH</strong><small>Admin</small></span>
+          </Link>
+          <div className="admin-topbar-title">
+            <span>CHILL TECH LTD / Admin</span>
+            <h1>{activeTabDetails.label}</h1>
+            <p>{activeTabDetails.description}</p>
+          </div>
+          <div className="admin-topbar-actions">
+            <button className="admin-icon-button admin-refresh-button" type="button" onClick={loadRecords} disabled={loading} aria-label="Refresh dashboard data">
+              <FiRefreshCw className={loading ? 'is-spinning' : ''} /><span>{loading ? 'Refreshing' : 'Refresh'}</span>
+            </button>
+            <div className="admin-notification-wrap">
+              <button className={`admin-icon-button admin-notification-button ${notificationsOpen ? 'active' : ''}`} type="button" aria-label={`${notificationCount} notifications`} aria-expanded={notificationsOpen} aria-haspopup="dialog" onClick={() => setNotificationsOpen((open) => !open)}>
+                <FiBell />
+                {notificationCount > 0 && <strong>{notificationCount > 9 ? '9+' : notificationCount}</strong>}
+              </button>
+              {notificationsOpen && (
+                <div className="admin-notification-popover" role="dialog" aria-label="Dashboard notifications">
+                  <header>
+                    <div><span>Notifications</span><strong>{notificationCount > 0 ? `${notificationCount} items need attention` : 'You are all caught up'}</strong></div>
+                    <button type="button" onClick={() => setNotificationsOpen(false)} aria-label="Close notifications"><FiX /></button>
+                  </header>
+                  <div className="admin-notification-list">
+                    {notificationItems.length > 0 ? notificationItems.map(({ id, title, message, count, Icon }) => (
+                      <button key={id} type="button" onClick={() => selectAdminTab(id)}>
+                        <span className={`admin-notification-icon ${id}`}><Icon /></span>
+                        <span><strong>{title}</strong><small>{message}</small></span>
+                        <em>{count}</em>
+                      </button>
+                    )) : <div className="admin-notification-empty"><FiCheckCircle /><strong>Everything is up to date</strong><span>There is nothing requiring your attention right now.</span></div>}
+                  </div>
+                  <button className="admin-notification-refresh" type="button" onClick={loadRecords}><FiRefreshCw /> Refresh notifications</button>
+                </div>
+              )}
+            </div>
+          </div>
+        </header>
 
-        {activeTab === 'overview' && <section className="admin-stat-grid">{stats.map(([label, value, Icon]) => <article key={label}><Icon /><strong>{value}</strong><span>{label}</span></article>)}</section>}
+        {notificationsOpen && <button className="admin-notification-scrim" type="button" aria-label="Close notifications" onClick={() => setNotificationsOpen(false)} />}
+
+        <main className="admin-main">
+          <div className="admin-mobile-section-heading"><span>{activeTabDetails.description}</span><h1>{activeTabDetails.label}</h1></div>
+          {notice && <div className="admin-notice">{notice}</div>}
+
+          {activeTab === 'overview' && (
+            <div className="admin-overview">
+              <section className="admin-overview-hero">
+                <div>
+                  <span>{formatDashboardDate()}</span>
+                  <h2>{greeting}, {adminDisplayName}.</h2>
+                  <p>Here is what is happening across your website today.</p>
+                </div>
+                <div className="admin-attention-summary">
+                  <span><FiBell /></span>
+                  <div><strong>{notificationCount}</strong><small>{notificationCount === 1 ? 'item needs attention' : 'items need attention'}</small></div>
+                </div>
+              </section>
+
+              <section className="admin-stat-grid" aria-label="Dashboard statistics">
+                {stats.map(({ id, label, value, hint, Icon, tone }) => (
+                  <button className={`admin-stat-card ${tone}`} key={id} type="button" onClick={() => selectAdminTab(id)}>
+                    <span className="admin-stat-icon"><Icon /></span>
+                    <span className="admin-stat-arrow"><FiChevronRight /></span>
+                    <strong>{value}</strong>
+                    <span className="admin-stat-label">{label}</span>
+                    <small>{hint}</small>
+                  </button>
+                ))}
+              </section>
+
+              <div className="admin-overview-panels">
+                <section className="admin-overview-panel admin-attention-panel">
+                  <header><div><span>Action centre</span><h2>Needs attention</h2></div><strong>{notificationCount}</strong></header>
+                  {notificationItems.length > 0 ? (
+                    <div className="admin-attention-list">
+                      {notificationItems.map(({ id, title, message, count, Icon }) => (
+                        <button key={id} type="button" onClick={() => selectAdminTab(id)}>
+                          <span className={`admin-notification-icon ${id}`}><Icon /></span>
+                          <span><strong>{title}</strong><small>{message}</small></span>
+                          <em>{count}</em><FiChevronRight />
+                        </button>
+                      ))}
+                    </div>
+                  ) : <div className="admin-overview-empty"><FiCheckCircle /><div><strong>You are all caught up</strong><span>No enquiries, reviews, or invoices currently need attention.</span></div></div>}
+                </section>
+
+                <section className="admin-overview-panel admin-shortcuts-panel">
+                  <header><div><span>Workspace</span><h2>Quick navigation</h2></div></header>
+                  <div className="admin-shortcut-list">
+                    {adminTabs.slice(1).map(({ id, label, description, Icon }) => (
+                      <button key={id} type="button" onClick={() => selectAdminTab(id)}><Icon /><span><strong>{label}</strong><small>{description}</small></span><FiChevronRight /></button>
+                    ))}
+                  </div>
+                </section>
+              </div>
+            </div>
+          )}
 
         {activeTab === 'enquiries' && (records.enquiries.length > 0 ? <section className="admin-table-wrap"><table><thead><tr><th>Contact</th><th>Service</th><th>Message</th><th>Status</th><th>Date</th><th /></tr></thead><tbody>{records.enquiries.map((item) => <tr key={item.id}><td data-label="Contact"><strong>{item.full_name}</strong><small>{item.email}<br />{item.phone}</small></td><td data-label="Service">{item.service}</td><td className="admin-message-cell" data-label="Message">{item.message}</td><td data-label="Status"><select value={item.status} onChange={(event) => updateRecord('enquiries', item.id, { status: event.target.value })}><option value="new">New</option><option value="in_progress">In progress</option><option value="resolved">Resolved</option><option value="spam">Spam</option></select></td><td data-label="Date">{formatDate(item.created_at)}</td><td data-label="Actions"><button aria-label={`Delete enquiry from ${item.full_name}`} onClick={() => deleteRecord('enquiries', item.id)}><FiTrash2 /></button></td></tr>)}</tbody></table></section> : <AdminEmptyState icon={FiInbox} title="No enquiries yet" message="New project enquiries will appear here as soon as they are submitted." />)}
 
         {activeTab === 'reviews' && (records.reviews.length > 0 ? <section className="admin-table-wrap"><table><thead><tr><th>Client</th><th>Review</th><th>Rating</th><th>Status</th><th>Date</th><th /></tr></thead><tbody>{records.reviews.map((item) => <tr key={item.id}><td data-label="Client"><strong>{item.name}</strong><small>{item.company}<br />{item.email}</small></td><td className="admin-message-cell" data-label="Review">{item.review}<small>{item.project}</small></td><td data-label="Rating">{item.rating}/5</td><td data-label="Status"><select value={item.status} onChange={(event) => updateRecord('reviews', item.id, { status: event.target.value })}><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></td><td data-label="Date">{formatDate(item.created_at)}</td><td data-label="Actions"><button aria-label={`Delete review from ${item.name}`} onClick={() => deleteRecord('reviews', item.id)}><FiTrash2 /></button></td></tr>)}</tbody></table></section> : <AdminEmptyState icon={FiStar} title="No reviews submitted yet" message="New client reviews will appear here for approval as soon as they are submitted." />)}
 
-        {activeTab === 'invoices' && (records.invoices.length > 0 ? <section className="admin-table-wrap"><table><thead><tr><th>Invoice</th><th>Client</th><th>Total</th><th>Due</th><th>Status</th><th /></tr></thead><tbody>{records.invoices.map((item) => <tr key={item.id}><td data-label="Invoice"><strong>{item.invoice_number}</strong><small>{formatDate(item.created_at)}</small></td><td data-label="Client">{item.client_company || item.client_name}<small>{item.client_email}</small></td><td data-label="Total">{item.currency} {Number(item.total).toLocaleString()}</td><td data-label="Due">{item.due_date || 'On receipt'}</td><td data-label="Status"><select value={item.status} onChange={(event) => updateRecord('invoices', item.id, { status: event.target.value })}><option value="draft">Draft</option><option value="sent">Sent</option><option value="paid">Paid</option><option value="cancelled">Cancelled</option></select></td><td data-label="Actions"><button aria-label={`Delete invoice ${item.invoice_number}`} onClick={() => deleteRecord('invoices', item.id)}><FiTrash2 /></button></td></tr>)}</tbody></table></section> : <AdminEmptyState icon={FiFileText} title="No invoices saved yet" message="Draft invoices saved from the invoice generator will appear here." />)}
+        {activeTab === 'invoices' && (records.invoices.length > 0 ? <section className="admin-table-wrap"><table><thead><tr><th>Invoice</th><th>Client</th><th>Total</th><th>Due</th><th>Status</th><th /></tr></thead><tbody>{records.invoices.map((item) => <tr key={item.id}><td data-label="Invoice"><strong>{item.invoice_number}</strong><small>{item.items?.[0]?.description}<br />{formatDate(item.created_at)}</small></td><td data-label="Client">{item.client_company || item.client_name}<small>{item.client_email}</small></td><td data-label="Total">{item.currency} {Number(item.total).toLocaleString()}</td><td data-label="Due">{item.due_date || 'On receipt'}</td><td data-label="Status"><select value={item.status} onChange={(event) => updateRecord('invoices', item.id, { status: event.target.value })}><option value="draft">Draft</option><option value="sent">Sent</option><option value="paid">Paid</option><option value="cancelled">Cancelled</option></select></td><td data-label="Actions"><button aria-label={`Delete invoice ${item.invoice_number}`} onClick={() => deleteRecord('invoices', item.id)}><FiTrash2 /></button></td></tr>)}</tbody></table></section> : <AdminEmptyState icon={FiFileText} title="No invoices saved yet" message="Draft invoices saved from the invoice generator will appear here." />)}
 
         {activeTab === 'projects' && <section className="admin-projects"><form onSubmit={addProject}><h2><FiPlus /> Add project</h2><div className="form-pair"><label>Title<input required value={projectForm.title} onChange={(event) => setProjectForm({ ...projectForm, title: event.target.value })} /></label><label>Slug<input value={projectForm.slug} onChange={(event) => setProjectForm({ ...projectForm, slug: event.target.value })} placeholder="Generated from title" /></label></div><label>Description<textarea value={projectForm.description} onChange={(event) => setProjectForm({ ...projectForm, description: event.target.value })} /></label><div className="form-pair"><label>Category<input value={projectForm.category} onChange={(event) => setProjectForm({ ...projectForm, category: event.target.value })} /></label><label>Technologies<input value={projectForm.technologies} onChange={(event) => setProjectForm({ ...projectForm, technologies: event.target.value })} placeholder="React, CSS, Vercel" /></label></div><label>Live URL<input type="url" value={projectForm.live_url} onChange={(event) => setProjectForm({ ...projectForm, live_url: event.target.value })} /></label><label>Image URL<input value={projectForm.image_url} onChange={(event) => setProjectForm({ ...projectForm, image_url: event.target.value })} /></label><div className="admin-checks"><label><input type="checkbox" checked={projectForm.is_featured} onChange={(event) => setProjectForm({ ...projectForm, is_featured: event.target.checked })} /> Featured</label><label><input type="checkbox" checked={projectForm.is_published} onChange={(event) => setProjectForm({ ...projectForm, is_published: event.target.checked })} /> Published</label></div><button className="button button-primary" type="submit">Add project</button></form><div className="admin-project-list">{records.projects.map((item) => <article key={item.id}><div><strong>{item.title}</strong><span>{item.category}</span><small>{item.live_url}</small></div><label><input type="checkbox" checked={item.is_published} onChange={(event) => updateRecord('projects', item.id, { is_published: event.target.checked })} /> Published</label><button onClick={() => deleteRecord('projects', item.id)}><FiTrash2 /></button></article>)}</div></section>}
-      </main>
+          {activeTab === 'news' && (
+            <section className="admin-news">
+              <form className="admin-news-form" onSubmit={saveNewsPost}>
+                <header><div><span>{editingNewsId ? 'Editing post' : 'New publication'}</span><h2><FiBookOpen /> {editingNewsId ? 'Update news post' : 'Create news post'}</h2></div>{editingNewsId && <button type="button" onClick={cancelNewsEdit}><FiX /> Cancel edit</button>}</header>
+                <div className="form-pair"><label>Headline<input required minLength="5" maxLength="180" value={newsForm.title} onChange={(event) => setNewsForm({ ...newsForm, title: event.target.value })} placeholder="News article headline" /></label><label>URL slug<input value={newsForm.slug} onChange={(event) => setNewsForm({ ...newsForm, slug: slugify(event.target.value) })} placeholder="Generated from headline" /></label></div>
+                <label>Short summary<textarea required minLength="20" maxLength="500" value={newsForm.excerpt} onChange={(event) => setNewsForm({ ...newsForm, excerpt: event.target.value })} placeholder="A concise introduction shown on the News page." /></label>
+                <label>Article content<textarea className="admin-news-content" required minLength="50" maxLength="20000" value={newsForm.content} onChange={(event) => setNewsForm({ ...newsForm, content: event.target.value })} placeholder="Write the full story. Separate paragraphs with a blank line." /></label>
+                <div className="form-pair"><label>Category<input required value={newsForm.category} onChange={(event) => setNewsForm({ ...newsForm, category: event.target.value })} placeholder="Company news" /></label><label>Author<input required value={newsForm.author_name} onChange={(event) => setNewsForm({ ...newsForm, author_name: event.target.value })} /></label></div>
+                <label>Cover image URL<input value={newsForm.cover_image_url} onChange={(event) => setNewsForm({ ...newsForm, cover_image_url: event.target.value })} placeholder="https://… or /image-name.jpg" /></label>
+                <div className="admin-checks"><label><input type="checkbox" checked={newsForm.is_featured} onChange={(event) => setNewsForm({ ...newsForm, is_featured: event.target.checked })} /> Feature on News page</label><label><input type="checkbox" checked={newsForm.is_published} onChange={(event) => setNewsForm({ ...newsForm, is_published: event.target.checked })} /> Publish now</label></div>
+                <button className="button button-primary" type="submit"><FiCheckCircle /> {editingNewsId ? 'Save changes' : 'Create news post'}</button>
+              </form>
+
+              <div className="admin-news-list">
+                <header><div><span>Content library</span><h2>News posts</h2></div><strong>{records.news.length}</strong></header>
+                {records.news.length > 0 ? records.news.map((item) => (
+                  <article key={item.id}>
+                    <div className="admin-news-thumbnail">{item.cover_image_url ? <img src={item.cover_image_url} alt="" /> : <FiBookOpen />}</div>
+                    <div className="admin-news-copy"><span>{item.category} · {formatDate(item.published_at || item.created_at)}</span><h3>{item.title}</h3><p>{item.excerpt}</p><div><small className={item.is_published ? 'published' : 'draft'}>{item.is_published ? 'Published' : 'Draft'}</small>{item.is_featured && <small>Featured</small>}</div></div>
+                    <div className="admin-news-actions">
+                      <label><input type="checkbox" checked={item.is_published} onChange={(event) => toggleNewsPublication(item, event.target.checked)} /><span>Published</span></label>
+                      <button type="button" onClick={() => editNewsPost(item)}><FiEdit3 /> Edit</button>
+                      {item.is_published && <Link to={`/news/${item.slug}`} target="_blank" rel="noreferrer"><FiBookOpen /> View</Link>}
+                      <button className="danger" type="button" onClick={() => deleteRecord('news_posts', item.id)}><FiTrash2 /> Delete</button>
+                    </div>
+                  </article>
+                )) : <AdminEmptyState icon={FiBookOpen} title="No news posts yet" message="Create your first company update, announcement, or technology insight using the editor." />}
+              </div>
+            </section>
+          )}
+        </main>
+      </section>
+
+      <nav className="admin-mobile-nav" aria-label="Mobile admin navigation">
+        {adminTabs.map(({ id, mobileLabel, count, Icon }) => (
+          <button key={id} type="button" className={activeTab === id ? 'active' : ''} aria-current={activeTab === id ? 'page' : undefined} onClick={() => selectAdminTab(id)}>
+            <span><Icon />{count > 0 && <strong>{count > 9 ? '9+' : count}</strong>}</span>
+            <small>{mobileLabel}</small>
+          </button>
+        ))}
+      </nav>
     </div>
   );
 }
