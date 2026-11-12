@@ -1,10 +1,19 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FiArrowLeft, FiBriefcase, FiCheckCircle, FiFileText, FiInbox, FiKey, FiLock, FiLogOut, FiPlus, FiRefreshCw, FiShield, FiStar, FiTrash2 } from 'react-icons/fi';
+import { FiArrowLeft, FiBriefcase, FiCheckCircle, FiEye, FiEyeOff, FiFileText, FiInbox, FiKey, FiLock, FiLogOut, FiPlus, FiRefreshCw, FiShield, FiStar, FiTrash2 } from 'react-icons/fi';
 import companyLogo from '../assets/chill-tech-logo.jpeg';
-import { isSupabaseConfigured, supabase } from '../lib/supabase';
+import { getAdminAuthPersistence, isSupabaseConfigured, setAdminAuthPersistence, supabase } from '../lib/supabase';
 
 const emptyProject = { title: '', slug: '', description: '', category: '', technologies: '', live_url: '', image_url: '', is_featured: false, is_published: false };
+const rememberedAdminEmailKey = 'chill-tech-admin-email';
+
+const getRememberedAdminEmail = () => {
+  try {
+    return window.localStorage.getItem(rememberedAdminEmailKey) || '';
+  } catch {
+    return '';
+  }
+};
 
 const formatDate = (value) => value ? new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value)) : '—';
 const slugify = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -27,8 +36,10 @@ export default function AdminDashboard() {
   const [session, setSession] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [authMode, setAuthMode] = useState(() => new URLSearchParams(window.location.search).get('mode') === 'forgot' ? 'forgot' : 'login');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(getRememberedAdminEmail);
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(getAdminAuthPersistence);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [authError, setAuthError] = useState('');
@@ -92,14 +103,24 @@ export default function AdminDashboard() {
     setAuthNotice('');
     if (!supabase) return setAuthError('Supabase is not configured.');
     setAuthSubmitting(true);
+    const normalizedEmail = email.trim().toLowerCase();
+    setAdminAuthPersistence(rememberMe);
     const { error } = await supabase.auth.signInWithPassword({
-      email: email.trim().toLowerCase(),
+      email: normalizedEmail,
       password,
     });
     if (error) {
       setAuthError(error.message === 'Invalid login credentials'
         ? 'Supabase rejected these credentials. Confirm that this user exists in Authentication, is confirmed, and has the correct password.'
         : error.message);
+    } else {
+      try {
+        if (rememberMe) window.localStorage.setItem(rememberedAdminEmailKey, normalizedEmail);
+        else window.localStorage.removeItem(rememberedAdminEmailKey);
+      } catch {
+        // Login remains usable when the browser blocks local storage.
+      }
+      setShowPassword(false);
     }
     setAuthSubmitting(false);
   };
@@ -150,6 +171,7 @@ export default function AdminDashboard() {
   const logout = async () => {
     await supabase?.auth.signOut();
     setPassword('');
+    setShowPassword(false);
     setAuthMode('login');
   };
 
@@ -218,7 +240,8 @@ export default function AdminDashboard() {
       <form className="admin-auth-card" onSubmit={login}>
         <img src={companyLogo} alt="CHILL TECH LTD" /><span>Secure administration</span><h1>Admin login</h1>
         <label>Email<input type="email" required autoComplete="username" value={email} onChange={(event) => setEmail(event.target.value)} /></label>
-        <div className="admin-password-field"><div><label htmlFor="admin-password">Password</label><button type="button" onClick={() => { setAuthMode('forgot'); setAuthError(''); setAuthNotice(''); window.history.replaceState({}, document.title, '/admin?mode=forgot'); }}>Forgot password?</button></div><input id="admin-password" type="password" required autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} /></div>
+        <div className="admin-password-field"><div><label htmlFor="admin-password">Password</label><button type="button" onClick={() => { setAuthMode('forgot'); setAuthError(''); setAuthNotice(''); window.history.replaceState({}, document.title, '/admin?mode=forgot'); }}>Forgot password?</button></div><div className="admin-password-input"><input id="admin-password" type={showPassword ? 'text' : 'password'} required autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} /><button className="admin-password-toggle" type="button" aria-label={showPassword ? 'Hide password' : 'Show password'} aria-pressed={showPassword} onClick={() => setShowPassword((visible) => !visible)}>{showPassword ? <FiEyeOff /> : <FiEye />}<span>{showPassword ? 'Hide' : 'Show'}</span></button></div></div>
+        <label className="admin-remember-option"><input type="checkbox" checked={rememberMe} onChange={(event) => setRememberMe(event.target.checked)} /><span>Remember me on this device</span></label>
         {authNotice && <p className="admin-success">{authNotice}</p>}
         {authError && <p className="admin-error">{authError}</p>}
         <button className="button button-primary" type="submit" disabled={authSubmitting}>{authSubmitting ? 'Signing in…' : 'Sign in'}</button>
@@ -233,7 +256,7 @@ export default function AdminDashboard() {
     <div className="admin-shell">
       <aside className="admin-sidebar">
         <Link className="admin-brand" to="/"><img src={companyLogo} alt="" /><span><strong>CHILL TECH LTD</strong><small>Administration</small></span></Link>
-        <nav>{['overview', 'enquiries', 'reviews', 'invoices', 'projects'].map((tab) => <button key={tab} type="button" className={activeTab === tab ? 'active' : ''} onClick={() => setActiveTab(tab)}>{tab}</button>)}</nav>
+        <nav aria-label="Admin sections">{['overview', 'enquiries', 'reviews', 'invoices', 'projects'].map((tab) => <button key={tab} type="button" className={activeTab === tab ? 'active' : ''} aria-current={activeTab === tab ? 'page' : undefined} onClick={() => setActiveTab(tab)}>{tab}</button>)}</nav>
         <button className="admin-logout" type="button" onClick={logout}><FiLogOut /> Sign out</button>
       </aside>
       <main className="admin-main">
@@ -242,11 +265,11 @@ export default function AdminDashboard() {
 
         {activeTab === 'overview' && <section className="admin-stat-grid">{stats.map(([label, value, Icon]) => <article key={label}><Icon /><strong>{value}</strong><span>{label}</span></article>)}</section>}
 
-        {activeTab === 'enquiries' && <section className="admin-table-wrap"><table><thead><tr><th>Contact</th><th>Service</th><th>Message</th><th>Status</th><th>Date</th><th /></tr></thead><tbody>{records.enquiries.map((item) => <tr key={item.id}><td><strong>{item.full_name}</strong><small>{item.email}<br />{item.phone}</small></td><td>{item.service}</td><td className="admin-message-cell">{item.message}</td><td><select value={item.status} onChange={(event) => updateRecord('enquiries', item.id, { status: event.target.value })}><option value="new">New</option><option value="in_progress">In progress</option><option value="resolved">Resolved</option><option value="spam">Spam</option></select></td><td>{formatDate(item.created_at)}</td><td><button onClick={() => deleteRecord('enquiries', item.id)}><FiTrash2 /></button></td></tr>)}</tbody></table></section>}
+        {activeTab === 'enquiries' && <section className="admin-table-wrap"><table><thead><tr><th>Contact</th><th>Service</th><th>Message</th><th>Status</th><th>Date</th><th /></tr></thead><tbody>{records.enquiries.map((item) => <tr key={item.id}><td data-label="Contact"><strong>{item.full_name}</strong><small>{item.email}<br />{item.phone}</small></td><td data-label="Service">{item.service}</td><td className="admin-message-cell" data-label="Message">{item.message}</td><td data-label="Status"><select value={item.status} onChange={(event) => updateRecord('enquiries', item.id, { status: event.target.value })}><option value="new">New</option><option value="in_progress">In progress</option><option value="resolved">Resolved</option><option value="spam">Spam</option></select></td><td data-label="Date">{formatDate(item.created_at)}</td><td data-label="Actions"><button aria-label={`Delete enquiry from ${item.full_name}`} onClick={() => deleteRecord('enquiries', item.id)}><FiTrash2 /></button></td></tr>)}</tbody></table></section>}
 
-        {activeTab === 'reviews' && <section className="admin-table-wrap"><table><thead><tr><th>Client</th><th>Review</th><th>Rating</th><th>Status</th><th>Date</th><th /></tr></thead><tbody>{records.reviews.map((item) => <tr key={item.id}><td><strong>{item.name}</strong><small>{item.company}<br />{item.email}</small></td><td className="admin-message-cell">{item.review}<small>{item.project}</small></td><td>{item.rating}/5</td><td><select value={item.status} onChange={(event) => updateRecord('reviews', item.id, { status: event.target.value })}><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></td><td>{formatDate(item.created_at)}</td><td><button onClick={() => deleteRecord('reviews', item.id)}><FiTrash2 /></button></td></tr>)}</tbody></table></section>}
+        {activeTab === 'reviews' && <section className="admin-table-wrap"><table><thead><tr><th>Client</th><th>Review</th><th>Rating</th><th>Status</th><th>Date</th><th /></tr></thead><tbody>{records.reviews.map((item) => <tr key={item.id}><td data-label="Client"><strong>{item.name}</strong><small>{item.company}<br />{item.email}</small></td><td className="admin-message-cell" data-label="Review">{item.review}<small>{item.project}</small></td><td data-label="Rating">{item.rating}/5</td><td data-label="Status"><select value={item.status} onChange={(event) => updateRecord('reviews', item.id, { status: event.target.value })}><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></td><td data-label="Date">{formatDate(item.created_at)}</td><td data-label="Actions"><button aria-label={`Delete review from ${item.name}`} onClick={() => deleteRecord('reviews', item.id)}><FiTrash2 /></button></td></tr>)}</tbody></table></section>}
 
-        {activeTab === 'invoices' && <section className="admin-table-wrap"><table><thead><tr><th>Invoice</th><th>Client</th><th>Total</th><th>Due</th><th>Status</th><th /></tr></thead><tbody>{records.invoices.map((item) => <tr key={item.id}><td><strong>{item.invoice_number}</strong><small>{formatDate(item.created_at)}</small></td><td>{item.client_company || item.client_name}<small>{item.client_email}</small></td><td>{item.currency} {Number(item.total).toLocaleString()}</td><td>{item.due_date || 'On receipt'}</td><td><select value={item.status} onChange={(event) => updateRecord('invoices', item.id, { status: event.target.value })}><option value="draft">Draft</option><option value="sent">Sent</option><option value="paid">Paid</option><option value="cancelled">Cancelled</option></select></td><td><button onClick={() => deleteRecord('invoices', item.id)}><FiTrash2 /></button></td></tr>)}</tbody></table></section>}
+        {activeTab === 'invoices' && <section className="admin-table-wrap"><table><thead><tr><th>Invoice</th><th>Client</th><th>Total</th><th>Due</th><th>Status</th><th /></tr></thead><tbody>{records.invoices.map((item) => <tr key={item.id}><td data-label="Invoice"><strong>{item.invoice_number}</strong><small>{formatDate(item.created_at)}</small></td><td data-label="Client">{item.client_company || item.client_name}<small>{item.client_email}</small></td><td data-label="Total">{item.currency} {Number(item.total).toLocaleString()}</td><td data-label="Due">{item.due_date || 'On receipt'}</td><td data-label="Status"><select value={item.status} onChange={(event) => updateRecord('invoices', item.id, { status: event.target.value })}><option value="draft">Draft</option><option value="sent">Sent</option><option value="paid">Paid</option><option value="cancelled">Cancelled</option></select></td><td data-label="Actions"><button aria-label={`Delete invoice ${item.invoice_number}`} onClick={() => deleteRecord('invoices', item.id)}><FiTrash2 /></button></td></tr>)}</tbody></table></section>}
 
         {activeTab === 'projects' && <section className="admin-projects"><form onSubmit={addProject}><h2><FiPlus /> Add project</h2><div className="form-pair"><label>Title<input required value={projectForm.title} onChange={(event) => setProjectForm({ ...projectForm, title: event.target.value })} /></label><label>Slug<input value={projectForm.slug} onChange={(event) => setProjectForm({ ...projectForm, slug: event.target.value })} placeholder="Generated from title" /></label></div><label>Description<textarea value={projectForm.description} onChange={(event) => setProjectForm({ ...projectForm, description: event.target.value })} /></label><div className="form-pair"><label>Category<input value={projectForm.category} onChange={(event) => setProjectForm({ ...projectForm, category: event.target.value })} /></label><label>Technologies<input value={projectForm.technologies} onChange={(event) => setProjectForm({ ...projectForm, technologies: event.target.value })} placeholder="React, CSS, Vercel" /></label></div><label>Live URL<input type="url" value={projectForm.live_url} onChange={(event) => setProjectForm({ ...projectForm, live_url: event.target.value })} /></label><label>Image URL<input value={projectForm.image_url} onChange={(event) => setProjectForm({ ...projectForm, image_url: event.target.value })} /></label><div className="admin-checks"><label><input type="checkbox" checked={projectForm.is_featured} onChange={(event) => setProjectForm({ ...projectForm, is_featured: event.target.checked })} /> Featured</label><label><input type="checkbox" checked={projectForm.is_published} onChange={(event) => setProjectForm({ ...projectForm, is_published: event.target.checked })} /> Published</label></div><button className="button button-primary" type="submit">Add project</button></form><div className="admin-project-list">{records.projects.map((item) => <article key={item.id}><div><strong>{item.title}</strong><span>{item.category}</span><small>{item.live_url}</small></div><label><input type="checkbox" checked={item.is_published} onChange={(event) => updateRecord('projects', item.id, { is_published: event.target.checked })} /> Published</label><button onClick={() => deleteRecord('projects', item.id)}><FiTrash2 /></button></article>)}</div></section>}
       </main>

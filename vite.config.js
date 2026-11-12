@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
+      includeAssets: ['favicon-64x64.png', 'apple-touch-icon.png'],
       manifest: {
         id: '/',
         name: 'CHILL TECH LTD',
