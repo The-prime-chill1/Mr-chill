@@ -6,6 +6,9 @@ import { getAdminAuthPersistence, isSupabaseConfigured, setAdminAuthPersistence,
 
 const emptyProject = { title: '', slug: '', description: '', category: '', technologies: '', live_url: '', image_url: '', is_featured: false, is_published: false };
 const rememberedAdminEmailKey = 'chill-tech-admin-email';
+const getPasswordRecoveryRedirect = () => import.meta.env.PROD
+  ? 'https://www.chilltechltd.com/admin'
+  : `${window.location.origin}/admin`;
 
 const getRememberedAdminEmail = () => {
   try {
@@ -32,10 +35,23 @@ function AdminAuthLayout({ children }) {
   );
 }
 
+function AdminEmptyState({ icon: Icon, title, message }) {
+  return (
+    <section className="admin-empty-state">
+      <Icon />
+      <h2>{title}</h2>
+      <p>{message}</p>
+    </section>
+  );
+}
+
 export default function AdminDashboard() {
   const [session, setSession] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
-  const [authMode, setAuthMode] = useState(() => new URLSearchParams(window.location.search).get('mode') === 'forgot' ? 'forgot' : 'login');
+  const [authMode, setAuthMode] = useState(() => {
+    const requestedMode = new URLSearchParams(window.location.search).get('mode');
+    return ['forgot', 'recovery'].includes(requestedMode) ? requestedMode : 'login';
+  });
   const [email, setEmail] = useState(getRememberedAdminEmail);
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -59,8 +75,16 @@ export default function AdminDashboard() {
       setAuthLoading(false);
       return undefined;
     }
+    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+    const recoveryLink = hashParams.get('type') === 'recovery';
+    const redirectError = hashParams.get('error_description');
+    if (redirectError) setAuthError(redirectError);
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
+      if (recoveryLink && data.session) {
+        setAuthMode('recovery');
+        setAuthNotice('Your recovery link is verified. Choose a new password.');
+      }
       setAuthLoading(false);
     });
     const { data: listener } = supabase.auth.onAuthStateChange((event, nextSession) => {
@@ -69,6 +93,7 @@ export default function AdminDashboard() {
         setAuthMode('recovery');
         setAuthError('');
         setAuthNotice('Your recovery link is verified. Choose a new password.');
+        window.history.replaceState({}, document.title, '/admin?mode=recovery');
       }
     });
     return () => listener.subscription.unsubscribe();
@@ -95,6 +120,14 @@ export default function AdminDashboard() {
     ['Pending reviews', records.reviews.filter((item) => item.status === 'pending').length, FiStar],
     ['Open invoices', records.invoices.filter((item) => !['paid', 'cancelled'].includes(item.status)).length, FiFileText],
     ['Published projects', records.projects.filter((item) => item.is_published).length, FiBriefcase],
+  ], [records]);
+
+  const adminTabs = useMemo(() => [
+    { id: 'overview', label: 'Overview', count: 0 },
+    { id: 'enquiries', label: 'Enquiries', count: records.enquiries.filter((item) => item.status === 'new').length },
+    { id: 'reviews', label: 'Reviews', count: records.reviews.filter((item) => item.status === 'pending').length },
+    { id: 'invoices', label: 'Invoices', count: records.invoices.filter((item) => !['paid', 'cancelled'].includes(item.status)).length },
+    { id: 'projects', label: 'Projects', count: 0 },
   ], [records]);
 
   const login = async (event) => {
@@ -136,7 +169,7 @@ export default function AdminDashboard() {
 
     setAuthSubmitting(true);
     const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, {
-      redirectTo: `${window.location.origin}/admin`,
+      redirectTo: getPasswordRecoveryRedirect(),
     });
     setAuthSubmitting(false);
     if (error) {
@@ -208,7 +241,7 @@ export default function AdminDashboard() {
 
   if (!isSupabaseConfigured) return <AdminAuthLayout><div className="admin-auth-card"><img src={companyLogo} alt="CHILL TECH LTD" /><h1>Supabase is not configured.</h1><p>Add the Vite Supabase environment variables and restart the application.</p><Link to="/">Return to website</Link></div></AdminAuthLayout>;
 
-  if (authMode === 'recovery') return (
+  if (authMode === 'recovery' && session) return (
     <AdminAuthLayout>
       <form className="admin-auth-card" onSubmit={updatePassword}>
         <img src={companyLogo} alt="CHILL TECH LTD" /><span>Secure recovery</span><h1>Choose a new password</h1><p>Use a strong password that you do not use on another website.</p>
@@ -256,7 +289,7 @@ export default function AdminDashboard() {
     <div className="admin-shell">
       <aside className="admin-sidebar">
         <Link className="admin-brand" to="/"><img src={companyLogo} alt="" /><span><strong>CHILL TECH LTD</strong><small>Administration</small></span></Link>
-        <nav aria-label="Admin sections">{['overview', 'enquiries', 'reviews', 'invoices', 'projects'].map((tab) => <button key={tab} type="button" className={activeTab === tab ? 'active' : ''} aria-current={activeTab === tab ? 'page' : undefined} onClick={() => setActiveTab(tab)}>{tab}</button>)}</nav>
+        <nav aria-label="Admin sections">{adminTabs.map((tab) => <button key={tab.id} type="button" className={activeTab === tab.id ? 'active' : ''} aria-current={activeTab === tab.id ? 'page' : undefined} onClick={() => setActiveTab(tab.id)}><span>{tab.label}</span>{tab.count > 0 && <strong aria-label={`${tab.count} requiring attention`}>{tab.count}</strong>}</button>)}</nav>
         <button className="admin-logout" type="button" onClick={logout}><FiLogOut /> Sign out</button>
       </aside>
       <main className="admin-main">
@@ -265,11 +298,11 @@ export default function AdminDashboard() {
 
         {activeTab === 'overview' && <section className="admin-stat-grid">{stats.map(([label, value, Icon]) => <article key={label}><Icon /><strong>{value}</strong><span>{label}</span></article>)}</section>}
 
-        {activeTab === 'enquiries' && <section className="admin-table-wrap"><table><thead><tr><th>Contact</th><th>Service</th><th>Message</th><th>Status</th><th>Date</th><th /></tr></thead><tbody>{records.enquiries.map((item) => <tr key={item.id}><td data-label="Contact"><strong>{item.full_name}</strong><small>{item.email}<br />{item.phone}</small></td><td data-label="Service">{item.service}</td><td className="admin-message-cell" data-label="Message">{item.message}</td><td data-label="Status"><select value={item.status} onChange={(event) => updateRecord('enquiries', item.id, { status: event.target.value })}><option value="new">New</option><option value="in_progress">In progress</option><option value="resolved">Resolved</option><option value="spam">Spam</option></select></td><td data-label="Date">{formatDate(item.created_at)}</td><td data-label="Actions"><button aria-label={`Delete enquiry from ${item.full_name}`} onClick={() => deleteRecord('enquiries', item.id)}><FiTrash2 /></button></td></tr>)}</tbody></table></section>}
+        {activeTab === 'enquiries' && (records.enquiries.length > 0 ? <section className="admin-table-wrap"><table><thead><tr><th>Contact</th><th>Service</th><th>Message</th><th>Status</th><th>Date</th><th /></tr></thead><tbody>{records.enquiries.map((item) => <tr key={item.id}><td data-label="Contact"><strong>{item.full_name}</strong><small>{item.email}<br />{item.phone}</small></td><td data-label="Service">{item.service}</td><td className="admin-message-cell" data-label="Message">{item.message}</td><td data-label="Status"><select value={item.status} onChange={(event) => updateRecord('enquiries', item.id, { status: event.target.value })}><option value="new">New</option><option value="in_progress">In progress</option><option value="resolved">Resolved</option><option value="spam">Spam</option></select></td><td data-label="Date">{formatDate(item.created_at)}</td><td data-label="Actions"><button aria-label={`Delete enquiry from ${item.full_name}`} onClick={() => deleteRecord('enquiries', item.id)}><FiTrash2 /></button></td></tr>)}</tbody></table></section> : <AdminEmptyState icon={FiInbox} title="No enquiries yet" message="New project enquiries will appear here as soon as they are submitted." />)}
 
-        {activeTab === 'reviews' && <section className="admin-table-wrap"><table><thead><tr><th>Client</th><th>Review</th><th>Rating</th><th>Status</th><th>Date</th><th /></tr></thead><tbody>{records.reviews.map((item) => <tr key={item.id}><td data-label="Client"><strong>{item.name}</strong><small>{item.company}<br />{item.email}</small></td><td className="admin-message-cell" data-label="Review">{item.review}<small>{item.project}</small></td><td data-label="Rating">{item.rating}/5</td><td data-label="Status"><select value={item.status} onChange={(event) => updateRecord('reviews', item.id, { status: event.target.value })}><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></td><td data-label="Date">{formatDate(item.created_at)}</td><td data-label="Actions"><button aria-label={`Delete review from ${item.name}`} onClick={() => deleteRecord('reviews', item.id)}><FiTrash2 /></button></td></tr>)}</tbody></table></section>}
+        {activeTab === 'reviews' && (records.reviews.length > 0 ? <section className="admin-table-wrap"><table><thead><tr><th>Client</th><th>Review</th><th>Rating</th><th>Status</th><th>Date</th><th /></tr></thead><tbody>{records.reviews.map((item) => <tr key={item.id}><td data-label="Client"><strong>{item.name}</strong><small>{item.company}<br />{item.email}</small></td><td className="admin-message-cell" data-label="Review">{item.review}<small>{item.project}</small></td><td data-label="Rating">{item.rating}/5</td><td data-label="Status"><select value={item.status} onChange={(event) => updateRecord('reviews', item.id, { status: event.target.value })}><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></td><td data-label="Date">{formatDate(item.created_at)}</td><td data-label="Actions"><button aria-label={`Delete review from ${item.name}`} onClick={() => deleteRecord('reviews', item.id)}><FiTrash2 /></button></td></tr>)}</tbody></table></section> : <AdminEmptyState icon={FiStar} title="No reviews submitted yet" message="New client reviews will appear here for approval as soon as they are submitted." />)}
 
-        {activeTab === 'invoices' && <section className="admin-table-wrap"><table><thead><tr><th>Invoice</th><th>Client</th><th>Total</th><th>Due</th><th>Status</th><th /></tr></thead><tbody>{records.invoices.map((item) => <tr key={item.id}><td data-label="Invoice"><strong>{item.invoice_number}</strong><small>{formatDate(item.created_at)}</small></td><td data-label="Client">{item.client_company || item.client_name}<small>{item.client_email}</small></td><td data-label="Total">{item.currency} {Number(item.total).toLocaleString()}</td><td data-label="Due">{item.due_date || 'On receipt'}</td><td data-label="Status"><select value={item.status} onChange={(event) => updateRecord('invoices', item.id, { status: event.target.value })}><option value="draft">Draft</option><option value="sent">Sent</option><option value="paid">Paid</option><option value="cancelled">Cancelled</option></select></td><td data-label="Actions"><button aria-label={`Delete invoice ${item.invoice_number}`} onClick={() => deleteRecord('invoices', item.id)}><FiTrash2 /></button></td></tr>)}</tbody></table></section>}
+        {activeTab === 'invoices' && (records.invoices.length > 0 ? <section className="admin-table-wrap"><table><thead><tr><th>Invoice</th><th>Client</th><th>Total</th><th>Due</th><th>Status</th><th /></tr></thead><tbody>{records.invoices.map((item) => <tr key={item.id}><td data-label="Invoice"><strong>{item.invoice_number}</strong><small>{formatDate(item.created_at)}</small></td><td data-label="Client">{item.client_company || item.client_name}<small>{item.client_email}</small></td><td data-label="Total">{item.currency} {Number(item.total).toLocaleString()}</td><td data-label="Due">{item.due_date || 'On receipt'}</td><td data-label="Status"><select value={item.status} onChange={(event) => updateRecord('invoices', item.id, { status: event.target.value })}><option value="draft">Draft</option><option value="sent">Sent</option><option value="paid">Paid</option><option value="cancelled">Cancelled</option></select></td><td data-label="Actions"><button aria-label={`Delete invoice ${item.invoice_number}`} onClick={() => deleteRecord('invoices', item.id)}><FiTrash2 /></button></td></tr>)}</tbody></table></section> : <AdminEmptyState icon={FiFileText} title="No invoices saved yet" message="Draft invoices saved from the invoice generator will appear here." />)}
 
         {activeTab === 'projects' && <section className="admin-projects"><form onSubmit={addProject}><h2><FiPlus /> Add project</h2><div className="form-pair"><label>Title<input required value={projectForm.title} onChange={(event) => setProjectForm({ ...projectForm, title: event.target.value })} /></label><label>Slug<input value={projectForm.slug} onChange={(event) => setProjectForm({ ...projectForm, slug: event.target.value })} placeholder="Generated from title" /></label></div><label>Description<textarea value={projectForm.description} onChange={(event) => setProjectForm({ ...projectForm, description: event.target.value })} /></label><div className="form-pair"><label>Category<input value={projectForm.category} onChange={(event) => setProjectForm({ ...projectForm, category: event.target.value })} /></label><label>Technologies<input value={projectForm.technologies} onChange={(event) => setProjectForm({ ...projectForm, technologies: event.target.value })} placeholder="React, CSS, Vercel" /></label></div><label>Live URL<input type="url" value={projectForm.live_url} onChange={(event) => setProjectForm({ ...projectForm, live_url: event.target.value })} /></label><label>Image URL<input value={projectForm.image_url} onChange={(event) => setProjectForm({ ...projectForm, image_url: event.target.value })} /></label><div className="admin-checks"><label><input type="checkbox" checked={projectForm.is_featured} onChange={(event) => setProjectForm({ ...projectForm, is_featured: event.target.checked })} /> Featured</label><label><input type="checkbox" checked={projectForm.is_published} onChange={(event) => setProjectForm({ ...projectForm, is_published: event.target.checked })} /> Published</label></div><button className="button button-primary" type="submit">Add project</button></form><div className="admin-project-list">{records.projects.map((item) => <article key={item.id}><div><strong>{item.title}</strong><span>{item.category}</span><small>{item.live_url}</small></div><label><input type="checkbox" checked={item.is_published} onChange={(event) => updateRecord('projects', item.id, { is_published: event.target.checked })} /> Published</label><button onClick={() => deleteRecord('projects', item.id)}><FiTrash2 /></button></article>)}</div></section>}
       </main>
