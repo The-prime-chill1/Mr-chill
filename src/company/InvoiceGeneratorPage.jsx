@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FiCheck, FiDownload, FiFileText, FiGlobe, FiPrinter, FiTrendingUp, FiUsers } from 'react-icons/fi';
+import { FiArrowDown, FiCheck, FiDownload, FiFileText, FiGlobe, FiPrinter, FiTrendingUp, FiUsers } from 'react-icons/fi';
 import companyLogo from '../assets/chill-tech-logo.jpeg';
 import { profile } from '../data';
 import { insertSupabaseRow } from '../lib/supabase';
@@ -70,6 +70,7 @@ export default function InvoiceGeneratorPage() {
     : selectedType.label;
   const extraPages = Math.max(0, pageCount - selectedType.includedPages);
   const urgencyMultiplier = totalTimelineDays <= 7 ? 1.35 : totalTimelineDays <= 14 ? 1.22 : totalTimelineDays <= 21 ? 1.1 : 1;
+  const urgencyLabel = urgencyMultiplier > 1 ? `${Math.round((urgencyMultiplier - 1) * 100)}% priority-delivery adjustment` : 'Standard delivery pricing';
   const calculatedDevelopmentFee = roundToThousand((selectedType.base + extraPages * EXTRA_PAGE_FEE) * urgencyMultiplier);
   const domainNaira = roundToThousand(DOMAIN_USD * exchangeRate);
   const deploymentNaira = roundToThousand(DEPLOYMENT_USD * exchangeRate);
@@ -147,20 +148,34 @@ export default function InvoiceGeneratorPage() {
         </div>
 
         <div className="invoice-pricing-rules no-print">
-          <div><FiTrendingUp /><span><strong>₦450k–₦2m</strong><small>Protected total range</small></span></div>
+          <div><FiTrendingUp /><span><strong>NGN 450k–2m</strong><small>Protected total range</small></span></div>
           <div><FiGlobe /><span><strong>$50 + $20</strong><small>Fixed domain and deployment</small></span></div>
           <div><FiUsers /><span><strong>15%</strong><small>Eligible referral commission</small></span></div>
         </div>
 
         <div className="invoice-workspace">
           <form className="invoice-form no-print" onSubmit={(event) => event.preventDefault()}>
-            <fieldset>
-              <legend>Invoice details</legend>
-              <label>Invoice number<input value={invoice.number} onChange={(event) => update('number', event.target.value)} /></label>
-              <div className="form-pair"><label>Issue date<input type="date" value={invoice.date} onChange={(event) => update('date', event.target.value)} /></label><label>Due date<input type="date" value={invoice.dueDate} onChange={(event) => update('dueDate', event.target.value)} /></label></div>
+            <div className="invoice-form-intro"><span>Step 1</span><strong>Start with the website you need.</strong><small>Your total updates instantly as you change the scope.</small></div>
+            <fieldset id="estimate-scope">
+              <legend>Website scope</legend>
+              <label>Type of website<select value={invoice.websiteType} onChange={(event) => update('websiteType', event.target.value)}>{websiteTypes.map((type) => <option value={type.value} key={type.value}>{type.label}</option>)}</select></label>
+              {invoice.websiteType === 'custom' && <label>Describe the website type<input required value={invoice.customWebsiteType} onChange={(event) => update('customWebsiteType', event.target.value)} placeholder="e.g. School portal or property platform" /></label>}
+              <label>Number of pages<input type="number" min="1" max="50" value={invoice.pageCount} onChange={(event) => update('pageCount', event.target.value)} /></label>
+              <div className="form-pair"><label>Delivery weeks<input type="number" min="0" max="24" value={invoice.timelineWeeks} onChange={(event) => update('timelineWeeks', event.target.value)} /></label><label>Extra days<input type="number" min="0" max="6" value={invoice.timelineDays} onChange={(event) => update('timelineDays', event.target.value)} /></label></div>
+              <div className="invoice-calculation-note"><FiCheck /><span>The website type sets the base fee. Pages above the included amount add {formatNaira(EXTRA_PAGE_FEE)} each, while faster delivery increases the development fee.</span></div>
             </fieldset>
 
-            <fieldset>
+            <aside className="invoice-live-summary" aria-live="polite">
+              <span>Live estimated total</span>
+              <strong>NGN {total.toLocaleString()}</strong>
+              <div><span>Development</span><b>{formatNaira(developmentFee)}</b></div>
+              <div><span>Domain + deployment</span><b>{formatNaira(fixedFees)}</b></div>
+              <div><span>Delivery</span><b>{urgencyLabel}</b></div>
+              <div><span>Potential referral commission</span><b>{formatNaira(referralCommission)}</b></div>
+              <a href="#invoice-preview">Review the full invoice <FiArrowDown /></a>
+            </aside>
+
+            <fieldset id="estimate-client">
               <legend>Client details</legend>
               <label>Client name<input value={invoice.clientName} onChange={(event) => update('clientName', event.target.value)} placeholder="Client full name" /></label>
               <label>Company<input value={invoice.clientCompany} onChange={(event) => update('clientCompany', event.target.value)} placeholder="Business or organization" /></label>
@@ -169,12 +184,9 @@ export default function InvoiceGeneratorPage() {
             </fieldset>
 
             <fieldset>
-              <legend>Website scope</legend>
-              <label>Type of website<select value={invoice.websiteType} onChange={(event) => update('websiteType', event.target.value)}>{websiteTypes.map((type) => <option value={type.value} key={type.value}>{type.label}</option>)}</select></label>
-              {invoice.websiteType === 'custom' && <label>Describe the website type<input required value={invoice.customWebsiteType} onChange={(event) => update('customWebsiteType', event.target.value)} placeholder="e.g. School portal or property platform" /></label>}
-              <label>Number of pages<input type="number" min="1" max="50" value={invoice.pageCount} onChange={(event) => update('pageCount', event.target.value)} /></label>
-              <div className="form-pair"><label>Delivery weeks<input type="number" min="0" max="24" value={invoice.timelineWeeks} onChange={(event) => update('timelineWeeks', event.target.value)} /></label><label>Extra days<input type="number" min="0" max="6" value={invoice.timelineDays} onChange={(event) => update('timelineDays', event.target.value)} /></label></div>
-              <div className="invoice-calculation-note"><FiCheck /><span>The website type sets the base fee. Pages above the included amount add {formatNaira(EXTRA_PAGE_FEE)} each, while faster delivery increases the development fee.</span></div>
+              <legend>Invoice details</legend>
+              <label>Invoice number<input value={invoice.number} onChange={(event) => update('number', event.target.value)} /></label>
+              <div className="form-pair"><label>Issue date<input type="date" value={invoice.date} onChange={(event) => update('date', event.target.value)} /></label><label>Due date<input type="date" value={invoice.dueDate} onChange={(event) => update('dueDate', event.target.value)} /></label></div>
             </fieldset>
 
             <fieldset>
@@ -192,7 +204,7 @@ export default function InvoiceGeneratorPage() {
             </fieldset>
           </form>
 
-          <article className="invoice-preview">
+          <article className="invoice-preview" id="invoice-preview" tabIndex="-1">
             <div className="invoice-preview-header"><div><img src={companyLogo} alt="CHILL TECH LTD" /><strong>CHILL TECH LTD</strong><span>Innovate. Build. Empower.</span></div><div><h2>INVOICE</h2><span>#{invoice.number}</span></div></div>
             <div className="invoice-parties"><div><span>From</span><strong>CHILL TECH LTD</strong><p>{profile.officialEmail}<br />{profile.phone}<br />Nigeria</p></div><div><span>Bill to</span><strong>{invoice.clientCompany || invoice.clientName || 'Client / Company'}</strong><p>{invoice.clientCompany && invoice.clientName ? `${invoice.clientName}\n` : ''}{invoice.clientEmail || 'Client email'}<br />{invoice.clientAddress || 'Client billing address'}</p></div><div><span>Invoice dates</span><p>Issued: <strong>{invoice.date || '—'}</strong><br />Due: <strong>{invoice.dueDate || 'On receipt'}</strong></p></div></div>
             <div className="invoice-scope-summary"><div><span>Website type</span><strong>{projectTypeLabel}</strong></div><div><span>Project size</span><strong>{pageCount} {pageCount === 1 ? 'page' : 'pages'}</strong></div><div><span>Delivery period</span><strong>{timelineLabel}</strong></div></div>

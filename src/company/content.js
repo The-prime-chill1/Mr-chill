@@ -101,6 +101,14 @@ const portfolioProjects = [
     services: ['E-commerce experience', 'UI/UX design', 'Responsive development'], tech: [],
   },
   {
+    title: "Tovia's Luxe Hairs",
+    link: 'https://tovia-s-luxe-hair.vercel.app/',
+    preview: '/project-previews/tovias-luxe-hair.png',
+    description: 'Premium raw and virgin human hair storefront designed around confident product discovery, polished brand storytelling, and a responsive shopping experience.',
+    category: 'E-commerce & Retail', industry: 'Beauty & hair retail', status: 'Live client project',
+    services: ['E-commerce experience', 'Product catalogue', 'Responsive development'], tech: ['React', 'Vite', 'CSS', 'Vercel'],
+  },
+  {
     title: 'Chill Cakes & Pastries',
     link: 'https://chill-pi-green.vercel.app/',
     preview: '/project-previews/chill-cakes.png',

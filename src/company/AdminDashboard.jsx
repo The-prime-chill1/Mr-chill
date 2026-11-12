@@ -1,11 +1,14 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FiArrowLeft, FiBell, FiBookOpen, FiBriefcase, FiCheckCircle, FiChevronRight, FiEdit3, FiEye, FiEyeOff, FiFileText, FiHome, FiInbox, FiKey, FiLock, FiLogOut, FiPlus, FiRefreshCw, FiShield, FiStar, FiTrash2, FiX } from 'react-icons/fi';
+import { FiArrowLeft, FiBell, FiBookOpen, FiBriefcase, FiCheckCircle, FiChevronRight, FiEdit3, FiEye, FiEyeOff, FiFileText, FiHome, FiImage, FiInbox, FiKey, FiLock, FiLogOut, FiPlus, FiRefreshCw, FiShield, FiStar, FiTrash2, FiUploadCloud, FiX } from 'react-icons/fi';
 import companyLogo from '../assets/chill-tech-logo.jpeg';
 import { getAdminAuthPersistence, isSupabaseConfigured, setAdminAuthPersistence, supabase } from '../lib/supabase';
 
 const emptyProject = { title: '', slug: '', description: '', category: '', technologies: '', live_url: '', image_url: '', is_featured: false, is_published: false };
-const emptyNews = { title: '', slug: '', excerpt: '', content: '', category: 'Company news', cover_image_url: '', author_name: 'CHILL TECH LTD', is_featured: false, is_published: false, published_at: null };
+const emptyNews = { title: '', slug: '', excerpt: '', content: '', category: 'Company news', cover_image_url: '', cover_image_path: '', author_name: 'CHILL TECH LTD', is_featured: false, is_published: false, published_at: null };
+const NEWS_IMAGE_BUCKET = 'news-images';
+const NEWS_IMAGE_MAX_BYTES = 5 * 1024 * 1024;
+const NEWS_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 const rememberedAdminEmailKey = 'chill-tech-admin-email';
 const getPasswordRecoveryRedirect = () => import.meta.env.PROD
   ? 'https://www.chilltechltd.com/admin'
@@ -70,7 +73,13 @@ export default function AdminDashboard() {
   const [projectForm, setProjectForm] = useState(emptyProject);
   const [newsForm, setNewsForm] = useState(emptyNews);
   const [editingNewsId, setEditingNewsId] = useState(null);
+  const [newsImageFile, setNewsImageFile] = useState(null);
+  const [newsImagePreview, setNewsImagePreview] = useState('');
+  const [newsImageRemoved, setNewsImageRemoved] = useState(false);
+  const [newsImageError, setNewsImageError] = useState('');
+  const [newsSubmitting, setNewsSubmitting] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const newsImageInputRef = useRef(null);
 
   const isAdmin = session?.user?.app_metadata?.role === 'admin';
 
@@ -125,6 +134,10 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (isAdmin) loadRecords();
   }, [isAdmin, loadRecords]);
+
+  useEffect(() => () => {
+    if (newsImagePreview.startsWith('blob:')) URL.revokeObjectURL(newsImagePreview);
+  }, [newsImagePreview]);
 
   const dashboardCounts = useMemo(() => ({
     enquiries: records.enquiries.filter((item) => item.status === 'new').length,
@@ -285,48 +298,152 @@ export default function AdminDashboard() {
       content: item.content || '',
       category: item.category || 'Company news',
       cover_image_url: item.cover_image_url || '',
+      cover_image_path: item.cover_image_path || '',
       author_name: item.author_name || 'CHILL TECH LTD',
       is_featured: Boolean(item.is_featured),
       is_published: Boolean(item.is_published),
       published_at: item.published_at || null,
     });
+    setNewsImageFile(null);
+    setNewsImagePreview(item.cover_image_url || '');
+    setNewsImageRemoved(false);
+    setNewsImageError('');
+    if (newsImageInputRef.current) newsImageInputRef.current.value = '';
     window.requestAnimationFrame(() => document.querySelector('.admin-news-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
   };
 
-  const cancelNewsEdit = () => {
+  const resetNewsEditor = () => {
     setEditingNewsId(null);
     setNewsForm(emptyNews);
+    setNewsImageFile(null);
+    setNewsImagePreview('');
+    setNewsImageRemoved(false);
+    setNewsImageError('');
+    if (newsImageInputRef.current) newsImageInputRef.current.value = '';
+  };
+
+  const cancelNewsEdit = () => resetNewsEditor();
+
+  const selectNewsImage = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!NEWS_IMAGE_TYPES.has(file.type)) {
+      setNewsImageError('Choose a JPEG, PNG, or WebP image.');
+      event.target.value = '';
+      return;
+    }
+    if (file.size > NEWS_IMAGE_MAX_BYTES) {
+      setNewsImageError('The cover image must be 5 MB or smaller.');
+      event.target.value = '';
+      return;
+    }
+    setNewsImageError('');
+    setNewsImageFile(file);
+    setNewsImageRemoved(false);
+    setNewsImagePreview(URL.createObjectURL(file));
+  };
+
+  const removeNewsImage = () => {
+    setNewsImageFile(null);
+    setNewsImagePreview('');
+    setNewsImageRemoved(true);
+    setNewsImageError('');
+    if (newsImageInputRef.current) newsImageInputRef.current.value = '';
   };
 
   const saveNewsPost = async (event) => {
     event.preventDefault();
+    if (newsSubmitting) return;
+    if (newsImageFile && (!NEWS_IMAGE_TYPES.has(newsImageFile.type) || newsImageFile.size > NEWS_IMAGE_MAX_BYTES)) {
+      setNewsImageError('Choose a JPEG, PNG, or WebP image that is 5 MB or smaller.');
+      return;
+    }
+
     const now = new Date().toISOString();
-    const payload = {
-      title: newsForm.title.trim(),
-      slug: newsForm.slug.trim() || slugify(newsForm.title),
-      excerpt: newsForm.excerpt.trim(),
-      content: newsForm.content.trim(),
-      category: newsForm.category.trim() || 'Company news',
-      cover_image_url: newsForm.cover_image_url.trim() || null,
-      author_name: newsForm.author_name.trim() || 'CHILL TECH LTD',
-      is_featured: newsForm.is_featured,
-      is_published: newsForm.is_published,
-      published_at: newsForm.is_published ? (newsForm.published_at || now) : newsForm.published_at,
-      updated_at: now,
-    };
-    setNotice(editingNewsId ? 'Updating news post…' : 'Creating news post…');
-    const query = editingNewsId
-      ? supabase.from('news_posts').update(payload).eq('id', editingNewsId)
-      : supabase.from('news_posts').insert(payload);
-    const { error } = await query;
+    const postSlug = newsForm.slug.trim() || slugify(newsForm.title);
+    const previousImagePath = newsForm.cover_image_path || '';
+    let uploadedImagePath = '';
+    let databaseSaved = false;
+    let nextImageUrl = newsImageRemoved ? null : (newsForm.cover_image_url.trim() || null);
+    let nextImagePath = newsImageRemoved ? null : (previousImagePath || null);
+
+    setNewsSubmitting(true);
+    setNewsImageError('');
+    setNotice(editingNewsId ? 'Uploading and updating news post…' : 'Uploading and creating news post…');
+
+    try {
+      if (newsImageFile) {
+        const extensionByType = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
+        const uniqueId = globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+        uploadedImagePath = `${new Date().getFullYear()}/${postSlug}-${uniqueId}.${extensionByType[newsImageFile.type]}`;
+        const { error: uploadError } = await supabase.storage.from(NEWS_IMAGE_BUCKET).upload(uploadedImagePath, newsImageFile, {
+          cacheControl: '3600',
+          contentType: newsImageFile.type,
+          upsert: false,
+        });
+        if (uploadError) throw uploadError;
+
+        const { data: publicImage } = supabase.storage.from(NEWS_IMAGE_BUCKET).getPublicUrl(uploadedImagePath);
+        nextImageUrl = publicImage.publicUrl;
+        nextImagePath = uploadedImagePath;
+      }
+
+      const payload = {
+        title: newsForm.title.trim(),
+        slug: postSlug,
+        excerpt: newsForm.excerpt.trim(),
+        content: newsForm.content.trim(),
+        category: newsForm.category.trim() || 'Company news',
+        cover_image_url: nextImageUrl,
+        cover_image_path: nextImagePath,
+        author_name: newsForm.author_name.trim() || 'CHILL TECH LTD',
+        is_featured: newsForm.is_featured,
+        is_published: newsForm.is_published,
+        published_at: newsForm.is_published ? (newsForm.published_at || now) : newsForm.published_at,
+        updated_at: now,
+      };
+      const query = editingNewsId
+        ? supabase.from('news_posts').update(payload).eq('id', editingNewsId)
+        : supabase.from('news_posts').insert(payload);
+      const { error } = await query;
+      if (error) throw error;
+      databaseSaved = true;
+
+      let cleanupError = null;
+      if (previousImagePath && previousImagePath !== nextImagePath && (newsImageFile || newsImageRemoved)) {
+        const cleanupResult = await supabase.storage.from(NEWS_IMAGE_BUCKET).remove([previousImagePath]);
+        cleanupError = cleanupResult.error;
+      }
+
+      const successMessage = editingNewsId ? 'News post and cover image updated successfully.' : 'News post created successfully.';
+      resetNewsEditor();
+      await loadRecords();
+      setNotice(cleanupError ? 'News post saved, but the previous image could not be removed from Storage.' : successMessage);
+    } catch (error) {
+      if (uploadedImagePath && !databaseSaved) await supabase.storage.from(NEWS_IMAGE_BUCKET).remove([uploadedImagePath]);
+      setNotice(error.message);
+    } finally {
+      setNewsSubmitting(false);
+    }
+  };
+
+  const deleteNewsPost = async (item) => {
+    if (!window.confirm(`Delete "${item.title}" permanently?`)) return;
+    setNotice('Deleting news post…');
+    const { error } = await supabase.from('news_posts').delete().eq('id', item.id);
     if (error) {
       setNotice(error.message);
       return;
     }
-    setNotice(editingNewsId ? 'News post updated successfully.' : 'News post created successfully.');
-    setEditingNewsId(null);
-    setNewsForm(emptyNews);
-    loadRecords();
+
+    let storageError = null;
+    if (item.cover_image_path) {
+      const storageResult = await supabase.storage.from(NEWS_IMAGE_BUCKET).remove([item.cover_image_path]);
+      storageError = storageResult.error;
+    }
+    if (editingNewsId === item.id) resetNewsEditor();
+    await loadRecords();
+    setNotice(storageError ? 'News post deleted, but its old image could not be removed from Storage.' : 'News post and image deleted.');
   };
 
   const toggleNewsPublication = (item, isPublished) => updateRecord('news_posts', item.id, {
@@ -524,9 +641,19 @@ export default function AdminDashboard() {
                 <label>Short summary<textarea required minLength="20" maxLength="500" value={newsForm.excerpt} onChange={(event) => setNewsForm({ ...newsForm, excerpt: event.target.value })} placeholder="A concise introduction shown on the News page." /></label>
                 <label>Article content<textarea className="admin-news-content" required minLength="50" maxLength="20000" value={newsForm.content} onChange={(event) => setNewsForm({ ...newsForm, content: event.target.value })} placeholder="Write the full story. Separate paragraphs with a blank line." /></label>
                 <div className="form-pair"><label>Category<input required value={newsForm.category} onChange={(event) => setNewsForm({ ...newsForm, category: event.target.value })} placeholder="Company news" /></label><label>Author<input required value={newsForm.author_name} onChange={(event) => setNewsForm({ ...newsForm, author_name: event.target.value })} /></label></div>
-                <label>Cover image URL<input value={newsForm.cover_image_url} onChange={(event) => setNewsForm({ ...newsForm, cover_image_url: event.target.value })} placeholder="https://… or /image-name.jpg" /></label>
+                <div className="admin-news-image-field">
+                  <div><span>Cover image</span><small>JPEG, PNG, or WebP · maximum 5 MB</small></div>
+                  <label className={`admin-news-upload ${newsImagePreview ? 'has-preview' : ''}`}>
+                    <input ref={newsImageInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={selectNewsImage} />
+                    {newsImagePreview
+                      ? <img src={newsImagePreview} alt="Selected news cover preview" />
+                      : <span><FiUploadCloud /><strong>Choose an image from your device</strong><small>Click here to browse your photos</small></span>}
+                  </label>
+                  {newsImagePreview && <div className="admin-news-image-selection"><span><FiImage /> {newsImageFile?.name || 'Current cover image'}</span><button type="button" onClick={removeNewsImage}><FiTrash2 /> Remove</button></div>}
+                  {newsImageError && <p className="admin-news-image-error" role="alert">{newsImageError}</p>}
+                </div>
                 <div className="admin-checks"><label><input type="checkbox" checked={newsForm.is_featured} onChange={(event) => setNewsForm({ ...newsForm, is_featured: event.target.checked })} /> Feature on News page</label><label><input type="checkbox" checked={newsForm.is_published} onChange={(event) => setNewsForm({ ...newsForm, is_published: event.target.checked })} /> Publish now</label></div>
-                <button className="button button-primary" type="submit"><FiCheckCircle /> {editingNewsId ? 'Save changes' : 'Create news post'}</button>
+                <button className="button button-primary" type="submit" disabled={newsSubmitting}><FiCheckCircle /> {newsSubmitting ? 'Saving post…' : editingNewsId ? 'Save changes' : 'Create news post'}</button>
               </form>
 
               <div className="admin-news-list">
@@ -539,7 +666,7 @@ export default function AdminDashboard() {
                       <label><input type="checkbox" checked={item.is_published} onChange={(event) => toggleNewsPublication(item, event.target.checked)} /><span>Published</span></label>
                       <button type="button" onClick={() => editNewsPost(item)}><FiEdit3 /> Edit</button>
                       {item.is_published && <Link to={`/news/${item.slug}`} target="_blank" rel="noreferrer"><FiBookOpen /> View</Link>}
-                      <button className="danger" type="button" onClick={() => deleteRecord('news_posts', item.id)}><FiTrash2 /> Delete</button>
+                      <button className="danger" type="button" onClick={() => deleteNewsPost(item)}><FiTrash2 /> Delete</button>
                     </div>
                   </article>
                 )) : <AdminEmptyState icon={FiBookOpen} title="No news posts yet" message="Create your first company update, announcement, or technology insight using the editor." />}
